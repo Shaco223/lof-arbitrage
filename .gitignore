@@ -68,3 +68,6 @@ data/raw/
 data/snapshots/
 *.parquet
 *.feather
+
+# ===== Git worktree isolation =====
+.worktrees/
