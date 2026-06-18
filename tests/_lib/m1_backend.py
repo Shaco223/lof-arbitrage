@@ -5,6 +5,7 @@ scripts. They do not call paid cloud resources or live market data sources.
 """
 from __future__ import annotations
 
+import json
 import subprocess
 import sys
 import time
@@ -69,3 +70,18 @@ def measure_call_ms(callback: Callable[[], object], repeat: int = 100) -> float:
         callback()
         durations.append(time.perf_counter() - start)
     return p95_ms(durations)
+
+def run_ac_evidence(project_root: Path, output_dir: Path) -> dict[str, Any]:
+    ensure_fetcher_import(project_root)
+    from fetcher.main import main
+
+    main(["ac-evidence", "--output-dir", str(output_dir)])
+    return {
+        "retry_success": read_jsonl(output_dir / "backend-ac-c2-retry-success-v2.jsonl"),
+        "retry_failure": read_jsonl(output_dir / "backend-ac-c2-retry-failure-v2.jsonl"),
+        "quota": json.loads((output_dir / "backend-ac-s1-quota-estimate-v2.json").read_text(encoding="utf-8")),
+    }
+
+
+def read_jsonl(path: Path) -> list[dict[str, Any]]:
+    return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]

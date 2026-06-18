@@ -386,3 +386,46 @@ No new blocking / major / normal issues found in this round.
 - AC-C2: waiting for dev-004 failure/retry sample output: source failure -> 3 retries -> log and skip.
 - AC-S1: waiting for dev-004/dev-001 quota evidence: cloud function calls, database reads, database writes for 3 trading days.
 - Real deployed API regression is not executed in this round because no paid cloud / live uniCloud access should be used by dev-005 M1 local smoke.
+
+---
+
+# Test Report - AC-C2 retry trace and AC-S1 quota estimate
+
+- Date: 2026-06-18
+- Tester: dev-005
+- worktree: `.worktrees/dev-005-test`
+- Branch: `feat/tests-ac-skeleton`
+- Baseline: `origin/main = 46560da`
+- Scope: fill AC-C2 using dev-004 retry trace evidence; add AC-S1 local quota estimate check while keeping the hard gate pending.
+
+## Result
+
+| Item | Result |
+| --- | --- |
+| AC-C2 | Pass: success trace is failed, failed, success; failure trace is failed, failed, skipped |
+| Retry timing | Pass: third attempt elapsed time is <= 30 seconds in both traces |
+| History pollution | Pass: all retry events have `pollute_history=false` |
+| AC-S1 local estimate | Pass: local quota estimate is within configured free-budget values |
+| AC-S1 release gate | Pending / hard: still requires 3 real trading days of uniCloud quota evidence |
+| Target pytest | `2 passed, 1 skipped` |
+| AC-C/AC-S marker pytest | `3 passed, 2 skipped, 26 deselected` |
+| M1 marker pytest | `12 passed, 2 skipped, 17 deselected` |
+| tests full pytest | `23 passed, 8 skipped` |
+| root pytest | `34 passed, 1 skipped` |
+| git diff check | Pass |
+| Blockers for dev-003/dev-004 | No blocking bug found; AC-S1 remains evidence-dependent hard pending |
+
+## Commands
+
+```powershell
+cd .worktrees/dev-005-test
+python -m pytest -q tests/ac/AC-C2.test.py tests/ac/AC-S1.test.py
+```
+
+## Bug List
+
+No new blocking / major / normal issues found in this round.
+
+### Pending Evidence
+
+- AC-S1: formal release approval still waits for cloud function calls, database reads, and database writes from 3 real trading days.

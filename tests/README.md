@@ -147,3 +147,24 @@ python -m pytest -q
 - M1 local smoke can run in CI with `cd tests; python -m pytest -q -m "ac_i or ac_c or ac_p"`.
 - `AC-S1` remains pending by default because it needs real quota evidence.
 - Live API baseURL regression is not part of default CI, to avoid paid cloud or external dependencies.
+
+---
+
+## AC-C2 retry trace update (2026-06-18)
+
+### Coverage
+
+| AC | Current method | Result | Notes |
+| --- | --- | --- | --- |
+| AC-C2 | `fetcher.main ac-evidence` writes retry success/failure traces into a temp directory | pass | Validates failed, failed, success and failed, failed, skipped paths within 30 seconds with `pollute_history=false` |
+| AC-S1 | Same evidence command writes local quota estimate | pending / hard | Local estimate is checked as within budget, but release gate still waits for 3 real trading days of quota evidence |
+
+### Local commands
+
+```powershell
+cd .worktrees/dev-005-test
+python -m pytest -q tests/ac/AC-C2.test.py tests/ac/AC-S1.test.py
+cd tests
+python -m pytest -q -m "ac_c or ac_s"
+python -m pytest -q
+```
