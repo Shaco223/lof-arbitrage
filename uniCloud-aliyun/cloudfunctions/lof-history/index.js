@@ -10,7 +10,7 @@ exports.main = async (event) => {
   const granularity = query.granularity || 'day';
 
   if (!/^\d{6}$/.test(code) || Number.isNaN(days) || days <= 0 || !['day', 'minute'].includes(granularity)) {
-    return fail(4001, '参数缺失或非法');
+    return fail(4001, 'invalid params');
   }
 
   try {
@@ -44,6 +44,6 @@ exports.main = async (event) => {
     });
   } catch (error) {
     console.error(error);
-    return fail(5000, '服务异常');
+    return fail(5000, 'server error');
   }
 };

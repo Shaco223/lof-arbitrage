@@ -2,13 +2,18 @@
 
 ## 适用范围
 
-本文档用于后端 dev-004、测试 dev-005、前端联调 dev-003 在本机启动或验证 `lof-fetcher/`。当前 M1 为骨架阶段，真实盘中循环任务需在数据源填实后开启。
+本文档用于 dev-004 后端、dev-003 前端联调、dev-005 测试验收在本机运行 `lof-fetcher/`。M1 联调闭环默认使用：
+
+- `assets/lof-watchlist-v2.csv`
+- `assets/benchmark-mapping-v2.csv`
+
+不再以 v1 作为默认自选池或 benchmark 输入。
 
 ## 环境要求
 
-- Python：3.11（PRD 硬约束）。若本机暂为 3.10，只允许跑骨架单测，不作为正式运行环境。
-- 网络：可访问东方财富 / 新浪等公开接口。
-- 不提交文件：`.env`、`.venv/`、`__pycache__/`、真实 token。
+- Python 3.11（PRD 硬约束）。
+- 可访问东方财富 / 新浪等公开行情源；本地样例生成不依赖外网。
+- 不提交 `.env`、`.venv/`、`__pycache__/`、真实 token。
 
 ## 首次初始化
 
@@ -21,7 +26,7 @@ pip install -r requirements.txt
 Copy-Item .env.example .env
 ```
 
-若 Windows 本机没有 `py -3.11`，先安装 Python 3.11 后再继续，不要把系统 Python 3.10 当正式运行环境。
+如本机没有 Python 3.11，先安装 3.11；不要把 Python 3.10 作为正式运行环境。
 
 ## `.env` 配置
 
@@ -31,8 +36,8 @@ Copy-Item .env.example .env
 | `UNICLOUD_INGEST_TOKEN` | Y | 与云函数环境变量一致的写入 token |
 | `FETCH_INTERVAL_SECONDS` | N | 默认 60 秒 |
 | `HTTP_TIMEOUT_SECONDS` | N | 默认 10 秒 |
-| `WATCHLIST_PATH` | N | 默认 `../assets/lof-watchlist-v1.csv` |
-| `BENCHMARK_MAPPING_PATH` | N | 默认 `../assets/benchmark-mapping-v1.csv` |
+| `WATCHLIST_PATH` | N | 默认 `../assets/lof-watchlist-v2.csv` |
+| `BENCHMARK_MAPPING_PATH` | N | 默认 `../assets/benchmark-mapping-v2.csv` |
 | `ALERT_PREMIUM_THRESHOLD` | N | 默认 `0.05` |
 | `ALERT_DISCOUNT_THRESHOLD` | N | 默认 `-0.02` |
 | `ALERT_COOLDOWN_MINUTES` | N | 默认 `30` |
@@ -42,21 +47,37 @@ Copy-Item .env.example .env
 ```powershell
 cd lof-fetcher
 python -m pytest -q
-$env:PYTHONPATH='.'; python scripts\validate_watchlist.py --watchlist ..\assets\lof-watchlist-v1.csv --benchmark ..\assets\benchmark-mapping-v1.csv --output ..\assets\watchlist-v1-validation.md
 python -m fetcher.main
+python -m fetcher.main sample-output --output-dir ..\outputs --ts 2026-06-18T10:31:00+08:00
+python scripts\generate_unicloud_mock_data.py
 ```
 
 预期结果：
 
-- 单测通过。
-- `validate_watchlist.py` 只更新验证报告，不修改 `lof-watchlist-v1.csv`。
-- `python -m fetcher.main` 能加载 watchlist 与 benchmark mapping 并打印数量。
+- `python -m pytest -q` 通过。
+- `python -m fetcher.main` 能加载 30 只 v2 watchlist 与 30 只 benchmark mapping。
+- `sample-output` 生成 5 个示例文件：
+  - `outputs/backend-realtime-snapshot-v2.json`
+  - `outputs/backend-sample-api-lof-list-v2.json`
+  - `outputs/backend-sample-api-lof-detail-v2.json`
+  - `outputs/backend-sample-api-lof-history-v2.json`
+  - `outputs/backend-sample-ingest-realtime-v2.json`
+- `generate_unicloud_mock_data.py` 更新 `uniCloud-aliyun/tests/sample-dataset.json`，供本地云函数 smoke 使用。
 
-## 盘中运行流程（数据源填实后）
+## watchlist 验证脚本
 
-1. 盘前 09:20 激活 venv，确认 `.env` 指向生产或联调 cloud function。
+二次元数据验证脚本仍可手动指定 v1 或 v2 输入；默认保留历史报告用途，不作为 M1 联调默认池：
+
+```powershell
+$env:PYTHONPATH='.'
+python scripts\validate_watchlist.py --watchlist ..\assets\lof-watchlist-v2.csv --benchmark ..\assets\benchmark-mapping-v2.csv --output ..\outputs\watchlist-v2-validation-dryrun.md
+```
+
+## 盘中运行流程
+
+1. 盘前 09:20 激活 venv，确认 `.env` 指向联调或生产 cloud function。
 2. 运行单次 smoke，确认 ingest token 与 URL 正确。
-3. 09:30–11:30 / 13:00–15:00 只开启 1 个 fetcher 进程，避免重复写入。
+3. 09:30-11:30 / 13:00-15:00 只启动 1 个 fetcher 进程，避免重复写入。
 4. 每分钟批量处理 30 只 LOF，最终只发起 1 次 `lof-ingest` 请求。
 5. 15:05 后停止盘中任务，等待 18:00 校准任务或手动校准。
 
@@ -64,11 +85,11 @@ python -m fetcher.main
 
 - `4010`：检查 `.env` 中 `UNICLOUD_INGEST_TOKEN` 与云函数环境变量是否一致。
 - `4001`：检查 payload 是否符合 PRD §6.4：`ts` + `items[].code/price/iopv/premium/coverage/source_quality`。
-- `4290`：降低批次频率或确认是否重复启动多个 fetcher。
-- 网络错误：参见 `lof-fetcher/docs/source-fallback.md`。
+- `4290`：降低批次频率，或确认是否重复启动多个 fetcher。
+- 网络错误：参考 `lof-fetcher/docs/source-fallback.md`。
 
 ## 联调交付
 
 - 给前端：只提供 uniCloud URL 化云函数地址，不提供 fetcher 本机地址。
-- 给测试：提供 `.env.example`、运行命令、样本 payload、`watchlist-v1-validation.md`。
-- 给项目经理：任何 PRD §6 字段变更先走 CCR，不直接改代码契约。
+- 给测试：提供 `.env.example`、运行命令、样例 payload、`outputs/backend-*-v2.json`。
+- 给项目经理：任何 PRD §6 字段变更先走 CCR；本阶段不变更接口字段。

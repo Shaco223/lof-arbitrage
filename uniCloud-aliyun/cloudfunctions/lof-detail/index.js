@@ -6,12 +6,12 @@ exports.main = async (event) => {
   const db = uniCloud.database();
   const query = normalizeQuery(event);
   const code = String(query.code || '').trim();
-  if (!/^\d{6}$/.test(code)) return fail(4001, '参数缺失或非法');
+  if (!/^\d{6}$/.test(code)) return fail(4001, 'invalid params');
 
   try {
     const metaRes = await db.collection('lof_meta').where({ code }).limit(1).get();
     const meta = (metaRes.data || [])[0];
-    if (!meta) return fail(4040, '资源不存在');
+    if (!meta) return fail(4040, 'not found');
 
     const holdingsRes = await db.collection('lof_holdings').where({ code }).orderBy('weight', 'desc').limit(10).get();
     const realtimeRes = await db.collection('lof_realtime').where({ code }).orderBy('ts', 'desc').limit(1).get();
@@ -41,6 +41,6 @@ exports.main = async (event) => {
     });
   } catch (error) {
     console.error(error);
-    return fail(5000, '服务异常');
+    return fail(5000, 'server error');
   }
 };

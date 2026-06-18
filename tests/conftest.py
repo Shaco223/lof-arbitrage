@@ -1,4 +1,4 @@
-"""tests/conftest.py — 通用 fixture / pending 标记自动 skip。"""
+"""通用 pytest fixture 与 pending 标记自动跳过。"""
 from __future__ import annotations
 
 import sys
@@ -10,23 +10,22 @@ ROOT = Path(__file__).resolve().parent
 PROJECT_ROOT = ROOT.parent
 FIXTURE_DIR = ROOT / "fixtures"
 
-# 让 ac/e2e 子目录里的 from _lib import ... 可用
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 
 def pytest_configure(config):
     markers = {
-        "ac_p": "AC-P ??????",
-        "ac_c": "AC-C ???????",
-        "ac_h": "AC-H ??????",
-        "ac_a": "AC-A ????",
-        "ac_i": "AC-I ????",
-        "ac_s": "AC-S ??????",
-        "ac_t": "AC-T ??????",
-        "ac_hard": "??? AC-T1 / AC-S3 / AC-S1??????????",
-        "contract": "PRD ?6 ??????",
-        "pending": "?????????????",
+        "ac_p": "AC-P 性能/算法验收",
+        "ac_c": "AC-C 采集验收",
+        "ac_h": "AC-H 历史数据验收",
+        "ac_a": "AC-A 告警验收",
+        "ac_i": "AC-I 接口验收",
+        "ac_s": "AC-S 架构与配额验收",
+        "ac_t": "AC-T 透明度验收",
+        "ac_hard": "硬约束验收",
+        "contract": "PRD §6 接口契约测试",
+        "pending": "待对应模块交付后填实",
     }
     for name, description in markers.items():
         config.addinivalue_line("markers", f"{name}: {description}")
@@ -44,12 +43,12 @@ def project_root() -> Path:
 
 @pytest.fixture(scope="session")
 def watchlist_csv(project_root: Path) -> Path:
-    return project_root / "assets" / "lof-watchlist-v1.csv"
+    return project_root / "assets" / "lof-watchlist-v2.csv"
 
 
 @pytest.fixture(scope="session")
 def benchmark_csv(project_root: Path) -> Path:
-    return project_root / "assets" / "benchmark-mapping-v1.csv"
+    return project_root / "assets" / "benchmark-mapping-v2.csv"
 
 
 def pytest_collection_modifyitems(config, items):

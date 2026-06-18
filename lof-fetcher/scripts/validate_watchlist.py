@@ -22,28 +22,28 @@ def render_report(
 ) -> str:
     now = datetime.now(ZoneInfo("Asia/Shanghai")).isoformat(timespec="seconds")
     suspicious = [row for row in results if row["risk"] != "ok"]
-    pending = [row for row in results if row["status"] == "pending_verify"]
     secondary_results = secondary_results or []
     benchmark_conflicts = benchmark_conflicts or []
     recommendation_counts = _count_by_recommendation(secondary_results)
+
     lines = [
-        "# watchlist-v1 元数据验证报告",
+        "# watchlist-v2 元数据验证报告",
         "",
         f"- 生成时间：{now}",
         f"- 一阶段数据源：{source}",
-        "- 二次验证数据源：东方财富场内行情 / 东方财富 20 日 K 线 / 天天基金估值净值 / 东方财富 pingzhongdata 辅助名称",
+        "- 二次验证数据源：东方财富场内行情 / 东方财富 20 日 K 线 / 天天基金估值净值 / pingzhongdata 辅助名称",
         f"- 验证范围：{len(results)} 只 LOF",
-        f"- 一阶段需回推关注：{len(suspicious)} 只",
-        f"- PRD pending_verify：{', '.join(row['code'] for row in pending) or '无'}",
+        f"- 一阶段需关注：{len(suspicious)} 只",
         f"- 二次建议统计：{_format_recommendation_counts(recommendation_counts)}",
         "",
         "## 结论摘要",
         "",
     ]
     if suspicious:
-        lines.append("以下条目需 dev-001/dev-002 复核；本报告不直接修改 `assets/lof-watchlist-v1.csv`。")
+        lines.append("以下条目需 dev-001/dev-002 复核；本报告不直接修改 watchlist CSV。")
     else:
         lines.append("未发现需回推条目。")
+
     lines.extend(
         [
             "",
@@ -57,10 +57,14 @@ def render_report(
         lines.append(
             f"| {row['code']} | {row['watchlist_name']} | {row['official_name']} | {row['type']} | {row['scale_yi']} | {row['status']} | {row['risk']} | {row['reason']} |"
         )
+    if not suspicious:
+        lines.append("| - | - | - | - | - | - | - | - |")
+
     if secondary_results:
         lines.extend(_render_secondary_section(secondary_results))
     if benchmark_conflicts:
         lines.extend(_render_benchmark_conflicts(benchmark_conflicts))
+
     lines.extend(
         [
             "",
@@ -74,15 +78,15 @@ def render_report(
         lines.append(
             f"| {row['code']} | {row['watchlist_name']} | {row['official_name']} | {row['type']} | {row['status']} | {row['risk']} |"
         )
+
     lines.extend(
         [
             "",
-            "## 元数据来源与局限",
+            "## 数据源局限",
             "",
-            "- 一阶段报告使用东方财富 `pingzhongdata/{code}.js` 校验基金名称，但该接口返回的多为场外基金份额名称，不能直接代表场内 LOF 代码名称。",
-            "- 二次验证以场内行情代码是否存在、是否有成交、是否可取净值为主，pingzhongdata 只作为辅助名称证据。",
-            "- 该报告不能单独证明基金是否已转型、合并或清盘；`manual_review` 条目仍需 dev-001/dev-002 做人工复核或公告确认。",
-            "- 本轮只输出验证报告，不修改 PRD 或 watchlist CSV。",
+            "- pingzhongdata 名称不能单独作为场内 LOF 替换依据。",
+            "- manual_review 条目仍需 dev-001/dev-002 结合公告或交易规则复核。",
+            "- 本脚本只输出验证报告，不修改 PRD 或 watchlist CSV。",
             "",
         ]
     )
@@ -91,9 +95,9 @@ def render_report(
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Validate LOF watchlist metadata")
-    parser.add_argument("--watchlist", default="../assets/lof-watchlist-v1.csv")
-    parser.add_argument("--benchmark", default="../assets/benchmark-mapping-v1.csv")
-    parser.add_argument("--output", default="../assets/watchlist-v1-validation.md")
+    parser.add_argument("--watchlist", default="../assets/lof-watchlist-v2.csv")
+    parser.add_argument("--benchmark", default="../assets/benchmark-mapping-v2.csv")
+    parser.add_argument("--output", default="../outputs/watchlist-v2-validation-dryrun.md")
     args = parser.parse_args()
 
     rows = load_watchlist(args.watchlist)
@@ -105,92 +109,61 @@ def main() -> None:
 
     secondary_client = EastmoneySecondaryValidationClient()
     try:
-        secondary_results = []
-        ping_by_code = {row["code"]: row.get("official_name", "") for row in results}
-        for row in rows:
-            secondary_results.append(
-                classify_watchlist_row(
-                    row=row,
-                    venue=secondary_client.fetch_venue_quote(row.code),
-                    nav=secondary_client.fetch_nav(row.code),
-                    activity=secondary_client.fetch_activity(row.code),
-                    ping_name=ping_by_code.get(row.code, ""),
-                )
+        secondary_results = [
+            classify_watchlist_row(
+                row,
+                secondary_client.fetch_venue_quote(row.code),
+                secondary_client.fetch_nav(row.code),
+                secondary_client.fetch_activity(row.code),
+                secondary_client.fetch_pingzhong_name(row.code),
             )
+            for row in rows
+        ]
     finally:
         secondary_client.close()
 
+    conflicts = detect_benchmark_conflicts(args.benchmark)
+    report = render_report(results, "eastmoney pingzhongdata", secondary_results, conflicts)
     output_path = Path(args.output)
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    benchmark_conflicts = detect_benchmark_conflicts(args.benchmark)
-    output_path.write_text(
-        render_report(results, "东方财富 pingzhongdata", secondary_results, benchmark_conflicts),
-        encoding="utf-8",
-    )
-    print(f"wrote {output_path} ({len(results)} rows)")
+    output_path.write_text(report, encoding="utf-8")
 
 
-def _render_secondary_section(results: list[SecondaryValidationResult]) -> list[str]:
+def _render_secondary_section(rows: list[SecondaryValidationResult]) -> list[str]:
     lines = [
         "",
         "## 二次验证结果",
         "",
-        "### 处理建议汇总",
-        "",
-        "| 建议 | code | 说明 |",
-        "| --- | --- | --- |",
+        "| code | 名称 | 交易 | 类型 | LOF | QDII | 净值 | 行情 | 20日成交额(万元) | 多源名称比对 | 建议 |",
+        "| --- | --- | --- | --- | --- | --- | --- | --- | ---: | --- | --- |",
     ]
-    for recommendation in ["keep", "rename", "type_fix", "replace", "phase2_qdii", "manual_review"]:
-        rows = [row for row in results if row.recommendation == recommendation]
-        lines.append(f"| {recommendation} | {', '.join(row.code for row in rows) or '无'} | {_recommendation_text(recommendation)} |")
-    lines.extend(
-        [
-            "",
-            "### 二次验证明细",
-            "",
-            "| code | 清单名称 | 场内名称 | 净值名称 | 交易状态 | 类型 | LOF | QDII | 可取净值 | 可取场内行情 | 最新规模(亿) | 20日均成交额 | 活跃度 | 多源名称比对 | 建议 | 证据 |",
-            "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---: | ---: | --- | --- | --- | --- |",
-        ]
-    )
-    for row in results:
+    for row in rows:
         lines.append(
-            "| "
-            + " | ".join(
-                [
-                    row.code,
-                    row.watchlist_name,
-                    row.venue_name or "-",
-                    row.nav_name or "-",
-                    row.trading_status,
-                    row.fund_type_verified,
-                    _yes_no(row.is_lof),
-                    _yes_no(row.is_qdii),
-                    _yes_no(row.has_nav),
-                    _yes_no(row.has_venue_quote),
-                    _format_number(row.latest_scale_yi),
-                    _format_number(row.avg_amount_20d),
-                    row.activity_status,
-                    row.name_compare,
-                    row.recommendation,
-                    row.evidence.replace("|", "/"),
-                ]
+            "| {code} | {name} | {trading} | {fund_type} | {is_lof} | {is_qdii} | {has_nav} | {has_quote} | {amount} | {name_cmp} | {recommendation} |".format(
+                code=row.code,
+                name=row.watchlist_name,
+                trading=_yes_no(row.trading),
+                fund_type=row.fund_type,
+                is_lof=_yes_no(row.is_lof),
+                is_qdii=_yes_no(row.is_qdii),
+                has_nav=_yes_no(row.has_nav),
+                has_quote=_yes_no(row.has_venue_quote),
+                amount=_format_number(row.avg_amount_20d_wan),
+                name_cmp=row.name_compare,
+                recommendation=row.recommendation,
             )
-            + " |"
         )
     lines.extend(
         [
             "",
-            "### 重点核查结论",
+            "### 处理建议说明",
             "",
-            "- `501050`：场内行情名称为 `50AHLOF`，净值源名称为 `华夏上证50AH优选指数A`；原 watchlist 名称 `华夏中证500ETF联接(LOF)` 疑似资产清单误填，应进入 `rename/manual_review`，不是 pingzhongdata 单点错映射。",
-            "- `160516`：场内行情显示 `证券指数基金` 且 20 日 K 线为空，净值源为 `博时证券公司ETF联接A`；原 `诺安油气能源(LOF)` 疑似代码已不匹配，一期建议 `replace` 或人工确认。",
-            "- `160218`：场内行情为 `房地产LOF`，净值源为 `国泰国证房地产行业指数A`；原 `国泰国证医药卫生行业指数(LOF)` 疑似代码对应资产错误，且 20 日成交不活跃，建议 `replace/manual_review`。",
-            "- `161024`：有场内行情与净值，分级名称已转为 `军工LOF` / `富国中证军工指数(LOF)A`，建议 `rename` 后可保留观察。",
-            "- `161121 / 160628`：有场内行情与净值，但 20 日成交不活跃；如一期坚持成交额阈值，建议 `replace`，否则需人工降级保留。",
-            "- `399987`：benchmark 自动检测发现同数字不同后缀/名称冲突，详见 `benchmark mapping 冲突核查`；建议 dev-002/dev-001 复核，可能触发 benchmark CCR。",
-            "",
+            "| 建议 | 含义 |",
+            "| --- | --- |",
         ]
     )
+    for recommendation in ["keep", "rename", "type_fix", "replace", "phase2_qdii", "manual_review"]:
+        lines.append(f"| {recommendation} | {_recommendation_text(recommendation)} |")
     return lines
 
 
@@ -229,7 +202,7 @@ def detect_benchmark_conflicts(path: str) -> list[dict[str, str]]:
                     "index_codes": ", ".join(index_codes),
                     "component_names": ", ".join(component_names),
                     "lof_codes": ", ".join(sorted({row[2] for row in rows})),
-                    "conclusion": "同一数字代码映射到多个后缀或组件名称，需人工确认行情源代码",
+                    "conclusion": "同一数字代码映射到多个后缀或组件名称，需人工确认行情源代码。",
                 }
             )
     return conflicts
@@ -258,12 +231,12 @@ def _format_recommendation_counts(counts: dict[str, int]) -> str:
 
 def _recommendation_text(recommendation: str) -> str:
     return {
-        "keep": "可保留原条目",
-        "rename": "建议按场内/净值多源名称更新名称或状态",
-        "type_fix": "建议修正 type",
+        "keep": "保留原条目",
+        "rename": "按场内/净值多源名称更新名称或状态",
+        "type_fix": "修正 type",
         "replace": "不适合一期，建议替换",
         "phase2_qdii": "QDII 或跨境品种，建议二期处理",
-        "manual_review": "需人工公告/交易规则复核",
+        "manual_review": "需人工公告或交易规则复核",
     }[recommendation]
 
 

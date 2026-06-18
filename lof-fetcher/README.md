@@ -1,37 +1,43 @@
-﻿# lof-fetcher · 本机 Python 拉取器
+# lof-fetcher · 本机 Python 拉取器
 
 ## 职责
-- 盘中每分钟拉取 LOF / 重仓股 / 指数行情
-- 计算实时 IOPV、溢价率、估算覆盖率
-- 通过 uniCloud `ingest/realtime` 接口写入数据库
-- 触发告警（Server酱 / 邮件）
+
+- 盘中每分钟拉取 LOF / 重仓股 / 指数行情。
+- 计算实时 IOPV、溢价率、估算覆盖率。
+- 通过 uniCloud `lof-ingest` 接口写入数据库。
+- 触发告警（Server 酱 / 邮件）。
 
 ## 技术栈
+
 - Python 3.11
 - apscheduler / httpx / pandas / loguru / pydantic-settings
 
-## 目录约定（待 dev-004 实现）
-```
+## 目录约定
+
+```text
 lof-fetcher/
 ├── fetcher/
-│   ├── __init__.py
-│   ├── main.py              # 入口
+│   ├── main.py              # 入口与样例输出命令
 │   ├── config.py            # pydantic-settings
-│   ├── sources/             # 数据源适配（东财/新浪/天天/集思录）
+│   ├── sources/             # 数据源适配
 │   ├── engine/              # IOPV / 溢价 / 覆盖率
+│   ├── pipeline/            # v2 快照与样例输出
 │   ├── alert/               # 阈值与冷却
 │   └── ingest/              # 调用 uniCloud ingest 接口
+├── scripts/
 ├── tests/
 ├── requirements.txt
-├── .env.example
 └── README.md
 ```
 
 ## 当前状态
-- M1 首版骨架已建立：`fetcher/sources`、`fetcher/engine`、`fetcher/alert`、`fetcher/ingest`。
+
+- 默认资产已切到 `assets/lof-watchlist-v2.csv` 与 `assets/benchmark-mapping-v2.csv`。
 - `engine/coverage.py` 已按 PRD §M2 双公式实现：指数型使用基准+现金，行业/主动型使用前十大+剩余仓位基准补全。
 - `engine/premium.py` 提供 IOPV 与溢价率基础计算。
-- `scripts/validate_watchlist.py` 可生成 `assets/watchlist-v1-validation.md`，只输出报告，不修改 watchlist。
+- `fetcher/pipeline/snapshot.py` 可生成 30 只 LOF 的 realtime snapshot 与 PRD §6 样例响应。
+- `scripts/generate_unicloud_mock_data.py` 可刷新 uniCloud 本地 smoke 数据集。
+- `scripts/validate_watchlist.py` 保留元数据验证用途，默认报告不作为 M1 联调输入。
 
 ## 常用命令
 
@@ -39,20 +45,39 @@ lof-fetcher/
 cd lof-fetcher
 pip install -r requirements.txt
 python -m pytest -q
-$env:PYTHONPATH='.'; python scripts\validate_watchlist.py --watchlist ..\assets\lof-watchlist-v1.csv --benchmark ..\assets\benchmark-mapping-v1.csv --output ..\assets\watchlist-v1-validation.md
+python -m fetcher.main
+python -m fetcher.main sample-output --output-dir ..\outputs --ts 2026-06-18T10:31:00+08:00
+python scripts\generate_unicloud_mock_data.py
 ```
 
+## 示例输出
+
+`sample-output` 会生成：
+
+- `outputs/backend-realtime-snapshot-v2.json`
+- `outputs/backend-sample-api-lof-list-v2.json`
+- `outputs/backend-sample-api-lof-detail-v2.json`
+- `outputs/backend-sample-api-lof-history-v2.json`
+- `outputs/backend-sample-ingest-realtime-v2.json`
+
+`outputs/*` 默认不入库，作为本地联调交付物传递路径。
+
 ## 元数据验证说明
-- 默认数据源：东方财富 `https://fund.eastmoney.com/pingzhongdata/{code}.js`。
+
+- 默认数据源：东方财富、场内行情、天天基金净值等公开源。
 - HTTP 客户端统一 `trust_env=False`，避免本机代理污染公开接口访问。
-- `pending_verify` 条目只在报告中标记回推，最终是否替换由 dev-001/dev-002 决策。
+- watchlist-v2 已由 dev-002 固化；如后续发现资产口径问题，输出报告给 dev-001/dev-002，不直接修改 CSV。
 
 ## 运行与运维文档
+
 - 本机运行 SOP：`docs/runbook.md`
 - 数据源失败兜底：`docs/source-fallback.md`
 - NAV 反推溢价口径：`docs/nav-premium-calibration.md`
 - watchlist 验证数据源说明：`docs/watchlist-validation-sources.md`
 
 ## 不要做
-- 不直接对前端开放接口（前端只读 uniCloud REST API）
-- 不在仓库提交 `.env` / `.venv` / `__pycache__`
+
+- 不直接对前端开放 fetcher 本机接口；前端只读 uniCloud URL 化云函数。
+- 不直连 uniCloud 数据库写入；拉取器写入只能走 `lof-ingest`。
+- 不提交 `.env` / `.venv` / `__pycache__` / 真实 token。
+- 不改 PRD §6 字段；字段变更必须走 CCR。

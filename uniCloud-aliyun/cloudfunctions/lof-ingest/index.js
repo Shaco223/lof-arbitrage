@@ -5,13 +5,13 @@ const { ok, fail } = require('./response');
 exports.main = async (event) => {
   const token = getHeader(event, 'x-ingest-token') || event.XIngestToken || event.token;
   const expected = process.env.UNICLOUD_INGEST_TOKEN;
-  if (!expected || token !== expected) return fail(4010, '鉴权失败');
+  if (!expected || token !== expected) return fail(4010, 'unauthorized');
 
   const body = parseBody(event);
   const validation = validatePayload(body);
-  if (!validation.valid) return fail(4001, '参数缺失或非法', { reason: validation.reason });
+  if (!validation.valid) return fail(4001, 'invalid params', { reason: validation.reason });
   const maxBatchSize = parseInt(process.env.MAX_INGEST_BATCH_SIZE || '100', 10);
-  if (body.items.length > maxBatchSize) return fail(4290, '写入限流（uniCloud 配额接近上限）');
+  if (body.items.length > maxBatchSize) return fail(4290, 'rate limited');
 
   try {
     const db = uniCloud.database();
@@ -29,7 +29,7 @@ exports.main = async (event) => {
     return ok({ accepted: docs.length, rejected: 0 });
   } catch (error) {
     console.error(error);
-    return fail(5000, '服务异常');
+    return fail(5000, 'server error');
   }
 };
 

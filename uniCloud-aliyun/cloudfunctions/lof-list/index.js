@@ -9,14 +9,14 @@ exports.main = async (event) => {
   const fundType = query.type || 'all';
 
   if (!['premium_desc', 'premium_asc', 'code'].includes(sort)) {
-    return fail(4001, '参数缺失或非法');
+    return fail(4001, 'invalid params');
   }
   if (!['all', 'index', 'industry', 'active'].includes(fundType)) {
-    return fail(4001, '参数缺失或非法');
+    return fail(4001, 'invalid params');
   }
 
   try {
-    const metaWhere = fundType === 'all' ? { status: db.command.in(['active', 'pending_verify']) } : { type: fundType };
+    const metaWhere = fundType === 'all' ? { status: db.command.in(['active', 'active_low_liquidity']) } : { type: fundType };
     const metaRes = await db.collection('lof_meta').where(metaWhere).limit(100).get();
     const metas = metaRes.data || [];
     const codes = metas.map((item) => item.code);
@@ -56,7 +56,7 @@ exports.main = async (event) => {
     return ok({ ts: latestTs, items });
   } catch (error) {
     console.error(error);
-    return fail(5000, '服务异常');
+    return fail(5000, 'server error');
   }
 };
 
