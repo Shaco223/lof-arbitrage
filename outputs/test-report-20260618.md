@@ -429,3 +429,120 @@ No new blocking / major / normal issues found in this round.
 ### Pending Evidence
 
 - AC-S1: formal release approval still waits for cloud function calls, database reads, and database writes from 3 real trading days.
+
+---
+
+# Test Report - Real API E2E readiness checklist
+
+- Date: 2026-06-18
+- Tester: dev-005
+- worktree: `.worktrees/dev-005-test`
+- Branch: `feat/tests-ac-skeleton`
+- Baseline: `origin/main = f219e26`
+- Scope: prepare real uniCloud / frontend-backend integration acceptance checklist; no live cloud calls executed in this round.
+
+## Result
+
+| Item | Result |
+| --- | --- |
+| Real API checklist | Prepared for AC-I1/I2/I3/I4, AC-C1/C2, AC-S1 evidence plan |
+| Dev-004 prerequisites | Pending: base URL, function names, token policy, deploy/local steps, quota export method |
+| AC-S1 gate | Still pending / hard; no early release from local estimate |
+| Live API execution | Not started; waiting for dev-004 integration details |
+| Blockers for dev-003/dev-004 | No defect reported; dev-004 integration info is the next dependency |
+
+## Bug List
+
+No new blocking / major / normal issues found in this preparation round.
+
+---
+
+# Test Report - Real API integration inputs recorded
+
+- Date: 2026-06-18
+- Tester: dev-005
+- worktree: `.worktrees/dev-005-test`
+- Branch: `feat/tests-ac-skeleton`
+- Baseline: `origin/main = 11d6398`
+- Scope: record dev-004 real API integration details into the e2e checklist; no live cloud calls or real ingest writes executed in this round.
+
+## Result
+
+| Item | Result |
+| --- | --- |
+| Function names | Recorded: `lof-list`, `lof-detail`, `lof-history`, `lof-ingest` |
+| Read auth | Recorded: list/detail/history do not require token |
+| Ingest auth | Recorded: `X-Ingest-Token: <UNICLOUD_INGEST_TOKEN>` required for `lof-ingest` |
+| Deployment notes | Recorded: HBuilderX schema upload and four cloud function deployment steps |
+| Local sample command | Recorded: `cd lof-fetcher; pip install -r requirements.txt; python -m fetcher.main sample-output --output-dir ..\outputs` |
+| AC-S1 evidence | Recorded: local estimate plus 3 real trading days of uniCloud console exports/screenshots |
+| Live API execution | Not executed; waiting for concrete public URL prefix and test token / execution approval |
+| AC-S1 gate | Still pending / hard; no early release from local estimate |
+
+## Bug List
+
+No new blocking / major / normal issues found in this preparation round.
+
+---
+
+# Test Report - Real uniCloud API acceptance execution
+
+- Date: 2026-06-18
+- Tester: dev-005
+- worktree: `.worktrees/dev-005-test`
+- Branch: `feat/tests-ac-skeleton`
+- Baseline: `origin/main = f10de56`
+- API Base: `https://fc-mp-8550b592-295c-49da-a33a-57df17e450a1.next.bspapp.com`
+- Scope: execute real read API acceptance for AC-I1/I2/I3, safe no-token AC-I4 path, and AC-C1/C2 local regression. Positive ingest write was not executed because token is private and must not be committed.
+
+## Result
+
+| Item | Result |
+| --- | --- |
+| AC-I1 structure | Pass: `lof-list` returned 30 rows with PRD 6.1 fields |
+| AC-I1 p95 | Fail: p95 sample was about `9668ms`, above `800ms` |
+| AC-I2 | Pass: `lof-detail` returned required detail blocks including `coverage_breakdown` and `realtime` |
+| AC-I3 | Fail: `lof-history?days=30` returned 1 row, below the `>=20` trading-day requirement |
+| AC-I4 missing token | Pass: `lof-ingest` without token returned `4010` |
+| AC-I4 positive write | Pending: requires private token or dev-004 local execution; no token committed |
+| AC-C1/C2 regression | Pass: local regression `3 passed, 1 skipped` with AC-S1 pending |
+| AC-S1 | Still pending / hard; only smoke observation recorded, not release evidence |
+
+## Commands
+
+```powershell
+cd .worktrees/dev-005-test
+$env:REAL_API_BASE='https://fc-mp-8550b592-295c-49da-a33a-57df17e450a1.next.bspapp.com'
+$env:REAL_API_P95_REPEAT='5'
+python -m pytest -q tests/e2e/test_real_api_acceptance.py -ra
+python -m pytest -q tests/ac/AC-C1.test.py tests/ac/AC-C2.test.py tests/ac/AC-S1.test.py
+```
+
+## Bug List
+
+### BUG-REAL-001
+- AC ID: AC-I1
+- Endpoint / page: `GET /lof-list?sort=code`
+- Environment: real uniCloud API base `https://fc-mp-8550b592-295c-49da-a33a-57df17e450a1.next.bspapp.com`
+- Reproduction steps: set `REAL_API_BASE`, set `REAL_API_P95_REPEAT=5`, run `python -m pytest -q tests/e2e/test_real_api_acceptance.py -ra`
+- Expected result: p95 response time `<= 800ms` and 30-row structure compliant response
+- Actual result: 30-row structure passed, but p95 was about `9668ms` (`9667.697ms` in the latest sample run)
+- Severity: blocking
+- Responsible Agent: dev-004
+- CC: dev-001
+
+### BUG-REAL-002
+- AC ID: AC-I3
+- Endpoint / page: `GET /lof-history?code=160119&days=30`
+- Environment: real uniCloud API base `https://fc-mp-8550b592-295c-49da-a33a-57df17e450a1.next.bspapp.com`
+- Reproduction steps: set `REAL_API_BASE`, run `python -m pytest -q tests/e2e/test_real_api_acceptance.py -ra`
+- Expected result: `granularity == day` and at least 20 trading-day rows under `days=30`
+- Actual result: `granularity == day`, but returned 1 row
+- Severity: blocking
+- Responsible Agent: dev-004
+- CC: dev-001
+
+### Pending Evidence
+
+- AC-I4 positive ingest write: waiting for private token execution by dev-004 or local environment variable outside git.
+- AC-S1: waiting for 3 real trading days of uniCloud quota evidence.

@@ -168,3 +168,24 @@ cd tests
 python -m pytest -q -m "ac_c or ac_s"
 python -m pytest -q
 ```
+
+---
+
+## Real API E2E readiness update (2026-06-18)
+
+- Checklist: `tests/e2e/real-api-acceptance-checklist.md`.
+- Focus AC: AC-I1/I2/I3/I4, AC-C1/C2 regression, and AC-S1 quota evidence plan.
+- Current state: dev-004 provided function names (`lof-list/lof-detail/lof-history/lof-ingest`), token rule (`X-Ingest-Token` for ingest only), deployment/local commands, and AC-S1 export method; actual public `VITE_API_BASE` prefix and test token remain out-of-band execution inputs.
+- Safety rule: AC-S1 remains hard pending until 3 real trading days of quota evidence are available.
+
+---
+
+## Real API execution update (2026-06-18)
+
+- Executed endpoint: `https://fc-mp-8550b592-295c-49da-a33a-57df17e450a1.next.bspapp.com`.
+- Automated script: `tests/e2e/test_real_api_acceptance.py`.
+- AC-I1: structure pass, but p95 failed (`~9646ms > 800ms`) and is a dev-004 blocking issue.
+- AC-I2: detail contract pass for sampled code.
+- AC-I3: failed because `lof-history?days=30` returned 1 row, below the `>=20` trading-day requirement.
+- AC-I4: missing-token path pass (`4010`); positive ingest write remains pending without private token.
+- AC-C1/C2 local regression: pass; AC-S1 remains hard pending.
