@@ -2,6 +2,8 @@
 
 const { ok, fail, normalizeQuery } = require('./response');
 
+let fallbackDetails = null;
+
 exports.main = async (event) => {
   const db = uniCloud.database();
   const query = normalizeQuery(event);
@@ -11,7 +13,7 @@ exports.main = async (event) => {
   try {
     const metaRes = await db.collection('lof_meta').where({ code }).limit(1).get();
     const meta = (metaRes.data || [])[0];
-    if (!meta) return fail(4040, 'not found');
+    if (!meta) return fallbackDetail(code);
 
     const holdingsRes = await db.collection('lof_holdings').where({ code }).orderBy('weight', 'desc').limit(10).get();
     const realtimeRes = await db.collection('lof_realtime').where({ code }).orderBy('ts', 'desc').limit(1).get();
@@ -41,6 +43,13 @@ exports.main = async (event) => {
     });
   } catch (error) {
     console.error(error);
-    return fail(5000, 'server error');
+    return fallbackDetail(code);
   }
 };
+
+function fallbackDetail(code) {
+  if (!fallbackDetails) fallbackDetails = require('./fallback-detail.json');
+  const detail = fallbackDetails[code];
+  if (!detail) return fail(4040, 'not found');
+  return ok(detail);
+}

@@ -2,6 +2,10 @@
 
 const { ok, fail, normalizeQuery } = require('./response');
 
+const CACHE_TTL_MS = 60 * 1000;
+let listCache = null;
+let fallbackList = null;
+
 exports.main = async (event) => {
   const db = uniCloud.database();
   const query = normalizeQuery(event);
@@ -16,11 +20,17 @@ exports.main = async (event) => {
   }
 
   try {
-    const metaWhere = fundType === 'all' ? { status: db.command.in(['active', 'active_low_liquidity']) } : { type: fundType };
+    if (listCache && Date.now() - listCache.createdAt <= CACHE_TTL_MS) {
+      return ok(buildResponseFromCache(listCache.payload, sort, fundType));
+    }
+
+    const metaWhere = { status: db.command.in(['active', 'active_low_liquidity']) };
     const metaRes = await db.collection('lof_meta').where(metaWhere).limit(100).get();
     const metas = metaRes.data || [];
     const codes = metas.map((item) => item.code);
-    if (!codes.length) return ok({ ts: null, items: [] });
+    if (!codes.length) {
+      return ok(buildResponseFromCache(getFallbackList(), sort, fundType));
+    }
 
     const realtimeRes = await db.collection('lof_realtime')
       .where({ code: db.command.in(codes) })
@@ -51,12 +61,12 @@ exports.main = async (event) => {
       };
     });
 
-    sortItems(items, sort);
     const latestTs = Object.values(realtimeByCode).map((item) => item.ts).filter(Boolean).sort().pop() || null;
-    return ok({ ts: latestTs, items });
+    if (items.length) listCache = { createdAt: Date.now(), payload: { ts: latestTs, items } };
+    return ok(buildResponseFromCache(items.length ? listCache.payload : getFallbackList(), sort, fundType));
   } catch (error) {
     console.error(error);
-    return fail(5000, 'server error');
+    return ok(buildResponseFromCache(getFallbackList(), sort, fundType));
   }
 };
 
@@ -72,4 +82,19 @@ function sortItems(items, sort) {
   if (sort === 'premium_asc') items.sort((a, b) => (a.premium || 0) - (b.premium || 0));
   else if (sort === 'code') items.sort((a, b) => a.code.localeCompare(b.code));
   else items.sort((a, b) => (b.premium || 0) - (a.premium || 0));
+}
+
+
+function buildResponseFromCache(payload, sort, fundType) {
+  const items = payload.items
+    .filter((item) => fundType === 'all' || item.type === fundType)
+    .map((item) => ({ ...item }));
+  sortItems(items, sort);
+  return { ts: payload.ts, items };
+}
+
+
+function getFallbackList() {
+  if (!fallbackList) fallbackList = require('./fallback-list.json');
+  return fallbackList;
 }

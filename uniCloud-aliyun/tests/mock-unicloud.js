@@ -1,15 +1,15 @@
 'use strict';
 
-function createMockUniCloud(seed) {
+function createMockUniCloud(seed, options = {}) {
   const state = clone(seed);
   return {
     database() {
-      return createDatabase(state);
+      return createDatabase(state, options);
     }
   };
 }
 
-function createDatabase(state) {
+function createDatabase(state, options) {
   const command = {
     in(values) {
       return { $in: values };
@@ -19,16 +19,17 @@ function createDatabase(state) {
     command,
     collection(name) {
       if (!state[name]) state[name] = [];
-      return new Query(state, name, state[name].slice());
+      return new Query(state, name, state[name].slice(), options);
     }
   };
 }
 
 class Query {
-  constructor(state, name, rows) {
+  constructor(state, name, rows, options) {
     this.state = state;
     this.name = name;
     this.rows = rows;
+    this.options = options || {};
   }
 
   where(criteria) {
@@ -48,6 +49,7 @@ class Query {
   }
 
   async get() {
+    if (this.options.onGet) this.options.onGet(this.name);
     return { data: clone(this.rows) };
   }
 

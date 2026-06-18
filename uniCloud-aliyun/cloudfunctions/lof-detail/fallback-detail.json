@@ -1,0 +1,1532 @@
+{
+  "160119": {
+    "code": "160119",
+    "name": "南方中证500ETF联接(LOF)A",
+    "type": "index",
+    "scale_yi": 15,
+    "coverage_top10": 0.475,
+    "coverage_breakdown": {
+      "top10_weight": 0.475,
+      "benchmark_assigned_weight": 0.95,
+      "cash_weight": 0.05
+    },
+    "benchmark_raw": "中证500指数收益率×95%+银行活期存款利率(税后)×5%",
+    "benchmark_components": [
+      {
+        "index_code": "000905.SH",
+        "name": "中证500指数",
+        "weight": 0.95
+      },
+      {
+        "index_code": "CASH",
+        "name": "银行活期存款利率",
+        "weight": 0.05
+      }
+    ],
+    "holdings_top10": [
+      {
+        "stock_code": "S00001",
+        "stock_name": "样例持仓1",
+        "weight": 0.08
+      },
+      {
+        "stock_code": "S00002",
+        "stock_name": "样例持仓2",
+        "weight": 0.07
+      },
+      {
+        "stock_code": "S00003",
+        "stock_name": "样例持仓3",
+        "weight": 0.06
+      }
+    ],
+    "realtime": {
+      "ts": "2026-06-18T10:31:00+08:00",
+      "price": 1.1804,
+      "iopv": 1.146,
+      "premium": 0.030017,
+      "coverage": 1,
+      "source_quality": "ok"
+    },
+    "pctile_30d": 0.033333
+  },
+  "160220": {
+    "code": "160220",
+    "name": "国泰民益混合(LOF)A",
+    "type": "active",
+    "scale_yi": 3,
+    "coverage_top10": 0.46,
+    "coverage_breakdown": {
+      "top10_weight": 0.46,
+      "benchmark_assigned_weight": 1,
+      "cash_weight": 0
+    },
+    "benchmark_raw": "沪深300指数收益率×60%+中证综合债券指数收益率×40%",
+    "benchmark_components": [
+      {
+        "index_code": "000300.SH",
+        "name": "沪深300指数",
+        "weight": 0.6
+      },
+      {
+        "index_code": "H11009.CSI",
+        "name": "中证综合债券指数",
+        "weight": 0.4
+      }
+    ],
+    "holdings_top10": [
+      {
+        "stock_code": "S00001",
+        "stock_name": "样例持仓1",
+        "weight": 0.08
+      },
+      {
+        "stock_code": "S00002",
+        "stock_name": "样例持仓2",
+        "weight": 0.07
+      },
+      {
+        "stock_code": "S00003",
+        "stock_name": "样例持仓3",
+        "weight": 0.06
+      }
+    ],
+    "realtime": {
+      "ts": "2026-06-18T10:31:00+08:00",
+      "price": 1.198,
+      "iopv": 1.22,
+      "premium": -0.018033,
+      "coverage": 1,
+      "source_quality": "ok"
+    },
+    "pctile_30d": 0.033333
+  },
+  "160505": {
+    "code": "160505",
+    "name": "博时主题行业混合(LOF)",
+    "type": "active",
+    "scale_yi": 30,
+    "coverage_top10": 0.495,
+    "coverage_breakdown": {
+      "top10_weight": 0.495,
+      "benchmark_assigned_weight": 1,
+      "cash_weight": 0
+    },
+    "benchmark_raw": "沪深300指数收益率×80%+中证综合债券指数收益率×20%",
+    "benchmark_components": [
+      {
+        "index_code": "000300.SH",
+        "name": "沪深300指数",
+        "weight": 0.8
+      },
+      {
+        "index_code": "H11009.CSI",
+        "name": "中证综合债券指数",
+        "weight": 0.2
+      }
+    ],
+    "holdings_top10": [
+      {
+        "stock_code": "S00001",
+        "stock_name": "样例持仓1",
+        "weight": 0.08
+      },
+      {
+        "stock_code": "S00002",
+        "stock_name": "样例持仓2",
+        "weight": 0.07
+      },
+      {
+        "stock_code": "S00003",
+        "stock_name": "样例持仓3",
+        "weight": 0.06
+      }
+    ],
+    "realtime": {
+      "ts": "2026-06-18T10:31:00+08:00",
+      "price": 1.0474,
+      "iopv": 1.035,
+      "premium": 0.011981,
+      "coverage": 1,
+      "source_quality": "ok"
+    },
+    "pctile_30d": 0.033333
+  },
+  "160632": {
+    "code": "160632",
+    "name": "鹏华酒A",
+    "type": "industry",
+    "scale_yi": 12,
+    "coverage_top10": 0.425,
+    "coverage_breakdown": {
+      "top10_weight": 0.425,
+      "benchmark_assigned_weight": 0.95,
+      "cash_weight": 0.05
+    },
+    "benchmark_raw": "中证酒指数收益率×95%+银行活期存款利率(税后)×5%",
+    "benchmark_components": [
+      {
+        "index_code": "399987.SZ",
+        "name": "中证酒指数",
+        "weight": 0.95
+      },
+      {
+        "index_code": "CASH",
+        "name": "银行活期存款利率",
+        "weight": 0.05
+      }
+    ],
+    "holdings_top10": [
+      {
+        "stock_code": "S00001",
+        "stock_name": "样例持仓1",
+        "weight": 0.08
+      },
+      {
+        "stock_code": "S00002",
+        "stock_name": "样例持仓2",
+        "weight": 0.07
+      },
+      {
+        "stock_code": "S00003",
+        "stock_name": "样例持仓3",
+        "weight": 0.06
+      }
+    ],
+    "realtime": {
+      "ts": "2026-06-18T10:31:00+08:00",
+      "price": 1.2256,
+      "iopv": 1.183,
+      "premium": 0.03601,
+      "coverage": 1,
+      "source_quality": "ok"
+    },
+    "pctile_30d": 0.033333
+  },
+  "160706": {
+    "code": "160706",
+    "name": "嘉实沪深300ETF联接A",
+    "type": "index",
+    "scale_yi": 80,
+    "coverage_top10": 0.475,
+    "coverage_breakdown": {
+      "top10_weight": 0.475,
+      "benchmark_assigned_weight": 0.95,
+      "cash_weight": 0.05
+    },
+    "benchmark_raw": "沪深300指数收益率×95%+银行活期存款利率(税后)×5%",
+    "benchmark_components": [
+      {
+        "index_code": "000300.SH",
+        "name": "沪深300指数",
+        "weight": 0.95
+      },
+      {
+        "index_code": "CASH",
+        "name": "银行活期存款利率",
+        "weight": 0.05
+      }
+    ],
+    "holdings_top10": [
+      {
+        "stock_code": "S00001",
+        "stock_name": "样例持仓1",
+        "weight": 0.08
+      },
+      {
+        "stock_code": "S00002",
+        "stock_name": "样例持仓2",
+        "weight": 0.07
+      },
+      {
+        "stock_code": "S00003",
+        "stock_name": "样例持仓3",
+        "weight": 0.06
+      }
+    ],
+    "realtime": {
+      "ts": "2026-06-18T10:31:00+08:00",
+      "price": 0.961,
+      "iopv": 0.961,
+      "premium": 0,
+      "coverage": 1,
+      "source_quality": "ok"
+    },
+    "pctile_30d": 0.033333
+  },
+  "161005": {
+    "code": "161005",
+    "name": "富国天惠成长混合(LOF)A",
+    "type": "active",
+    "scale_yi": 180,
+    "coverage_top10": 0.355,
+    "coverage_breakdown": {
+      "top10_weight": 0.355,
+      "benchmark_assigned_weight": 1,
+      "cash_weight": 0
+    },
+    "benchmark_raw": "沪深300指数收益率×80%+中证综合债券指数收益率×20%",
+    "benchmark_components": [
+      {
+        "index_code": "000300.SH",
+        "name": "沪深300指数",
+        "weight": 0.8
+      },
+      {
+        "index_code": "H11009.CSI",
+        "name": "中证综合债券指数",
+        "weight": 0.2
+      }
+    ],
+    "holdings_top10": [
+      {
+        "stock_code": "S00001",
+        "stock_name": "样例持仓1",
+        "weight": 0.08
+      },
+      {
+        "stock_code": "S00002",
+        "stock_name": "样例持仓2",
+        "weight": 0.07
+      },
+      {
+        "stock_code": "S00003",
+        "stock_name": "样例持仓3",
+        "weight": 0.06
+      }
+    ],
+    "realtime": {
+      "ts": "2026-06-18T10:31:00+08:00",
+      "price": 0.8764,
+      "iopv": 0.887,
+      "premium": -0.01195,
+      "coverage": 1,
+      "source_quality": "ok"
+    },
+    "pctile_30d": 0.033333
+  },
+  "161024": {
+    "code": "161024",
+    "name": "富国中证军工指数(LOF)A",
+    "type": "index",
+    "scale_yi": 18,
+    "coverage_top10": 0.475,
+    "coverage_breakdown": {
+      "top10_weight": 0.475,
+      "benchmark_assigned_weight": 0.95,
+      "cash_weight": 0.05
+    },
+    "benchmark_raw": "中证军工指数收益率×95%+银行活期存款利率(税后)×5%",
+    "benchmark_components": [
+      {
+        "index_code": "399967.SZ",
+        "name": "中证军工指数",
+        "weight": 0.95
+      },
+      {
+        "index_code": "CASH",
+        "name": "银行活期存款利率",
+        "weight": 0.05
+      }
+    ],
+    "holdings_top10": [
+      {
+        "stock_code": "S00001",
+        "stock_name": "样例持仓1",
+        "weight": 0.08
+      },
+      {
+        "stock_code": "S00002",
+        "stock_name": "样例持仓2",
+        "weight": 0.07
+      },
+      {
+        "stock_code": "S00003",
+        "stock_name": "样例持仓3",
+        "weight": 0.06
+      }
+    ],
+    "realtime": {
+      "ts": "2026-06-18T10:31:00+08:00",
+      "price": 1.1356,
+      "iopv": 1.109,
+      "premium": 0.023986,
+      "coverage": 1,
+      "source_quality": "ok"
+    },
+    "pctile_30d": 0.033333
+  },
+  "161725": {
+    "code": "161725",
+    "name": "招商中证白酒指数(LOF)A",
+    "type": "index",
+    "scale_yi": 300,
+    "coverage_top10": 0.475,
+    "coverage_breakdown": {
+      "top10_weight": 0.475,
+      "benchmark_assigned_weight": 0.95,
+      "cash_weight": 0.05
+    },
+    "benchmark_raw": "中证白酒指数收益率×95%+银行活期存款利率(税后)×5%",
+    "benchmark_components": [
+      {
+        "index_code": "399997.SZ",
+        "name": "中证白酒指数",
+        "weight": 0.95
+      },
+      {
+        "index_code": "CASH",
+        "name": "银行活期存款利率",
+        "weight": 0.05
+      }
+    ],
+    "holdings_top10": [
+      {
+        "stock_code": "S00001",
+        "stock_name": "样例持仓1",
+        "weight": 0.08
+      },
+      {
+        "stock_code": "S00002",
+        "stock_name": "样例持仓2",
+        "weight": 0.07
+      },
+      {
+        "stock_code": "S00003",
+        "stock_name": "样例持仓3",
+        "weight": 0.06
+      }
+    ],
+    "realtime": {
+      "ts": "2026-06-18T10:31:00+08:00",
+      "price": 0.8347,
+      "iopv": 0.85,
+      "premium": -0.018,
+      "coverage": 1,
+      "source_quality": "ok"
+    },
+    "pctile_30d": 0.033333
+  },
+  "161903": {
+    "code": "161903",
+    "name": "万家行业优选混合(LOF)",
+    "type": "active",
+    "scale_yi": 8,
+    "coverage_top10": 0.495,
+    "coverage_breakdown": {
+      "top10_weight": 0.495,
+      "benchmark_assigned_weight": 1,
+      "cash_weight": 0
+    },
+    "benchmark_raw": "沪深300指数收益率×75%+中证综合债券指数收益率×25%",
+    "benchmark_components": [
+      {
+        "index_code": "000300.SH",
+        "name": "沪深300指数",
+        "weight": 0.75
+      },
+      {
+        "index_code": "H11009.CSI",
+        "name": "中证综合债券指数",
+        "weight": 0.25
+      }
+    ],
+    "holdings_top10": [
+      {
+        "stock_code": "S00001",
+        "stock_name": "样例持仓1",
+        "weight": 0.08
+      },
+      {
+        "stock_code": "S00002",
+        "stock_name": "样例持仓2",
+        "weight": 0.07
+      },
+      {
+        "stock_code": "S00003",
+        "stock_name": "样例持仓3",
+        "weight": 0.06
+      }
+    ],
+    "realtime": {
+      "ts": "2026-06-18T10:31:00+08:00",
+      "price": 1.2419,
+      "iopv": 1.257,
+      "premium": -0.012013,
+      "coverage": 1,
+      "source_quality": "ok"
+    },
+    "pctile_30d": 0.033333
+  },
+  "162605": {
+    "code": "162605",
+    "name": "景顺长城鼎益混合(LOF)A",
+    "type": "active",
+    "scale_yi": 30,
+    "coverage_top10": 0.32,
+    "coverage_breakdown": {
+      "top10_weight": 0.32,
+      "benchmark_assigned_weight": 1,
+      "cash_weight": 0
+    },
+    "benchmark_raw": "沪深300指数收益率×80%+中证综合债券指数收益率×20%",
+    "benchmark_components": [
+      {
+        "index_code": "000300.SH",
+        "name": "沪深300指数",
+        "weight": 0.8
+      },
+      {
+        "index_code": "H11009.CSI",
+        "name": "中证综合债券指数",
+        "weight": 0.2
+      }
+    ],
+    "holdings_top10": [
+      {
+        "stock_code": "S00001",
+        "stock_name": "样例持仓1",
+        "weight": 0.08
+      },
+      {
+        "stock_code": "S00002",
+        "stock_name": "样例持仓2",
+        "weight": 0.07
+      },
+      {
+        "stock_code": "S00003",
+        "stock_name": "样例持仓3",
+        "weight": 0.06
+      }
+    ],
+    "realtime": {
+      "ts": "2026-06-18T10:31:00+08:00",
+      "price": 1.0913,
+      "iopv": 1.072,
+      "premium": 0.018004,
+      "coverage": 1,
+      "source_quality": "ok"
+    },
+    "pctile_30d": 0.033333
+  },
+  "163406": {
+    "code": "163406",
+    "name": "兴全合润混合A",
+    "type": "active",
+    "scale_yi": 150,
+    "coverage_top10": 0.39,
+    "coverage_breakdown": {
+      "top10_weight": 0.39,
+      "benchmark_assigned_weight": 1,
+      "cash_weight": 0
+    },
+    "benchmark_raw": "沪深300指数收益率×75%+上证国债指数收益率×25%",
+    "benchmark_components": [
+      {
+        "index_code": "000300.SH",
+        "name": "沪深300指数",
+        "weight": 0.75
+      },
+      {
+        "index_code": "000012.SH",
+        "name": "上证国债指数",
+        "weight": 0.25
+      }
+    ],
+    "holdings_top10": [
+      {
+        "stock_code": "S00001",
+        "stock_name": "样例持仓1",
+        "weight": 0.08
+      },
+      {
+        "stock_code": "S00002",
+        "stock_name": "样例持仓2",
+        "weight": 0.07
+      },
+      {
+        "stock_code": "S00003",
+        "stock_name": "样例持仓3",
+        "weight": 0.06
+      }
+    ],
+    "realtime": {
+      "ts": "2026-06-18T10:31:00+08:00",
+      "price": 0.9185,
+      "iopv": 0.924,
+      "premium": -0.005952,
+      "coverage": 1,
+      "source_quality": "ok"
+    },
+    "pctile_30d": 0.033333
+  },
+  "501050": {
+    "code": "501050",
+    "name": "华夏上证50AH优选指数A",
+    "type": "index",
+    "scale_yi": 40,
+    "coverage_top10": 0.475,
+    "coverage_breakdown": {
+      "top10_weight": 0.475,
+      "benchmark_assigned_weight": 0.95,
+      "cash_weight": 0.05
+    },
+    "benchmark_raw": "上证50AH优选指数收益率×95%+银行活期存款利率(税后)×5%",
+    "benchmark_components": [
+      {
+        "index_code": "950090.CSI",
+        "name": "上证50AH优选指数",
+        "weight": 0.95
+      },
+      {
+        "index_code": "CASH",
+        "name": "银行活期存款利率",
+        "weight": 0.05
+      }
+    ],
+    "holdings_top10": [
+      {
+        "stock_code": "S00001",
+        "stock_name": "样例持仓1",
+        "weight": 0.08
+      },
+      {
+        "stock_code": "S00002",
+        "stock_name": "样例持仓2",
+        "weight": 0.07
+      },
+      {
+        "stock_code": "S00003",
+        "stock_name": "样例持仓3",
+        "weight": 0.06
+      }
+    ],
+    "realtime": {
+      "ts": "2026-06-18T10:31:00+08:00",
+      "price": 1.004,
+      "iopv": 0.998,
+      "premium": 0.006012,
+      "coverage": 1,
+      "source_quality": "ok"
+    },
+    "pctile_30d": 0.033333
+  },
+  "501057": {
+    "code": "501057",
+    "name": "汇添富中证新能源汽车产业指数(LOF)A",
+    "type": "index",
+    "scale_yi": 4,
+    "coverage_top10": 0.475,
+    "coverage_breakdown": {
+      "top10_weight": 0.475,
+      "benchmark_assigned_weight": 0.95,
+      "cash_weight": 0.05
+    },
+    "benchmark_raw": "中证新能源汽车产业指数收益率×95%+银行活期存款利率(税后)×5%",
+    "benchmark_components": [
+      {
+        "index_code": "930997.CSI",
+        "name": "中证新能源汽车产业指数",
+        "weight": 0.95
+      },
+      {
+        "index_code": "CASH",
+        "name": "银行活期存款利率",
+        "weight": 0.05
+      }
+    ],
+    "holdings_top10": [
+      {
+        "stock_code": "S00001",
+        "stock_name": "样例持仓1",
+        "weight": 0.08
+      },
+      {
+        "stock_code": "S00002",
+        "stock_name": "样例持仓2",
+        "weight": 0.07
+      },
+      {
+        "stock_code": "S00003",
+        "stock_name": "样例持仓3",
+        "weight": 0.06
+      }
+    ],
+    "realtime": {
+      "ts": "2026-06-18T10:31:00+08:00",
+      "price": 1.257,
+      "iopv": 1.257,
+      "premium": 0,
+      "coverage": 1,
+      "source_quality": "ok"
+    },
+    "pctile_30d": 0.033333
+  },
+  "501077": {
+    "code": "501077",
+    "name": "富国创新企业灵活配置混合(LOF)A",
+    "type": "active",
+    "scale_yi": 4,
+    "coverage_top10": 0.46,
+    "coverage_breakdown": {
+      "top10_weight": 0.46,
+      "benchmark_assigned_weight": 1,
+      "cash_weight": 0
+    },
+    "benchmark_raw": "沪深300指数收益率×75%+中证综合债券指数收益率×25%",
+    "benchmark_components": [
+      {
+        "index_code": "000300.SH",
+        "name": "沪深300指数",
+        "weight": 0.75
+      },
+      {
+        "index_code": "H11009.CSI",
+        "name": "中证综合债券指数",
+        "weight": 0.25
+      }
+    ],
+    "holdings_top10": [
+      {
+        "stock_code": "S00001",
+        "stock_name": "样例持仓1",
+        "weight": 0.08
+      },
+      {
+        "stock_code": "S00002",
+        "stock_name": "样例持仓2",
+        "weight": 0.07
+      },
+      {
+        "stock_code": "S00003",
+        "stock_name": "样例持仓3",
+        "weight": 0.06
+      }
+    ],
+    "realtime": {
+      "ts": "2026-06-18T10:31:00+08:00",
+      "price": 1.2127,
+      "iopv": 1.22,
+      "premium": -0.005984,
+      "coverage": 1,
+      "source_quality": "ok"
+    },
+    "pctile_30d": 0.033333
+  },
+  "501078": {
+    "code": "501078",
+    "name": "广发科创主题灵活配置混合(LOF)",
+    "type": "active",
+    "scale_yi": 4,
+    "coverage_top10": 0.355,
+    "coverage_breakdown": {
+      "top10_weight": 0.355,
+      "benchmark_assigned_weight": 1,
+      "cash_weight": 0
+    },
+    "benchmark_raw": "中国战略新兴产业成份指数收益率×70%+中证综合债券指数收益率×30%",
+    "benchmark_components": [
+      {
+        "index_code": "000891.CSI",
+        "name": "中国战略新兴产业成份指数",
+        "weight": 0.7
+      },
+      {
+        "index_code": "H11009.CSI",
+        "name": "中证综合债券指数",
+        "weight": 0.3
+      }
+    ],
+    "holdings_top10": [
+      {
+        "stock_code": "S00001",
+        "stock_name": "样例持仓1",
+        "weight": 0.08
+      },
+      {
+        "stock_code": "S00002",
+        "stock_name": "样例持仓2",
+        "weight": 0.07
+      },
+      {
+        "stock_code": "S00003",
+        "stock_name": "样例持仓3",
+        "weight": 0.06
+      }
+    ],
+    "realtime": {
+      "ts": "2026-06-18T10:31:00+08:00",
+      "price": 0.8976,
+      "iopv": 0.887,
+      "premium": 0.01195,
+      "coverage": 1,
+      "source_quality": "ok"
+    },
+    "pctile_30d": 0.033333
+  },
+  "501081": {
+    "code": "501081",
+    "name": "中欧科创主题混合(LOF)A",
+    "type": "active",
+    "scale_yi": 4,
+    "coverage_top10": 0.46,
+    "coverage_breakdown": {
+      "top10_weight": 0.46,
+      "benchmark_assigned_weight": 1,
+      "cash_weight": 0
+    },
+    "benchmark_raw": "中国战略新兴产业成份指数收益率×70%+中证综合债券指数收益率×30%",
+    "benchmark_components": [
+      {
+        "index_code": "000891.CSI",
+        "name": "中国战略新兴产业成份指数",
+        "weight": 0.7
+      },
+      {
+        "index_code": "H11009.CSI",
+        "name": "中证综合债券指数",
+        "weight": 0.3
+      }
+    ],
+    "holdings_top10": [
+      {
+        "stock_code": "S00001",
+        "stock_name": "样例持仓1",
+        "weight": 0.08
+      },
+      {
+        "stock_code": "S00002",
+        "stock_name": "样例持仓2",
+        "weight": 0.07
+      },
+      {
+        "stock_code": "S00003",
+        "stock_name": "样例持仓3",
+        "weight": 0.06
+      }
+    ],
+    "realtime": {
+      "ts": "2026-06-18T10:31:00+08:00",
+      "price": 1.0279,
+      "iopv": 0.998,
+      "premium": 0.02996,
+      "coverage": 1,
+      "source_quality": "ok"
+    },
+    "pctile_30d": 0.033333
+  },
+  "501085": {
+    "code": "501085",
+    "name": "财通科创主题灵活配置混合(LOF)",
+    "type": "active",
+    "scale_yi": 4,
+    "coverage_top10": 0.355,
+    "coverage_breakdown": {
+      "top10_weight": 0.355,
+      "benchmark_assigned_weight": 1,
+      "cash_weight": 0
+    },
+    "benchmark_raw": "中国战略新兴产业成份指数收益率×70%+中证综合债券指数收益率×30%",
+    "benchmark_components": [
+      {
+        "index_code": "000891.CSI",
+        "name": "中国战略新兴产业成份指数",
+        "weight": 0.7
+      },
+      {
+        "index_code": "H11009.CSI",
+        "name": "中证综合债券指数",
+        "weight": 0.3
+      }
+    ],
+    "holdings_top10": [
+      {
+        "stock_code": "S00001",
+        "stock_name": "样例持仓1",
+        "weight": 0.08
+      },
+      {
+        "stock_code": "S00002",
+        "stock_name": "样例持仓2",
+        "weight": 0.07
+      },
+      {
+        "stock_code": "S00003",
+        "stock_name": "样例持仓3",
+        "weight": 0.06
+      }
+    ],
+    "realtime": {
+      "ts": "2026-06-18T10:31:00+08:00",
+      "price": 1.1489,
+      "iopv": 1.109,
+      "premium": 0.035978,
+      "coverage": 1,
+      "source_quality": "ok"
+    },
+    "pctile_30d": 0.033333
+  },
+  "501090": {
+    "code": "501090",
+    "name": "华宝中证消费龙头ETF联接A",
+    "type": "index",
+    "scale_yi": 4,
+    "coverage_top10": 0.475,
+    "coverage_breakdown": {
+      "top10_weight": 0.475,
+      "benchmark_assigned_weight": 0.95,
+      "cash_weight": 0.05
+    },
+    "benchmark_raw": "中证消费龙头指数收益率×95%+银行活期存款利率(税后)×5%",
+    "benchmark_components": [
+      {
+        "index_code": "931068.CSI",
+        "name": "中证消费龙头指数",
+        "weight": 0.95
+      },
+      {
+        "index_code": "CASH",
+        "name": "银行活期存款利率",
+        "weight": 0.05
+      }
+    ],
+    "holdings_top10": [
+      {
+        "stock_code": "S00001",
+        "stock_name": "样例持仓1",
+        "weight": 0.08
+      },
+      {
+        "stock_code": "S00002",
+        "stock_name": "样例持仓2",
+        "weight": 0.07
+      },
+      {
+        "stock_code": "S00003",
+        "stock_name": "样例持仓3",
+        "weight": 0.06
+      }
+    ],
+    "realtime": {
+      "ts": "2026-06-18T10:31:00+08:00",
+      "price": 0.9841,
+      "iopv": 0.961,
+      "premium": 0.024037,
+      "coverage": 1,
+      "source_quality": "ok"
+    },
+    "pctile_30d": 0.033333
+  },
+  "501095": {
+    "code": "501095",
+    "name": "中银证券科技创新混合(LOF)",
+    "type": "active",
+    "scale_yi": 4,
+    "coverage_top10": 0.425,
+    "coverage_breakdown": {
+      "top10_weight": 0.425,
+      "benchmark_assigned_weight": 1,
+      "cash_weight": 0
+    },
+    "benchmark_raw": "中国战略新兴产业成份指数收益率×70%+中证综合债券指数收益率×30%",
+    "benchmark_components": [
+      {
+        "index_code": "000891.CSI",
+        "name": "中国战略新兴产业成份指数",
+        "weight": 0.7
+      },
+      {
+        "index_code": "H11009.CSI",
+        "name": "中证综合债券指数",
+        "weight": 0.3
+      }
+    ],
+    "holdings_top10": [
+      {
+        "stock_code": "S00001",
+        "stock_name": "样例持仓1",
+        "weight": 0.08
+      },
+      {
+        "stock_code": "S00002",
+        "stock_name": "样例持仓2",
+        "weight": 0.07
+      },
+      {
+        "stock_code": "S00003",
+        "stock_name": "样例持仓3",
+        "weight": 0.06
+      }
+    ],
+    "realtime": {
+      "ts": "2026-06-18T10:31:00+08:00",
+      "price": 1.1688,
+      "iopv": 1.183,
+      "premium": -0.012003,
+      "coverage": 1,
+      "source_quality": "ok"
+    },
+    "pctile_30d": 0.033333
+  },
+  "501096": {
+    "code": "501096",
+    "name": "国联安科创混合(LOF)",
+    "type": "active",
+    "scale_yi": 6,
+    "coverage_top10": 0.39,
+    "coverage_breakdown": {
+      "top10_weight": 0.39,
+      "benchmark_assigned_weight": 1,
+      "cash_weight": 0
+    },
+    "benchmark_raw": "中国战略新兴产业成份指数收益率×70%+中证综合债券指数收益率×30%",
+    "benchmark_components": [
+      {
+        "index_code": "000891.CSI",
+        "name": "中国战略新兴产业成份指数",
+        "weight": 0.7
+      },
+      {
+        "index_code": "H11009.CSI",
+        "name": "中证综合债券指数",
+        "weight": 0.3
+      }
+    ],
+    "holdings_top10": [
+      {
+        "stock_code": "S00001",
+        "stock_name": "样例持仓1",
+        "weight": 0.08
+      },
+      {
+        "stock_code": "S00002",
+        "stock_name": "样例持仓2",
+        "weight": 0.07
+      },
+      {
+        "stock_code": "S00003",
+        "stock_name": "样例持仓3",
+        "weight": 0.06
+      }
+    ],
+    "realtime": {
+      "ts": "2026-06-18T10:31:00+08:00",
+      "price": 0.9295,
+      "iopv": 0.924,
+      "premium": 0.005952,
+      "coverage": 1,
+      "source_quality": "ok"
+    },
+    "pctile_30d": 0.033333
+  },
+  "501097": {
+    "code": "501097",
+    "name": "国寿安保科技创新混合(LOF)",
+    "type": "active",
+    "scale_yi": 4,
+    "coverage_top10": 0.39,
+    "coverage_breakdown": {
+      "top10_weight": 0.39,
+      "benchmark_assigned_weight": 1,
+      "cash_weight": 0
+    },
+    "benchmark_raw": "中国战略新兴产业成份指数收益率×70%+中证综合债券指数收益率×30%",
+    "benchmark_components": [
+      {
+        "index_code": "000891.CSI",
+        "name": "中国战略新兴产业成份指数",
+        "weight": 0.7
+      },
+      {
+        "index_code": "H11009.CSI",
+        "name": "中证综合债券指数",
+        "weight": 0.3
+      }
+    ],
+    "holdings_top10": [
+      {
+        "stock_code": "S00001",
+        "stock_name": "样例持仓1",
+        "weight": 0.08
+      },
+      {
+        "stock_code": "S00002",
+        "stock_name": "样例持仓2",
+        "weight": 0.07
+      },
+      {
+        "stock_code": "S00003",
+        "stock_name": "样例持仓3",
+        "weight": 0.06
+      }
+    ],
+    "realtime": {
+      "ts": "2026-06-18T10:31:00+08:00",
+      "price": 0.9406,
+      "iopv": 0.924,
+      "premium": 0.017965,
+      "coverage": 1,
+      "source_quality": "ok"
+    },
+    "pctile_30d": 0.033333
+  },
+  "501099": {
+    "code": "501099",
+    "name": "平安新兴产业混合(LOF)",
+    "type": "active",
+    "scale_yi": 6,
+    "coverage_top10": 0.425,
+    "coverage_breakdown": {
+      "top10_weight": 0.425,
+      "benchmark_assigned_weight": 1,
+      "cash_weight": 0
+    },
+    "benchmark_raw": "中国战略新兴产业成份指数收益率×70%+中证综合债券指数收益率×30%",
+    "benchmark_components": [
+      {
+        "index_code": "000891.CSI",
+        "name": "中国战略新兴产业成份指数",
+        "weight": 0.7
+      },
+      {
+        "index_code": "H11009.CSI",
+        "name": "中证综合债券指数",
+        "weight": 0.3
+      }
+    ],
+    "holdings_top10": [
+      {
+        "stock_code": "S00001",
+        "stock_name": "样例持仓1",
+        "weight": 0.08
+      },
+      {
+        "stock_code": "S00002",
+        "stock_name": "样例持仓2",
+        "weight": 0.07
+      },
+      {
+        "stock_code": "S00003",
+        "stock_name": "样例持仓3",
+        "weight": 0.06
+      }
+    ],
+    "realtime": {
+      "ts": "2026-06-18T10:31:00+08:00",
+      "price": 0.9725,
+      "iopv": 0.961,
+      "premium": 0.011967,
+      "coverage": 1,
+      "source_quality": "ok"
+    },
+    "pctile_30d": 0.033333
+  },
+  "501201": {
+    "code": "501201",
+    "name": "红土创新科技创新股票(LOF)A",
+    "type": "active",
+    "scale_yi": 6,
+    "coverage_top10": 0.46,
+    "coverage_breakdown": {
+      "top10_weight": 0.46,
+      "benchmark_assigned_weight": 1,
+      "cash_weight": 0
+    },
+    "benchmark_raw": "中国战略新兴产业成份指数收益率×80%+中证综合债券指数收益率×20%",
+    "benchmark_components": [
+      {
+        "index_code": "000891.CSI",
+        "name": "中国战略新兴产业成份指数",
+        "weight": 0.8
+      },
+      {
+        "index_code": "H11009.CSI",
+        "name": "中证综合债券指数",
+        "weight": 0.2
+      }
+    ],
+    "holdings_top10": [
+      {
+        "stock_code": "S00001",
+        "stock_name": "样例持仓1",
+        "weight": 0.08
+      },
+      {
+        "stock_code": "S00002",
+        "stock_name": "样例持仓2",
+        "weight": 0.07
+      },
+      {
+        "stock_code": "S00003",
+        "stock_name": "样例持仓3",
+        "weight": 0.06
+      }
+    ],
+    "realtime": {
+      "ts": "2026-06-18T10:31:00+08:00",
+      "price": 1.016,
+      "iopv": 0.998,
+      "premium": 0.018036,
+      "coverage": 1,
+      "source_quality": "ok"
+    },
+    "pctile_30d": 0.033333
+  },
+  "501203": {
+    "code": "501203",
+    "name": "易方达创新未来混合(LOF)",
+    "type": "active",
+    "scale_yi": 5,
+    "coverage_top10": 0.495,
+    "coverage_breakdown": {
+      "top10_weight": 0.495,
+      "benchmark_assigned_weight": 1,
+      "cash_weight": 0
+    },
+    "benchmark_raw": "沪深300指数收益率×75%+中证综合债券指数收益率×25%",
+    "benchmark_components": [
+      {
+        "index_code": "000300.SH",
+        "name": "沪深300指数",
+        "weight": 0.75
+      },
+      {
+        "index_code": "H11009.CSI",
+        "name": "中证综合债券指数",
+        "weight": 0.25
+      }
+    ],
+    "holdings_top10": [
+      {
+        "stock_code": "S00001",
+        "stock_name": "样例持仓1",
+        "weight": 0.08
+      },
+      {
+        "stock_code": "S00002",
+        "stock_name": "样例持仓2",
+        "weight": 0.07
+      },
+      {
+        "stock_code": "S00003",
+        "stock_name": "样例持仓3",
+        "weight": 0.06
+      }
+    ],
+    "realtime": {
+      "ts": "2026-06-18T10:31:00+08:00",
+      "price": 1.0598,
+      "iopv": 1.035,
+      "premium": 0.023961,
+      "coverage": 1,
+      "source_quality": "ok"
+    },
+    "pctile_30d": 0.033333
+  },
+  "501205": {
+    "code": "501205",
+    "name": "鹏华创新未来混合(LOF)C",
+    "type": "active",
+    "scale_yi": 12,
+    "coverage_top10": 0.355,
+    "coverage_breakdown": {
+      "top10_weight": 0.355,
+      "benchmark_assigned_weight": 1,
+      "cash_weight": 0
+    },
+    "benchmark_raw": "沪深300指数收益率×75%+中证综合债券指数收益率×25%",
+    "benchmark_components": [
+      {
+        "index_code": "000300.SH",
+        "name": "沪深300指数",
+        "weight": 0.75
+      },
+      {
+        "index_code": "H11009.CSI",
+        "name": "中证综合债券指数",
+        "weight": 0.25
+      }
+    ],
+    "holdings_top10": [
+      {
+        "stock_code": "S00001",
+        "stock_name": "样例持仓1",
+        "weight": 0.08
+      },
+      {
+        "stock_code": "S00002",
+        "stock_name": "样例持仓2",
+        "weight": 0.07
+      },
+      {
+        "stock_code": "S00003",
+        "stock_name": "样例持仓3",
+        "weight": 0.06
+      }
+    ],
+    "realtime": {
+      "ts": "2026-06-18T10:31:00+08:00",
+      "price": 0.887,
+      "iopv": 0.887,
+      "premium": 0,
+      "coverage": 1,
+      "source_quality": "ok"
+    },
+    "pctile_30d": 0.033333
+  },
+  "501206": {
+    "code": "501206",
+    "name": "汇添富创新未来混合(LOF)",
+    "type": "active",
+    "scale_yi": 4,
+    "coverage_top10": 0.32,
+    "coverage_breakdown": {
+      "top10_weight": 0.32,
+      "benchmark_assigned_weight": 1,
+      "cash_weight": 0
+    },
+    "benchmark_raw": "沪深300指数收益率×75%+中证综合债券指数收益率×25%",
+    "benchmark_components": [
+      {
+        "index_code": "000300.SH",
+        "name": "沪深300指数",
+        "weight": 0.75
+      },
+      {
+        "index_code": "H11009.CSI",
+        "name": "中证综合债券指数",
+        "weight": 0.25
+      }
+    ],
+    "holdings_top10": [
+      {
+        "stock_code": "S00001",
+        "stock_name": "样例持仓1",
+        "weight": 0.08
+      },
+      {
+        "stock_code": "S00002",
+        "stock_name": "样例持仓2",
+        "weight": 0.07
+      },
+      {
+        "stock_code": "S00003",
+        "stock_name": "样例持仓3",
+        "weight": 0.06
+      }
+    ],
+    "realtime": {
+      "ts": "2026-06-18T10:31:00+08:00",
+      "price": 0.8551,
+      "iopv": 0.85,
+      "premium": 0.006,
+      "coverage": 1,
+      "source_quality": "ok"
+    },
+    "pctile_30d": 0.033333
+  },
+  "501208": {
+    "code": "501208",
+    "name": "中欧创新未来混合(LOF)",
+    "type": "active",
+    "scale_yi": 5,
+    "coverage_top10": 0.32,
+    "coverage_breakdown": {
+      "top10_weight": 0.32,
+      "benchmark_assigned_weight": 1,
+      "cash_weight": 0
+    },
+    "benchmark_raw": "沪深300指数收益率×75%+中证综合债券指数收益率×25%",
+    "benchmark_components": [
+      {
+        "index_code": "000300.SH",
+        "name": "沪深300指数",
+        "weight": 0.75
+      },
+      {
+        "index_code": "H11009.CSI",
+        "name": "中证综合债券指数",
+        "weight": 0.25
+      }
+    ],
+    "holdings_top10": [
+      {
+        "stock_code": "S00001",
+        "stock_name": "样例持仓1",
+        "weight": 0.08
+      },
+      {
+        "stock_code": "S00002",
+        "stock_name": "样例持仓2",
+        "weight": 0.07
+      },
+      {
+        "stock_code": "S00003",
+        "stock_name": "样例持仓3",
+        "weight": 0.06
+      }
+    ],
+    "realtime": {
+      "ts": "2026-06-18T10:31:00+08:00",
+      "price": 1.1042,
+      "iopv": 1.072,
+      "premium": 0.030037,
+      "coverage": 1,
+      "source_quality": "ok"
+    },
+    "pctile_30d": 0.033333
+  },
+  "501219": {
+    "code": "501219",
+    "name": "华夏智胜先锋股票(LOF)A",
+    "type": "active",
+    "scale_yi": 4,
+    "coverage_top10": 0.39,
+    "coverage_breakdown": {
+      "top10_weight": 0.39,
+      "benchmark_assigned_weight": 1,
+      "cash_weight": 0
+    },
+    "benchmark_raw": "中证800指数收益率×80%+中证综合债券指数收益率×20%",
+    "benchmark_components": [
+      {
+        "index_code": "000906.SH",
+        "name": "中证800指数",
+        "weight": 0.8
+      },
+      {
+        "index_code": "H11009.CSI",
+        "name": "中证综合债券指数",
+        "weight": 0.2
+      }
+    ],
+    "holdings_top10": [
+      {
+        "stock_code": "S00001",
+        "stock_name": "样例持仓1",
+        "weight": 0.08
+      },
+      {
+        "stock_code": "S00002",
+        "stock_name": "样例持仓2",
+        "weight": 0.07
+      },
+      {
+        "stock_code": "S00003",
+        "stock_name": "样例持仓3",
+        "weight": 0.06
+      }
+    ],
+    "realtime": {
+      "ts": "2026-06-18T10:31:00+08:00",
+      "price": 1.1254,
+      "iopv": 1.146,
+      "premium": -0.017976,
+      "coverage": 1,
+      "source_quality": "ok"
+    },
+    "pctile_30d": 0.033333
+  },
+  "501227": {
+    "code": "501227",
+    "name": "泓德红利优选混合(LOF)A",
+    "type": "active",
+    "scale_yi": 12,
+    "coverage_top10": 0.32,
+    "coverage_breakdown": {
+      "top10_weight": 0.32,
+      "benchmark_assigned_weight": 1,
+      "cash_weight": 0
+    },
+    "benchmark_raw": "沪深300指数收益率×75%+中证综合债券指数收益率×25%",
+    "benchmark_components": [
+      {
+        "index_code": "000300.SH",
+        "name": "沪深300指数",
+        "weight": 0.75
+      },
+      {
+        "index_code": "H11009.CSI",
+        "name": "中证综合债券指数",
+        "weight": 0.25
+      }
+    ],
+    "holdings_top10": [
+      {
+        "stock_code": "S00001",
+        "stock_name": "样例持仓1",
+        "weight": 0.08
+      },
+      {
+        "stock_code": "S00002",
+        "stock_name": "样例持仓2",
+        "weight": 0.07
+      },
+      {
+        "stock_code": "S00003",
+        "stock_name": "样例持仓3",
+        "weight": 0.06
+      }
+    ],
+    "realtime": {
+      "ts": "2026-06-18T10:31:00+08:00",
+      "price": 0.8449,
+      "iopv": 0.85,
+      "premium": -0.006,
+      "coverage": 1,
+      "source_quality": "ok"
+    },
+    "pctile_30d": 0.033333
+  },
+  "501311": {
+    "code": "501311",
+    "name": "嘉实港股通新经济指数A",
+    "type": "index",
+    "scale_yi": 4,
+    "coverage_top10": 0.475,
+    "coverage_breakdown": {
+      "top10_weight": 0.475,
+      "benchmark_assigned_weight": 0.95,
+      "cash_weight": 0.05
+    },
+    "benchmark_raw": "中证港股通新经济指数收益率×95%+银行活期存款利率(税后)×5%",
+    "benchmark_components": [
+      {
+        "index_code": "930709.CSI",
+        "name": "中证港股通新经济指数",
+        "weight": 0.95
+      },
+      {
+        "index_code": "CASH",
+        "name": "银行活期存款利率",
+        "weight": 0.05
+      }
+    ],
+    "holdings_top10": [
+      {
+        "stock_code": "S00001",
+        "stock_name": "样例持仓1",
+        "weight": 0.08
+      },
+      {
+        "stock_code": "S00002",
+        "stock_name": "样例持仓2",
+        "weight": 0.07
+      },
+      {
+        "stock_code": "S00003",
+        "stock_name": "样例持仓3",
+        "weight": 0.06
+      }
+    ],
+    "realtime": {
+      "ts": "2026-06-18T10:31:00+08:00",
+      "price": 1.0723,
+      "iopv": 1.035,
+      "premium": 0.036039,
+      "coverage": 1,
+      "source_quality": "ok"
+    },
+    "pctile_30d": 0.033333
+  }
+}
