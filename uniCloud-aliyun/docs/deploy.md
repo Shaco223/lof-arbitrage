@@ -144,3 +144,55 @@ python -m fetcher.main ac-evidence --output-dir ..\outputs
 - `outputs/backend-ac-s1-quota-estimate-v2.json`??????????
 
 AC-S1 ?? 3 ???????????????????????????? dev-005 ?????????
+
+## 本地真实 API 服务（默认联调入口）
+
+为避免继续消耗线上 uniCloud 免费配额，M1 后续前后端/测试联调默认使用本地真实 API 服务。该服务不是前端 mock；它在本机以 HTTP 方式暴露与线上 URL 化云函数一致的四个路径，并复用 `cloudfunctions/` 中的业务实现和 `tests/sample-dataset.json` 数据。
+
+### 启动命令
+
+```powershell
+cd uniCloud-aliyun
+$env:LOCAL_API_PORT='8787'
+$env:UNICLOUD_INGEST_TOKEN='local-dev-token'
+node local-api-server.js
+```
+
+启动后 base URL：
+
+```text
+http://localhost:8787
+```
+
+四个接口路径与线上一致：
+
+- `GET /lof-list?sort=code`
+- `GET /lof-detail?code=160119`
+- `GET /lof-history?code=160119&days=30`
+- `POST /lof-ingest`，Header：`X-Ingest-Token: local-dev-token`
+
+### 前端本地真实接口配置
+
+```env
+VITE_USE_MOCK=false
+VITE_API_BASE=http://localhost:8787
+VITE_API_FN_LIST=lof-list
+VITE_API_FN_DETAIL=lof-detail
+VITE_API_FN_HISTORY=lof-history
+VITE_API_FN_INGEST=lof-ingest
+```
+
+前端联调只读页面不得调用 `lof-ingest`，也不需要 token。
+
+### 本地 smoke
+
+```powershell
+node uniCloud-aliyun\tests\local-http-smoke.test.js
+```
+
+覆盖项：
+
+- `lof-list` 返回 30 行 v2 池。
+- `lof-detail` 返回 `coverage_breakdown` 与 `realtime`。
+- `lof-history?days=30` 返回不少于 20 个交易日样例。
+- `lof-ingest` 保留 token 校验：缺 token 返回 `4010`，带本地 token 正常返回 `accepted=30,rejected=0`。

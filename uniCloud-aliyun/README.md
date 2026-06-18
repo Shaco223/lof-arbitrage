@@ -44,3 +44,20 @@ uniCloud-aliyun/
 ## 不要做
 - 不直接拉外部数据源（这是 lof-fetcher 的职责）
 - 不超免费额度：云函数 5 万/日、库读 5 万、库写 3 万
+
+## 本地真实 API 服务
+
+M1 联调默认使用本地真实 API，避免消耗线上 uniCloud 配额。启动命令：
+
+```powershell
+cd uniCloud-aliyun
+$env:LOCAL_API_PORT='8787'
+$env:UNICLOUD_INGEST_TOKEN='local-dev-token'
+node local-api-server.js
+```
+
+Base URL：`http://localhost:8787`。接口路径与线上一致：`lof-list` / `lof-detail` / `lof-history` / `lof-ingest`。本地 smoke：
+
+```powershell
+node uniCloud-aliyun\tests\local-http-smoke.test.js
+```
