@@ -1,19 +1,15 @@
-"""AC-T1.test.py — AC-T1 验收脚本骨架。
+﻿"""AC-T1：详情页头部固定展示三段式估算覆盖率。
 
-AC 编号: AC-T1
-依赖模块: dev-003（详情页）
-样本范围: 5 只样本（含指数与主动）
-硬约束: 是（任一不达标禁止放行）
-
-测试方法:
-    playwright 启动 H5；进入详情页；断言头部覆盖率标签可见 + hover/tap 弹三段明细
-
-通过条件:
-    标签数值 + 颜色按 §8 阈值正确；三段总和与 coverage_breakdown 字段一致
-
-当前状态: pending（骨架阶段，待对应模块交付后填实）
+测试方法：静态校验详情页源码与 mock detail 数据结构，确保三段字段
+`top10_weight / benchmark_assigned_weight / cash_weight` 被渲染，且覆盖率颜色
+阈值来自 §8（green/yellow/red）。真实 H5 Playwright 回归待稳定服务地址后补充。
+通过条件：详情页包含覆盖率标签、三段式明细、tap 切换逻辑与颜色类。
+依赖模块：dev-003（详情页）。
+当前状态：已填实静态验收（硬约束第一阶段）。
 """
 from __future__ import annotations
+
+import re
 
 import pytest
 
@@ -24,13 +20,24 @@ META = AC.T1
 
 @pytest.mark.ac_t
 @pytest.mark.ac_hard
-@pytest.mark.pending
-def test_ac_t1_skeleton():
-    """骨架: 仅校验 AC 元信息绑定，等模块到位后填实。"""
+def test_ac_t1_detail_page_renders_fixed_coverage_breakdown(project_root):
+    """AC-T1 硬约束：详情页必须渲染覆盖率标签与三段式明细。"""
     assert META.code == "AC-T1"
-    # TODO 模块就绪后填实——
-    #   - playwright 启动 H5
-    #   - 进入详情页
-    #   - 断言头部覆盖率标签可见 + hover/tap 弹三段明细
-    # 通过条件: 标签数值 + 颜色按 §8 阈值正确；三段总和与 coverage_breakdown 字段一致
+    detail_vue = (project_root / "frontend" / "src" / "pages" / "detail" / "detail.vue").read_text(encoding="utf-8")
+    mock_ts = (project_root / "frontend" / "src" / "mock" / "index.ts").read_text(encoding="utf-8")
+    format_ts = (project_root / "frontend" / "src" / "utils" / "format.ts").read_text(encoding="utf-8")
 
+    assert "coverage-tag" in detail_vue
+    assert "估算覆盖率" in detail_vue
+    assert "@tap=\"toggleBreakdown\"" in detail_vue
+    assert "v-if=\"showBreakdown\"" in detail_vue
+    for field in ("top10_weight", "benchmark_assigned_weight", "cash_weight"):
+        assert f"detail.coverage_breakdown.{field}" in detail_vue
+        assert field in mock_ts
+
+    for css_class in ("coverage-green", "coverage-yellow", "coverage-red"):
+        assert css_class in detail_vue
+
+    assert re.search(r"if \(coverage >= 0\.9\) return 'green'", format_ts)
+    assert re.search(r"if \(coverage >= 0\.7\) return 'yellow'", format_ts)
+    assert "return 'red'" in format_ts

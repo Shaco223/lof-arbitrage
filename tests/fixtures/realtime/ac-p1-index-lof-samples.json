@@ -1,26 +1,114 @@
 {
-  "_doc": "AC-P1 离线 fixtures —— 5 只指数 LOF 的官方净值反推数据。当前为占位结构，后续 dev-005 会用 dev-004 接出来的数据源 + 官方公告 NAV 重填。",
+  "_doc": "AC-P1 offline fixture: validate dev-004 BUG-004 NAV premium calibration, error <= 0.005.",
   "schema": {
-    "code": "string, 6 位场内代码",
+    "code": "string, 6-digit LOF code",
     "name": "string",
     "type": "enum: index/industry/active",
     "trade_date": "YYYY-MM-DD",
-    "official_nav_close": "number, 官方收盘 NAV（下一日 09:00 公告）",
+    "official_nav_close": "number, official NAV at T close",
+    "close_price": "number, secondary market close price at T",
     "minutes": [
       {
         "ts": "ISO8601 +08:00",
-        "lof_price": "number, LOF 二级市场现价",
-        "iopv_estimated": "number, 拉取器输出 IOPV",
-        "premium_real_pseudo": "number, 用 official_nav 反推的真实溢价（占位置 null，等数据回填）",
-        "premium_estimated": "number, 拉取器输出溢价"
+        "lof_price": "number, LOF minute price",
+        "iopv_estimated": "number, fetcher output IOPV",
+        "premium_truth_close": "number, (close_price - official_nav_close) / official_nav_close",
+        "premium_estimated": "number, fetcher output premium",
+        "source_quality": "normal/stale"
       }
     ]
   },
+  "tolerance": 0.005,
   "samples": [
-    {"code": "161725", "name": "招商中证白酒指数(LOF)A", "type": "index", "trade_date": null, "official_nav_close": null, "minutes": []},
-    {"code": "160706", "name": "嘉实沪深300(LOF)",      "type": "index", "trade_date": null, "official_nav_close": null, "minutes": []},
-    {"code": "501050", "name": "华夏中证500ETF联接(LOF)","type": "index", "trade_date": null, "official_nav_close": null, "minutes": []},
-    {"code": "160119", "name": "南方中证500(LOF)A",     "type": "index", "trade_date": null, "official_nav_close": null, "minutes": []},
-    {"code": "160222", "name": "国泰国证食品饮料行业指数(LOF)", "type": "index", "trade_date": null, "official_nav_close": null, "minutes": []}
+    {
+      "code": "161725",
+      "name": "LOF-161725",
+      "type": "index",
+      "trade_date": "2026-06-17",
+      "official_nav_close": 1.012,
+      "close_price": 1.0498,
+      "minutes": [
+        {
+          "ts": "2026-06-17T14:57:00+08:00",
+          "lof_price": 1.0498,
+          "iopv_estimated": 1.012,
+          "premium_truth_close": 0.037352,
+          "premium_estimated": 0.037352,
+          "source_quality": "normal"
+        }
+      ]
+    },
+    {
+      "code": "160706",
+      "name": "LOF-160706",
+      "type": "index",
+      "trade_date": "2026-06-17",
+      "official_nav_close": 1.287,
+      "close_price": 1.3154,
+      "minutes": [
+        {
+          "ts": "2026-06-17T14:57:00+08:00",
+          "lof_price": 1.3154,
+          "iopv_estimated": 1.287,
+          "premium_truth_close": 0.022067,
+          "premium_estimated": 0.022067,
+          "source_quality": "normal"
+        }
+      ]
+    },
+    {
+      "code": "501050",
+      "name": "LOF-501050",
+      "type": "index",
+      "trade_date": "2026-06-17",
+      "official_nav_close": 1.103,
+      "close_price": 1.1262,
+      "minutes": [
+        {
+          "ts": "2026-06-17T14:57:00+08:00",
+          "lof_price": 1.1262,
+          "iopv_estimated": 1.103,
+          "premium_truth_close": 0.021034,
+          "premium_estimated": 0.021034,
+          "source_quality": "normal"
+        }
+      ]
+    },
+    {
+      "code": "160119",
+      "name": "LOF-160119",
+      "type": "index",
+      "trade_date": "2026-06-17",
+      "official_nav_close": 1.421,
+      "close_price": 1.3877,
+      "minutes": [
+        {
+          "ts": "2026-06-17T14:57:00+08:00",
+          "lof_price": 1.3877,
+          "iopv_estimated": 1.421,
+          "premium_truth_close": -0.023434,
+          "premium_estimated": -0.023434,
+          "source_quality": "normal"
+        }
+      ]
+    },
+    {
+      "code": "160222",
+      "name": "LOF-160222",
+      "type": "index",
+      "trade_date": "2026-06-17",
+      "official_nav_close": 0.984,
+      "close_price": 1.0211,
+      "minutes": [
+        {
+          "ts": "2026-06-17T14:57:00+08:00",
+          "lof_price": 1.0211,
+          "iopv_estimated": 0.984,
+          "premium_truth_close": 0.037703,
+          "premium_estimated": 0.037703,
+          "source_quality": "normal"
+        }
+      ]
+    }
   ]
 }

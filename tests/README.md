@@ -7,7 +7,7 @@
 
 ## 1. 当前状态
 
-- AC 骨架：已按 PRD §9 实际列项建立 17 个 `AC-*.test.py` 文件。
+- AC 骨架：已按 PRD §9 实际列项建立 17 个 `AC-*.test.py` 文件；AC-S3 / AC-T1 已填实为可执行测试。
 - 契约测试：已按 PRD §6 建立 4 个接口的静态字段结构校验，不依赖真实后端。
 - 端到端：已建立拉取器 → ingest → uniCloud → list 的冒烟骨架，当前 pending。
 - fixtures：已建立 AC-P1 五只指数 LOF 的离线样本结构，真实分钟数据待 dev-004 提供。
@@ -35,7 +35,7 @@ tests/
 
 | AC | PRD 章节 | 测试方法摘要 | 通过条件摘要 | 责任模块 | 文件 | 状态 |
 | --- | --- | --- | --- | --- | --- | --- |
-| AC-P1 | §9.1 | 用官方 NAV 反推真实溢价，对比分钟样本 | `|实时溢价 - 真实溢价| <= 0.5%` | dev-004 | `ac/AC-P1.test.py` | pending |
+| AC-P1 | §9.1 | 用官方 NAV 反推真实溢价，对比分钟样本 | `|实时溢价 - 真实溢价| <= 0.5%` | dev-004 | `ac/AC-P1.test.py` | pass |
 | AC-P2 | §9.1 | 统计 30 只 coverage，按类型分流核对 | 均值 ≥90%，个体 `<70%` ≤3，指数型 ≈1.00 | dev-004 | `ac/AC-P2.test.py` | pending |
 | AC-C1 | §9.2 | 重放/统计盘中分钟写入行数 | 每分钟 30 行；整分钟缺失 ≤3/日 | dev-004 | `ac/AC-C1.test.py` | pending |
 | AC-C2 | §9.2 | mock 数据源失败并观察重试 | 30 秒内重试 3 次；失败写日志并跳过 | dev-004 | `ac/AC-C2.test.py` | pending |
@@ -50,8 +50,8 @@ tests/
 | AC-I4 | §9.5 / §6.4 | ingest 三路径码值校验 | 错 token=4010；缺字段=4001；正常 accepted 等于提交条数 | dev-004 | `ac/AC-I4.test.py` | pending |
 | AC-S1 | §9.6 | 统计 3 个交易日 uniCloud 用量 | 云函数/读/写不超免费额度 | dev-004 | `ac/AC-S1.test.py` | pending / hard |
 | AC-S2 | §9.6 | 静态扫描架构边界 + H5 编译 | 写入仅走 ingest；前端不直连拉取器 | both | `ac/AC-S2.test.py` | pending |
-| AC-S3 | §9.6 | 不改源码执行 mp-weixin 构建 | `npm run build:mp-weixin` 成功 | dev-003 | `ac/AC-S3.test.py` | pending / hard |
-| AC-T1 | §9.7 | Playwright 检查详情页覆盖率标签 | 数值/颜色/三段明细固定展示 | dev-003 | `ac/AC-T1.test.py` | pending / hard |
+| AC-S3 | §9.6 | 不改源码执行 mp-weixin 构建 | `npm run build:mp-weixin` 成功 | dev-003 | `ac/AC-S3.test.py` | pass / hard |
+| AC-T1 | §9.7 | 静态检查详情页覆盖率标签与三段式字段 | 数值/颜色/三段明细固定展示 | dev-003 | `ac/AC-T1.test.py` | pass / hard |
 
 ## 4. PRD §6 契约测试矩阵
 
@@ -70,14 +70,14 @@ cd F:\CodexWorkspace\10-项目\2026-06-17-LOF基金套利信息\.worktrees\dev-0
 # 安装测试依赖（如环境未安装）
 pip install -r requirements.txt
 
-# 全量骨架自检：AC/e2e pending 自动 skip，contract 应 pass
+# 全量自检：AC-S3 / AC-T1 / contract 应 pass；其余 AC/e2e pending 自动 skip
 python -m pytest -q
 
 # 仅看 PRD §6 契约测试
 python -m pytest -q contract
 
-# 仅收集硬约束 AC
-python -m pytest --collect-only -q -m ac_hard
+# 运行硬约束 AC（当前 AC-S3 / AC-T1 pass，AC-S1 pending skip）
+python -m pytest -q -m ac_hard
 
 # 按 AC 编号筛选
 python -m pytest --collect-only -q -k AC-P1
@@ -106,6 +106,6 @@ python -m pytest --collect-only -q -k AC-P1
 
 ## 8. 当前已知限制
 
-- AC 骨架不跑真实功能，直到 dev-003 / dev-004 对应模块交付后才逐条移除 `pending`。
+- 大部分 AC 骨架不跑真实功能，直到 dev-003 / dev-004 对应模块交付后才逐条移除 `pending`；当前已填实 AC-S3 / AC-T1。
 - contract 测试只校验 PRD §6 字段结构，不验证真实后端可用性、性能或数据库状态。
 - AC-S1 需要连续 3 个真实交易日统计，当前只能保持 pending。

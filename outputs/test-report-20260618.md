@@ -172,3 +172,124 @@
 2. **dev-002**：BUG-001 / BUG-002 / BUG-003 / BUG-004 / BUG-005 / BUG-006 / BUG-007 共 7 条 PRD/资产层议题，请按优先级修订或确认现状。
 3. **dev-003**：骨架不会触碰 `frontend/`；AC-T1 / AC-H1 待详情页完成后由我填实，请在详情页 ready 时通知。
 4. **dev-004**：请优先反馈 BUG-004（AC-P1 反推流程定义）+ BUG-001（中证酒指数 / 国证大宗商品指数代码核对）；ingest 端最早交付，将先解锁 AC-I4 / AC-C2。
+
+---
+
+# 测试报告 - 前端演示节点 AC-S3 / AC-T1 回归
+
+- 日期：2026-06-18
+- 测试人：dev-005
+- worktree：`.worktrees/dev-005-test`
+- 分支：`feat/tests-ac-skeleton`
+- 基线：`origin/main = 1572d07`
+- 范围：dev-003 uni-app 前端可演示节点合入后的硬约束验收起步
+
+## 结论
+
+| 项 | 结果 |
+| --- | --- |
+| AC-S3 | ✅ Pass：`npm run build:mp-weixin` 成功，产物目录 `frontend/dist/build/mp-weixin` 存在 |
+| AC-T1 | ✅ Pass：Detail 页源码 + mock 数据已包含估算覆盖率标签、三段式明细、颜色阈值 |
+| PRD §6 contract | ✅ Pass：9 个静态契约测试全部通过 |
+| 全量 pytest | ✅ `11 passed, 16 skipped` |
+| 阻断 dev-003/dev-004 | 无新增阻断 |
+
+## 执行命令
+
+```powershell
+cd F:\CodexWorkspace\10-项目\2026-06-17-LOF基金套利信息\.worktrees\dev-005-test\tests
+python -m pytest -q ac/AC-T1.test.py ac/AC-S3.test.py
+python -m pytest -q
+```
+
+## 结果
+
+```text
+AC-S3 / AC-T1: 2 passed
+Full: 11 passed, 16 skipped
+```
+
+## 验证点
+
+### AC-S3
+- 自动检测 `frontend/node_modules`，缺失时先执行 `npm install`。
+- 执行 `npm run build:mp-weixin`。
+- 断言退出码为 0。
+- 断言 `frontend/dist/build/mp-weixin` 目录存在。
+
+### AC-T1
+- 检查 `frontend/src/pages/detail/detail.vue`：
+  - 存在 `coverage-tag`。
+  - 文案包含 `估算覆盖率`。
+  - `@tap="toggleBreakdown"` 存在。
+  - `v-if="showBreakdown"` 存在。
+  - 三段字段 `top10_weight / benchmark_assigned_weight / cash_weight` 均被渲染。
+  - CSS 类 `coverage-green / coverage-yellow / coverage-red` 存在。
+- 检查 `frontend/src/mock/index.ts`：三段字段均在 mock detail 数据中存在。
+- 检查 `frontend/src/utils/format.ts`：颜色阈值为 `>=0.9 green`、`>=0.7 yellow`、其余 red。
+
+## Bug 清单
+
+本轮未发现 dev-003 新增阻断问题。
+
+### 提示级观察
+
+- AC-T1 当前为静态验收（源码 + mock 数据），未启动 H5 Playwright 浏览器流。原因：本阶段目标是前端演示节点与字段结构校验；待后续 dev-003 提供稳定本地服务启动约定后，可升级为浏览器端真实交互验收。
+- AC-S3 在 dev-005 worktree 首次执行时会触发 `npm install`，属于测试环境准备，不修改源码。
+
+
+
+---
+
+
+---
+
+---
+
+# Test Report - Backend M1 AC-P1 / marker warning regression
+
+- Date: 2026-06-18
+- Tester: dev-005
+- worktree: `.worktrees/dev-005-test`
+- Branch: `feat/tests-ac-skeleton`
+- Baseline: `origin/main = df72a4b`
+- Scope: fill AC-P1 offline NAV premium calibration after dev-004 M1 skeleton, and clear root pytest marker warnings.
+
+## Result
+
+| Item | Result |
+| --- | --- |
+| AC-P1 | Pass: 5 index LOF offline samples satisfy `abs(premium_estimated - premium_truth_close) <= 0.005` |
+| marker warning | Pass: root `python -m pytest -q` no longer reports unregistered `contract / pending` markers |
+| tests pytest | `12 passed, 15 skipped` |
+| root pytest | `21 passed, 1 skipped` |
+| Blockers for dev-003/dev-004 | No new blockers |
+
+## Commands
+
+```powershell
+cd F:\CodexWorkspace\10-project\2026-06-17-LOF-arbitrage-info\.worktrees\dev-005-test
+python -m pytest -q tests/ac/AC-P1.test.py
+python -m pytest -q
+cd tests
+python -m pytest -q
+```
+
+## Checks
+
+### AC-P1
+- Fixture covers 5 PRD index LOF codes: `161725 / 160706 / 501050 / 160119 / 160222`.
+- Calculation follows `lof-fetcher/docs/nav-premium-calibration.md`:
+  - `premium_truth_close = (close_price_t - official_nav_t) / official_nav_t`
+  - `premium_estimated = (price_t_m - iopv_est_t_m) / iopv_est_t_m`
+  - `premium_error = abs(premium_estimated - premium_truth_close)`
+- Samples with `source_quality = stale` or missing `iopv_estimated` are skipped.
+- All 5 codes have valid minute samples and error is not greater than `0.005`.
+
+## Bug List
+
+No new blocking / major / normal issues found in this round.
+
+### Note
+
+- AC-P1 currently uses an offline calibrated fixture to verify algorithm convention. After real market/NAV sources are connected, replace the fixture with dev-004 actual minute samples and rerun the same AC.
