@@ -1,0 +1,32 @@
+﻿{
+  "name": "LOF-套利监控",
+  "appid": "",
+  "description": "LOF 实时溢价监控（一期 H5 / 二期微信小程序）",
+  "versionName": "0.1.0",
+  "versionCode": "1",
+  "transformPx": false,
+  "h5": {
+    "title": "LOF 实时溢价监控",
+    "router": {
+      "mode": "hash",
+      "base": "./"
+    },
+    "devServer": {
+      "https": false
+    },
+    "optimization": {
+      "treeShaking": { "enable": true }
+    }
+  },
+  "mp-weixin": {
+    "appid": "",
+    "setting": {
+      "urlCheck": false,
+      "es6": true,
+      "minified": true
+    },
+    "usingComponents": true,
+    "permission": {}
+  },
+  "vueVersion": "3"
+}

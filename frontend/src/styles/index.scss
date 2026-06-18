@@ -1,0 +1,33 @@
+﻿/* 全局样式：贴合 uni-ui 视觉，仅保留少量基础类 */
+page {
+  background-color: #f5f7fa;
+  color: #303133;
+  font-size: 28rpx;
+  font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+}
+
+.card {
+  background: #ffffff;
+  border-radius: 12rpx;
+  padding: 24rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 21, 41, 0.04);
+}
+
+.row { display: flex; align-items: center; }
+.col { display: flex; flex-direction: column; }
+.flex-1 { flex: 1; }
+.text-up { color: #f56c6c; }
+.text-down { color: #67c23a; }
+.text-muted { color: #909399; }
+.text-strong { font-weight: 600; }
+
+.tag-green { background: #f0f9eb; color: #67c23a; }
+.tag-yellow { background: #fdf6ec; color: #e6a23c; }
+.tag-red { background: #fef0f0; color: #f56c6c; }
+
+.section-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  margin: 16rpx 0;
+  color: #1f2d3d;
+}

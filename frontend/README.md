@@ -1,37 +1,72 @@
-﻿# frontend · uniapp H5（一期）/ 微信小程序（二期）
+﻿# frontend · uni-app（一期 H5 / 二期微信小程序）
 
-## 职责
-- 30 只 LOF 实时溢价 Dashboard
-- 单只 LOF 详情页（30 天曲线 + 分位 + 估算覆盖率标签）
-- 设置页（阈值 / 推送通道）
+## 职责范围
+- Dashboard：LOF 实时溢价列表，字段按 PRD §4.3 / §6.1 展示。
+- Detail：单只 LOF 实时快照、coverage_breakdown 三段式覆盖率、历史走势与 30 天分位。
+- Settings：溢价/折价阈值、推送通道、轮询间隔，本期写入本地 storage。
 
-## 技术栈（硬约束）
-- **必须使用 uniapp**（Vue 3 + setup script + uni-ui + ucharts + pinia）
-- 一期编译目标：H5
-- 二期编译目标：微信小程序（不改源码 npm run build:mp-weixin 即可，AC-S3）
+## 技术栈
+- uni-app + Vue 3 + setup script + uni-ui easycom + pinia。
+- 图表优先使用跨端 `canvas`，避免 DOM / window / document 等明显 H5-only 写法，预留 AC-S3 小程序构建。
+- 业务请求只用 `uni.request`，不使用 vue-router / axios；不直连 `lof-fetcher`。
 
-## 目录约定（HBuilderX uniapp 默认结构，待 dev-003 实现）
-```
+## 目录结构
+```text
 frontend/
-├── pages/
-│   ├── index/index.vue          # Dashboard
-│   ├── detail/detail.vue        # 详情页
-│   └── settings/settings.vue    # 设置页
-├── components/                  # 通用组件
-├── api/                         # uniCloud 调用封装
-├── store/                       # pinia
-├── static/                      # 静态资源
-├── manifest.json                # uniapp 全局配置
-├── pages.json                   # 路由
-├── App.vue
-├── main.js
-└── README.md
+├── src/
+│   ├── pages/
+│   │   ├── index/index.vue          # Dashboard 列表
+│   │   ├── detail/detail.vue        # 详情页 + coverage_breakdown + 历史图
+│   │   └── settings/settings.vue    # 阈值与推送通道
+│   ├── api/
+│   │   ├── index.ts                 # uniCloud 调用封装：list/detail/history/ingest mock
+│   │   └── types.ts                 # PRD §6 字段契约
+│   ├── mock/index.ts                # mock 数据，结构复刻 PRD §6 四接口
+│   ├── store/settings.ts            # pinia 本地设置
+│   ├── utils/format.ts              # 百分比/覆盖率/交易时段工具
+│   ├── App.vue / main.ts / pages.json / manifest.json
+│   └── styles/index.scss
+├── scripts/check-mock-contract.mjs   # mock 契约自检
+├── package.json
+└── .env.example
 ```
 
-## 当前状态
-- 空骨架，等待 dev-003 在 PRD 1.1 通过后于 `feat/frontend-dashboard` 等分支实现。
-- 上一版误启动的 Vite + Vue 3 工程已归档到分支 `wip/legacy-vite-python`，不再使用。
+## 启动方式
+```powershell
+cd F:\CodexWorkspace\10-项目\2026-06-17-LOF基金套利信息\.worktrees\dev-003-frontend\frontend
+npm install
+npm run dev:h5
+```
 
-## 不要做
-- 不使用 Vite / vue-router / axios（用 uniapp 内置等价物）
-- 不直连 lof-fetcher（只调 uniCloud REST API）
+浏览器访问 uni-app CLI 输出的本地 H5 地址。
+
+## 验证命令
+```powershell
+# mock 是否覆盖 PRD §6 list/detail/history/ingest 字段
+npm run check:mock-contract
+
+# H5 构建
+npm run build:h5
+
+# 小程序兼容构建（AC-S3 预留，不改源码）
+npm run build:mp-weixin
+```
+
+## 接口切换
+复制 `.env.example` 为 `.env.development`，联调时填写 dev-004 提供的 uniCloud URL：
+
+```env
+VITE_API_BASE=https://xxx.next.bspapp.com
+VITE_USE_MOCK=false
+VITE_POLL_INTERVAL_MS=60000
+```
+
+- `VITE_USE_MOCK=true`：三页使用 `src/mock/index.ts`，可脱离后端演示。
+- `VITE_USE_MOCK=false`：调用 `VITE_API_BASE/api-lof-list`、`api-lof-detail`、`api-lof-history`。
+- `ingest-realtime` 真实写入由 dev-004 调用；前端仅保留 mock 契约与封装，不在页面触发。
+
+## PRD §6 契约影响
+- `api-lof-list`：返回 `ts + items[]`，列表项含 `code/name/type/price/iopv/premium/coverage/pctile_30d/source_quality`。
+- `api-lof-detail`：返回 `coverage_top10/coverage_breakdown/benchmark_components/holdings_top10/realtime/pctile_30d` 六块。
+- `api-lof-history`：返回 `code/granularity/items[]`，历史项含收盘价、官方净值、收盘溢价、30 天分位。
+- `ingest-realtime`：mock 返回 `{ accepted, rejected }`；真实写入不由前端页面调用。
