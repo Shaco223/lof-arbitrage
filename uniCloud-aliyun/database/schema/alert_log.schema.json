@@ -1,0 +1,13 @@
+{
+  "bsonType": "object",
+  "required": ["code", "ts", "premium", "direction", "channel", "status"],
+  "permission": { "read": true, "create": false, "update": false, "delete": false },
+  "properties": {
+    "code": { "bsonType": "string", "description": "LOF 代码" },
+    "ts": { "bsonType": "timestamp", "description": "告警时间" },
+    "premium": { "bsonType": "number", "description": "触发时溢价率" },
+    "direction": { "bsonType": "string", "enum": ["premium", "discount"], "description": "告警方向" },
+    "channel": { "bsonType": "string", "enum": ["serverchan", "email"], "description": "推送通道" },
+    "status": { "bsonType": "string", "enum": ["sent", "failed", "cooldown_blocked"], "description": "发送状态" }
+  }
+}

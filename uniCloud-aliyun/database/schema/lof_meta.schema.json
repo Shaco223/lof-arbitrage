@@ -1,0 +1,17 @@
+{
+  "bsonType": "object",
+  "required": ["code", "name", "type", "scale_yi", "benchmark_raw", "status", "coverage_top10", "updated_at"],
+  "permission": { "read": true, "create": false, "update": false, "delete": false },
+  "properties": {
+    "code": { "bsonType": "string", "description": "6 位场内代码" },
+    "name": { "bsonType": "string", "description": "基金名称" },
+    "type": { "bsonType": "string", "enum": ["index", "industry", "active"], "description": "基金类型" },
+    "scale_yi": { "bsonType": "number", "description": "最新规模（亿元）" },
+    "benchmark_raw": { "bsonType": "string", "description": "业绩比较基准原文" },
+    "status": { "bsonType": "string", "enum": ["active", "pending_verify"], "description": "清单状态" },
+    "coverage_top10": { "bsonType": "number", "minimum": 0, "maximum": 1, "description": "前十重仓权重和" },
+    "coverage_breakdown": { "bsonType": "object", "description": "PRD §6.2 覆盖率三段式明细" },
+    "benchmark_components": { "bsonType": "array", "description": "PRD §6.2 基准组成项" },
+    "updated_at": { "bsonType": "timestamp", "description": "元数据更新时间" }
+  }
+}

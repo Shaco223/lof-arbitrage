@@ -1,0 +1,12 @@
+{
+  "bsonType": "object",
+  "required": ["code", "stock_code", "stock_name", "weight", "report_date"],
+  "permission": { "read": true, "create": false, "update": false, "delete": false },
+  "properties": {
+    "code": { "bsonType": "string", "description": "LOF 代码" },
+    "stock_code": { "bsonType": "string", "description": "股票代码（带交易所后缀）" },
+    "stock_name": { "bsonType": "string", "description": "股票名称" },
+    "weight": { "bsonType": "number", "minimum": 0, "maximum": 1, "description": "权重" },
+    "report_date": { "bsonType": "string", "description": "季报日期 YYYY-MM-DD" }
+  }
+}

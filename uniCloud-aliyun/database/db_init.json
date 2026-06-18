@@ -1,0 +1,9 @@
+{
+  "collections": [
+    { "name": "lof_meta", "indexes": [{ "name": "uniq_code", "keys": { "code": 1 }, "unique": true }, { "name": "idx_type_status", "keys": { "type": 1, "status": 1 } }] },
+    { "name": "lof_holdings", "indexes": [{ "name": "idx_code_report", "keys": { "code": 1, "report_date": -1 } }, { "name": "idx_stock_code", "keys": { "stock_code": 1 } }] },
+    { "name": "lof_realtime", "indexes": [{ "name": "idx_code_ts", "keys": { "code": 1, "ts": -1 } }, { "name": "idx_ts", "keys": { "ts": -1 } }] },
+    { "name": "lof_history", "indexes": [{ "name": "uniq_code_date", "keys": { "code": 1, "date": -1 }, "unique": true }, { "name": "idx_date", "keys": { "date": -1 } }] },
+    { "name": "alert_log", "indexes": [{ "name": "idx_code_ts", "keys": { "code": 1, "ts": -1 } }, { "name": "idx_status_ts", "keys": { "status": 1, "ts": -1 } }] }
+  ]
+}

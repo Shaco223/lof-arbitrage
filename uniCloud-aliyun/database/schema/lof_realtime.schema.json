@@ -1,0 +1,14 @@
+{
+  "bsonType": "object",
+  "required": ["code", "ts", "price", "iopv", "premium", "coverage"],
+  "permission": { "read": true, "create": false, "update": false, "delete": false },
+  "properties": {
+    "code": { "bsonType": "string", "description": "LOF 代码" },
+    "ts": { "bsonType": "timestamp", "description": "分钟时间戳" },
+    "price": { "bsonType": "number", "description": "二级市场现价" },
+    "iopv": { "bsonType": "number", "description": "实时估算净值" },
+    "premium": { "bsonType": "number", "description": "溢价率" },
+    "coverage": { "bsonType": "number", "minimum": 0, "maximum": 1, "description": "估算覆盖率" },
+    "source_quality": { "bsonType": "string", "enum": ["ok", "degraded", "stale"], "description": "数据质量" }
+  }
+}

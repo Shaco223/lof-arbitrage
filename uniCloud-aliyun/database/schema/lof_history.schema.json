@@ -1,0 +1,13 @@
+{
+  "bsonType": "object",
+  "required": ["code", "date", "close_price", "official_nav", "premium_close", "premium_pctile_30d"],
+  "permission": { "read": true, "create": false, "update": false, "delete": false },
+  "properties": {
+    "code": { "bsonType": "string", "description": "LOF 代码" },
+    "date": { "bsonType": "string", "description": "交易日 YYYY-MM-DD" },
+    "close_price": { "bsonType": "number", "description": "收盘价" },
+    "official_nav": { "bsonType": "number", "description": "官方净值" },
+    "premium_close": { "bsonType": "number", "description": "收盘真实溢价" },
+    "premium_pctile_30d": { "bsonType": "number", "minimum": 0, "maximum": 1, "description": "30 天分位" }
+  }
+}

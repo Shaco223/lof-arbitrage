@@ -26,7 +26,17 @@ uniCloud-aliyun/
 ```
 
 ## 当前状态
-- 空骨架，等待 dev-004 在 PRD 1.1 通过后于 `feat/cloud-api-list` 等分支实现。
+- 数据库初始化：`database/db_init.json`。
+- JQL Schema：`lof_meta` / `lof_holdings` / `lof_realtime` / `lof_history` / `alert_log`。
+- 云函数骨架：`lof-list` / `lof-detail` / `lof-history` / `lof-ingest`。
+- `lof-ingest` 使用 `X-Ingest-Token` 校验，只接受 PRD §6.4 的批量 payload，并一次性 `add(docs)` 写入。
+
+## 云函数返回约定
+- 成功：`{ "code": 0, "message": "ok", "data": { ... } }`
+- 参数错误：`4001`
+- 鉴权失败：`4010`
+- 资源不存在：`4040`
+- 服务异常：`5000`
 
 ## 不要做
 - 不直接拉外部数据源（这是 lof-fetcher 的职责）
