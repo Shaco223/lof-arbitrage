@@ -4,11 +4,12 @@ import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { onPullDownRefresh } from '@dcloudio/uni-app'
 import { getLofList } from '@/api'
 import type { FundType, ListParams, LofListItem } from '@/api/types'
-import { fmtNum, fmtPct, freshnessLabel, coverageLevel, coverageLevelLabel } from '@/utils/format'
+import { fmtNum, fmtPct, freshnessLabel, coverageLevel, coverageLevelLabel, isMarketOpen } from '@/utils/format'
 import { useSettingsStore } from '@/store/settings'
 
 const settings = useSettingsStore()
 const isMockMode = String(import.meta.env.VITE_USE_MOCK).toLowerCase() === 'true'
+const apiBase = String(import.meta.env.VITE_API_BASE || '')
 const loading = ref(false)
 const error = ref('')
 const list = ref<LofListItem[]>([])
@@ -34,8 +35,26 @@ const sortTabs: Array<{ label: string; value: ListParams['sort'] }> = [
 ]
 
 const highSignalCount = computed(() =>
-  list.value.filter((item) => isAlert(item)).length
+  list.value.filter((item) => signalType(item) !== 'none').length
 )
+
+const premiumSignalCount = computed(() =>
+  list.value.filter((item) => signalType(item) === 'premium').length
+)
+
+const discountSignalCount = computed(() =>
+  list.value.filter((item) => signalType(item) === 'discount').length
+)
+
+const interfaceModeText = computed(() => {
+  if (isMockMode) return 'mock'
+  return apiBase.includes('127.0.0.1') ? '本地真实 API' : '真实 uniCloud'
+})
+
+const marketStatusText = computed(() => {
+  nowTick.value
+  return isMarketOpen() ? '交易时段：信号按 60s 刷新' : '非交易时段，数据可能滞后'
+})
 
 const refreshText = computed(() => {
   nowTick.value
@@ -47,14 +66,29 @@ function typeLabel(value: FundType) {
 }
 
 function sourceQualityLabel(value: LofListItem['source_quality']) {
-  if (value === 'stale') return '数据滞后'
-  if (value === 'degraded') return '低流动性/降级'
-  if (value === 'ok') return '高置信'
+  if (value === 'stale') return '数据滞后，不可盲用'
+  if (value === 'degraded') return '数据降级，不可盲用'
+  if (value === 'ok') return '正常'
   return ''
 }
 
-function isAlert(item: LofListItem) {
-  return item.premium >= settings.premiumThreshold || item.premium <= -settings.discountThreshold
+function sourceQualityClass(value: LofListItem['source_quality']) {
+  if (value === 'stale') return 'quality-stale'
+  if (value === 'degraded') return 'quality-degraded'
+  return 'quality-ok'
+}
+
+function signalType(item: LofListItem): 'premium' | 'discount' | 'none' {
+  if (item.premium >= settings.premiumThreshold) return 'premium'
+  if (item.premium <= -settings.discountThreshold) return 'discount'
+  return 'none'
+}
+
+function signalLabel(item: LofListItem) {
+  const type = signalType(item)
+  if (type === 'premium') return '高溢价'
+  if (type === 'discount') return '高折价'
+  return ''
 }
 
 async function loadList(showToast = false) {
@@ -108,11 +142,18 @@ onUnmounted(() => {
     <view class="hero card">
       <view class="hero-main">
         <view class="hero-title">LOF 实时溢价监控</view>
-        <view class="hero-sub">按 PRD §6 {{ isMockMode ? 'mock' : '真实 uniCloud' }} 接口运行，60s 自动轮询</view>
+        <view class="hero-sub">{{ interfaceModeText }} · 60s 自动轮询 · 手动刷新可用</view>
+        <view class="hero-stats">
+          <text>信号 {{ highSignalCount }} 个</text>
+          <text>溢价 {{ premiumSignalCount }}</text>
+          <text>折价 {{ discountSignalCount }}</text>
+          <text>{{ refreshText }}</text>
+        </view>
+        <view class="market-tip" :class="isMarketOpen() ? 'market-open' : 'market-closed'">{{ marketStatusText }}</view>
       </view>
       <view class="hero-badge">
         <text class="badge-num">{{ highSignalCount }}</text>
-        <text class="badge-label">触阈值</text>
+        <text class="badge-label">信号数量</text>
       </view>
     </view>
 
@@ -136,10 +177,15 @@ onUnmounted(() => {
         >{{ tab.label }}</view>
       </view>
       <view class="refresh-line">
-        <text class="text-muted">{{ refreshText }}</text>
-        <button class="mini-btn" :loading="loading" @tap="loadList(true)">重试/刷新</button>
+        <view class="refresh-copy">
+          <text class="text-muted">更新时间：{{ refreshText }}</text>
+          <text class="mode-pill">接口：{{ interfaceModeText }}</text>
+          <text class="history-note">历史沉淀：本地优先，线上后置</text>
+        </view>
+        <button class="mini-btn" :loading="loading" @tap="loadList(true)">{{ error ? '重试' : '手动刷新' }}</button>
       </view>
-      <view v-if="error" class="error">{{ error }}</view>
+      <view v-if="loading && list.length === 0" class="state-box loading-box">正在读取本地真实 API 数据...</view>
+      <view v-if="error" class="state-box error">列表加载失败：{{ error }}</view>
     </view>
 
     <view class="list card">
@@ -154,14 +200,14 @@ onUnmounted(() => {
         v-for="item in list"
         :key="item.code"
         class="fund-row"
-        :class="{ alert: isAlert(item) }"
+        :class="[`signal-${signalType(item)}`]"
         @tap="goDetail(item.code)"
       >
         <view class="fund-main">
           <view class="name-line">
             <text class="fund-code">{{ item.code }}</text>
             <text class="type-pill">{{ typeLabel(item.type) }}</text>
-            <text v-if="isAlert(item)" class="alert-pill">触阈值</text>
+            <text v-if="signalType(item) !== 'none'" class="alert-pill" :class="`alert-${signalType(item)}`">{{ signalLabel(item) }}</text>
           </view>
           <view class="fund-name">{{ item.name }}</view>
           <view class="meta-line">
@@ -169,17 +215,18 @@ onUnmounted(() => {
             <text
               class="coverage-pill"
               :class="`coverage-${coverageLevel(item.coverage)}`"
-            >覆盖率 {{ fmtPct(item.coverage, 0) }} · {{ sourceQualityLabel(item.source_quality) || coverageLevelLabel(coverageLevel(item.coverage)) }}</text>
+            >覆盖率 {{ fmtPct(item.coverage, 0) }} · {{ coverageLevelLabel(coverageLevel(item.coverage)) }}</text>
+            <text class="quality-pill" :class="sourceQualityClass(item.source_quality)">数据 {{ sourceQualityLabel(item.source_quality) || '正常' }}</text>
           </view>
         </view>
         <view class="quote-grid">
           <text>{{ fmtNum(item.price, 3) }}</text>
           <text>{{ fmtNum(item.iopv, 3) }}</text>
-          <text :class="item.premium >= 0 ? 'text-up' : 'text-down'">{{ fmtPct(item.premium, 2) }}</text>
+          <text :class="[`premium-text`, item.premium >= 0 ? 'text-up' : 'text-down']">{{ fmtPct(item.premium, 2) }}</text>
         </view>
       </view>
 
-      <view v-if="!loading && list.length === 0" class="empty">暂无数据</view>
+      <view v-if="!loading && !error && list.length === 0" class="empty">暂无数据，请确认本地真实 API 已启动并返回 PRD §6 列表结构。</view>
     </view>
   </view>
 </template>
@@ -190,7 +237,12 @@ onUnmounted(() => {
 .hero-main { flex: 1; }
 .hero-title { font-size: 40rpx; font-weight: 700; color: #1f2d3d; }
 .hero-sub { margin-top: 8rpx; color: #909399; font-size: 24rpx; }
-.hero-badge { width: 128rpx; height: 128rpx; border-radius: 64rpx; background: #fef0f0; color: #f56c6c; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.hero-stats { display: flex; flex-wrap: wrap; gap: 10rpx; margin-top: 14rpx; color: #606266; font-size: 22rpx; }
+.hero-stats text { padding: 6rpx 12rpx; border-radius: 999rpx; background: #f5f7fa; }
+.market-tip { display: inline-flex; margin-top: 14rpx; padding: 8rpx 14rpx; border-radius: 12rpx; font-size: 22rpx; }
+.market-open { color: #67c23a; background: #f0f9eb; }
+.market-closed { color: #e6a23c; background: #fdf6ec; }
+.hero-badge { width: 140rpx; height: 140rpx; border-radius: 70rpx; background: linear-gradient(135deg, #f56c6c, #e6a23c); color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 10rpx 24rpx rgba(245, 108, 108, 0.22); }
 .badge-num { font-size: 42rpx; font-weight: 700; line-height: 48rpx; }
 .badge-label { font-size: 22rpx; }
 .toolbar { margin-bottom: 20rpx; }
@@ -200,23 +252,38 @@ onUnmounted(() => {
 .tab.small { font-size: 24rpx; padding: 10rpx 20rpx; }
 .tab.active { background: #1f2d3d; color: #fff; }
 .refresh-line { display: flex; align-items: center; justify-content: space-between; margin-top: 18rpx; }
-.mini-btn { margin: 0; padding: 0 20rpx; height: 56rpx; line-height: 56rpx; font-size: 24rpx; color: #1f2d3d; background: #eef3f8; }
-.error { color: #f56c6c; font-size: 24rpx; margin-top: 12rpx; }
+.refresh-copy { display: flex; flex-direction: column; gap: 8rpx; }
+.mode-pill { align-self: flex-start; padding: 4rpx 10rpx; border-radius: 999rpx; background: #ecf5ff; color: #409eff; font-size: 22rpx; }
+.history-note { color: #909399; font-size: 22rpx; }
+.mini-btn { margin: 0; padding: 0 24rpx; height: 62rpx; line-height: 62rpx; font-size: 24rpx; color: #fff; background: #1f2d3d; }
+.state-box { margin-top: 16rpx; padding: 18rpx; border-radius: 14rpx; font-size: 24rpx; }
+.loading-box { color: #409eff; background: #ecf5ff; }
+.error { color: #f56c6c; background: #fef0f0; }
 .table-head { display: grid; grid-template-columns: 1fr 100rpx 100rpx 120rpx; gap: 8rpx; color: #909399; font-size: 22rpx; padding-bottom: 16rpx; border-bottom: 1rpx solid #ebeef5; }
 .col-num, .col-rate { text-align: right; }
 .fund-row { display: grid; grid-template-columns: 1fr 320rpx; gap: 12rpx; padding: 22rpx 0; border-bottom: 1rpx solid #f0f2f5; }
-.fund-row.alert { position: relative; }
-.fund-row.alert::before { content: ''; position: absolute; left: -24rpx; top: 22rpx; bottom: 22rpx; width: 6rpx; border-radius: 6rpx; background: #f56c6c; }
+.fund-row.signal-premium, .fund-row.signal-discount { position: relative; margin: 0 -10rpx; padding-left: 10rpx; padding-right: 10rpx; border-radius: 18rpx; }
+.fund-row.signal-premium { background: #fff7f7; box-shadow: inset 0 0 0 2rpx #fde2e2; }
+.fund-row.signal-discount { background: #f0f9eb; box-shadow: inset 0 0 0 2rpx #e1f3d8; }
+.fund-row.signal-premium::before, .fund-row.signal-discount::before { content: ''; position: absolute; left: -4rpx; top: 22rpx; bottom: 22rpx; width: 8rpx; border-radius: 8rpx; }
+.fund-row.signal-premium::before { background: #f56c6c; }
+.fund-row.signal-discount::before { background: #67c23a; }
 .name-line { display: flex; align-items: center; gap: 8rpx; }
 .fund-code { font-weight: 700; color: #1f2d3d; }
-.type-pill, .alert-pill, .coverage-pill { display: inline-flex; padding: 4rpx 10rpx; border-radius: 999rpx; font-size: 20rpx; }
+.type-pill, .alert-pill, .coverage-pill, .quality-pill { display: inline-flex; padding: 4rpx 10rpx; border-radius: 999rpx; font-size: 20rpx; }
 .type-pill { background: #edf2fc; color: #409eff; }
-.alert-pill { background: #fef0f0; color: #f56c6c; }
+.alert-pill { font-weight: 700; }
+.alert-premium { background: #fef0f0; color: #f56c6c; }
+.alert-discount { background: #f0f9eb; color: #67c23a; }
 .fund-name { margin-top: 8rpx; color: #303133; font-size: 28rpx; }
 .meta-line { display: flex; flex-wrap: wrap; gap: 10rpx; margin-top: 10rpx; color: #909399; font-size: 22rpx; }
 .coverage-green { background: #f0f9eb; color: #67c23a; }
 .coverage-yellow { background: #fdf6ec; color: #e6a23c; }
 .coverage-red { background: #fef0f0; color: #f56c6c; }
+.quality-ok { background: #f4f4f5; color: #606266; }
+.quality-degraded { background: #fdf6ec; color: #e6a23c; }
+.quality-stale { background: #fef0f0; color: #f56c6c; }
 .quote-grid { display: grid; grid-template-columns: repeat(3, 1fr); align-items: center; gap: 8rpx; text-align: right; font-size: 26rpx; }
-.empty { padding: 48rpx 0; text-align: center; color: #909399; }
+.premium-text { font-size: 30rpx; font-weight: 700; }
+.empty { padding: 48rpx 24rpx; text-align: center; color: #909399; background: #fafafa; border-radius: 16rpx; }
 </style>

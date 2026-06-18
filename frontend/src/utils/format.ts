@@ -25,15 +25,28 @@ export function coverageLevelLabel(level: CoverageLevel): string {
   return level === 'green' ? '高置信' : level === 'yellow' ? '可参考' : '不可用'
 }
 
-/** "上次刷新 mm:ss 前"（弱网/超时态） */
+/** 相对时间：短时间显示分钟，长时间显示小时/天，避免 747:34 前这类难读格式。 */
 export function freshnessLabel(ts: string | number | undefined | null): string {
   if (!ts) return '--'
   const t = typeof ts === 'string' ? Date.parse(ts) : ts
   if (Number.isNaN(t)) return '--'
   const diff = Math.max(0, Math.floor((Date.now() - t) / 1000))
+  if (diff < 60) return '刚刚'
   const m = Math.floor(diff / 60)
-  const s = diff % 60
-  return `${m}:${String(s).padStart(2, '0')} 前`
+  if (m < 60) return `${m} 分钟前`
+  const h = Math.floor(m / 60)
+  if (h < 24) return `${h} 小时前`
+  const d = Math.floor(h / 24)
+  return `${d} 天前`
+}
+
+/** 交易/接口时间，展示为 YYYY-MM-DD HH:mm:ss，避免长相对时间难以理解。 */
+export function fmtDateTime(ts: string | number | undefined | null): string {
+  if (!ts) return '--'
+  const d = new Date(ts)
+  if (Number.isNaN(d.getTime())) return '--'
+  const pad = (v: number) => String(v).padStart(2, '0')
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`
 }
 
 /** 是否在交易时段 09:30-11:30 / 13:00-15:00（周末固定 false） */

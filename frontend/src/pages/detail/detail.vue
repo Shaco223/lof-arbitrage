@@ -4,7 +4,7 @@ import { computed, nextTick, ref } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
 import { getLofDetail, getLofHistory } from '@/api'
 import type { LofDetailData, LofHistoryData } from '@/api/types'
-import { coverageLevel, coverageLevelLabel, fmtNum, fmtPct, freshnessLabel } from '@/utils/format'
+import { coverageLevel, coverageLevelLabel, fmtDateTime, fmtNum, fmtPct, freshnessLabel } from '@/utils/format'
 
 const detail = ref<LofDetailData | null>(null)
 const history = ref<LofHistoryData | null>(null)
@@ -105,6 +105,12 @@ const latestHistory = computed(() => {
   return items.length ? items[items.length - 1] : null
 })
 
+function sourceQualityLabel(value: LofDetailData['realtime']['source_quality']) {
+  if (value === 'stale') return '数据滞后'
+  if (value === 'degraded') return '数据降级'
+  return '数据正常'
+}
+
 async function loadPage() {
   loading.value = true
   error.value = ''
@@ -192,7 +198,7 @@ onLoad((q: Record<string, string> | undefined) => {
           <text class="value">{{ fmtPct(detail.pctile_30d, 0) }}</text>
         </view>
       </view>
-      <view class="fresh-line">更新时间：{{ freshnessLabel(detail.realtime.ts) }} · source_quality={{ detail.realtime.source_quality }}</view>
+      <view class="fresh-line">数据时间：{{ fmtDateTime(detail.realtime.ts) }}（{{ freshnessLabel(detail.realtime.ts) }}） · {{ sourceQualityLabel(detail.realtime.source_quality) }}</view>
     </view>
 
     <view class="card chart-card" v-if="history">
