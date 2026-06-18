@@ -36,7 +36,7 @@ tests/
 | AC | PRD 章节 | 测试方法摘要 | 通过条件摘要 | 责任模块 | 文件 | 状态 |
 | --- | --- | --- | --- | --- | --- | --- |
 | AC-P1 | §9.1 | 用官方 NAV 反推真实溢价，对比分钟样本 | `|实时溢价 - 真实溢价| <= 0.5%` | dev-004 | `ac/AC-P1.test.py` | pass |
-| AC-P2 | ?9.1 | ?? watchlist-v2 / benchmark-v2 coverage???????? | ?? ?90%??? `<70%` ?3???/??? =1.00 | dev-002/dev-004 | `ac/AC-P2.test.py` | pass |
+| AC-P2 | sec 9.1 | watchlist-v2 / benchmark-v2 coverage static check | avg >=90%, count `<70%` <=3, index/industry =1.00 | dev-002/dev-004 | `ac/AC-P2.test.py` | pass |
 | AC-C1 | §9.2 | 重放/统计盘中分钟写入行数 | 每分钟 30 行；整分钟缺失 ≤3/日 | dev-004 | `ac/AC-C1.test.py` | pending |
 | AC-C2 | §9.2 | mock 数据源失败并观察重试 | 30 秒内重试 3 次；失败写日志并跳过 | dev-004 | `ac/AC-C2.test.py` | pending |
 | AC-H1 | §9.3 | 调 history + 前端详情曲线检查 | 30 天无非节假日断点 | both | `ac/AC-H1.test.py` | pending |
@@ -103,6 +103,11 @@ python -m pytest --collect-only -q -k AC-P1
 # - run: pip install -r tests/requirements.txt
 # - run: cd tests && python -m pytest -q --junitxml=../outputs/junit-tests.xml
 ```
+
+## M1 Integration Readiness
+
+- `m1-integration-readiness.md` tracks AC-I1~I4 / AC-C1~C2 / AC-P2 / AC-S1 integration inputs, pass criteria, and field-drift bug template.
+- Before dev-004 provides runnable API / sample output, related AC tests remain pending or static acceptance; no real API assertions are added yet.
 
 ## 8. 当前已知限制
 
