@@ -293,3 +293,44 @@ No new blocking / major / normal issues found in this round.
 ### Note
 
 - AC-P1 currently uses an offline calibrated fixture to verify algorithm convention. After real market/NAV sources are connected, replace the fixture with dev-004 actual minute samples and rerun the same AC.
+
+
+---
+
+---
+
+# Test Report - watchlist-v2 / benchmark-v2 AC-P2 regression
+
+- Date: 2026-06-18
+- Tester: dev-005
+- worktree: `.worktrees/dev-005-test`
+- Branch: `feat/tests-ac-skeleton`
+- Baseline: `origin/main = 126b241`
+- Scope: implement AC-P2 static coverage / benchmark acceptance after watchlist-v2 and benchmark-v2 merge.
+
+## Result
+
+| Item | Result |
+| --- | --- |
+| AC-P2 | Pass: all 30 watchlist-v2 funds are covered by benchmark-v2; average coverage is 1.00; low coverage count is 0 |
+| Benchmark weights | Pass: all 30 funds have weight sum 1.00; failures 0 |
+| 399987 conflict | Pass: only `160632 -> 399987.SZ` remains; no same-numeric-code conflict |
+| tests ac_p | `2 passed, 25 deselected` |
+| tests full pytest | `13 passed, 14 skipped` |
+| Blockers for dev-003/dev-004 | No new blockers |
+
+## Commands
+
+```powershell
+cd F:\CodexWorkspace\10-project\2026-06-17-LOF-arbitrage-info\.worktrees\dev-005-test\tests
+python -m pytest -q -m ac_p
+python -m pytest -q
+```
+
+## Bug List
+
+No new blocking / major / normal issues found in this round.
+
+### Note
+
+- AC-P2 currently verifies static watchlist-v2 and benchmark-v2 structure, weights, and conflict constraints. After dev-004 switches runtime defaults to v2 and emits real coverage, rerun the same AC against fetcher/API output.
