@@ -47,6 +47,7 @@ pip install -r requirements.txt
 python -m pytest -q
 python -m fetcher.main
 python -m fetcher.main sample-output --output-dir ..\outputs --ts 2026-06-18T10:31:00+08:00
+python -m fetcher.main ac-evidence --output-dir ..\outputs
 python scripts\generate_unicloud_mock_data.py
 ```
 
@@ -81,3 +82,17 @@ python scripts\generate_unicloud_mock_data.py
 - 不直连 uniCloud 数据库写入；拉取器写入只能走 `lof-ingest`。
 - 不提交 `.env` / `.venv` / `__pycache__` / 真实 token。
 - 不改 PRD §6 字段；字段变更必须走 CCR。
+
+
+## AC-C2 / AC-S1 ????
+
+```powershell
+cd lof-fetcher
+python -m fetcher.main ac-evidence --output-dir ..\outputs
+```
+
+`ac-evidence` ????
+
+- `outputs/backend-ac-c2-retry-success-v2.jsonl`???? 2 ????? 3 ????
+- `outputs/backend-ac-c2-retry-failure-v2.jsonl`??? 3 ????? skipped?`pollute_history=false`?
+- `outputs/backend-ac-s1-quota-estimate-v2.json`??????????AC-S1 ?? 3 ?????????
