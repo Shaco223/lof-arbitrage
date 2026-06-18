@@ -1,34 +1,39 @@
-"""AC-I1.test.py — AC-I1 验收脚本骨架。
+"""AC-I1: api-lof-list local M1 smoke acceptance.
 
-AC 编号: AC-I1
-依赖模块: dev-004（云函数）
-样本范围: 30 行结构
-硬约束: 否
-
-测试方法:
-    对 api-lof-list 连续打 100 次，统计 p95；逐字段比对 §6.1 schema
-
-通过条件:
-    p95 ≤ 800ms；每行 9 字段齐全 + 类型/枚举正确
-
-当前状态: pending（骨架阶段，待对应模块交付后填实）
+Method: build dev-004 sample API outputs from watchlist-v2 / benchmark-v2 and
+validate the list response against PRD section 6.1 contract. Also measure local
+sample builder p95 as a no-network smoke proxy.
+Pass criteria: p95 <= 800 ms, 30 rows returned, and every list item has the
+nine PRD section 6.1 fields with correct types/enums.
+Dependency: dev-004 local backend sample-output / uniCloud list function.
+Current status: implemented as local smoke; real deployed API regression waits
+for baseURL.
 """
 from __future__ import annotations
 
 import pytest
 
 from _lib import AC
+from _lib.m1_backend import build_sample_api_outputs, measure_call_ms
+from contract.prd6_contracts import API_LOF_LIST_DATA, API_LOF_LIST_ITEM, COMMON_RESPONSE, assert_contract
 
 META = AC.I1
 
 
 @pytest.mark.ac_i
-@pytest.mark.pending
-def test_ac_i1_skeleton():
-    """骨架: 仅校验 AC 元信息绑定，等模块到位后填实。"""
+def test_ac_i1_list_sample_output_matches_prd6_contract(project_root):
     assert META.code == "AC-I1"
-    # TODO 模块就绪后填实——
-    #   - 对 api-lof-list 连续打 100 次，统计 p95
-    #   - 逐字段比对 §6.1 schema
-    # 通过条件: p95 ≤ 800ms；每行 9 字段齐全 + 类型/枚举正确
+    samples = build_sample_api_outputs(project_root)
+    response = samples["list"]
 
+    assert_contract("api-lof-list.response", response, COMMON_RESPONSE)
+    assert_contract("api-lof-list.data", response["data"], API_LOF_LIST_DATA)
+    assert len(response["data"]["items"]) == 30
+    for item in response["data"]["items"]:
+        assert_contract("api-lof-list.data.items[]", item, API_LOF_LIST_ITEM)
+
+
+@pytest.mark.ac_i
+def test_ac_i1_local_sample_builder_p95_under_800ms(project_root):
+    p95 = measure_call_ms(lambda: build_sample_api_outputs(project_root), repeat=20)
+    assert p95 <= 800

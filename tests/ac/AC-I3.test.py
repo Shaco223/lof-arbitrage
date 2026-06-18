@@ -1,33 +1,33 @@
-"""AC-I3.test.py — AC-I3 验收脚本骨架。
+"""AC-I3: api-lof-history local M1 smoke acceptance.
 
-AC 编号: AC-I3
-依赖模块: dev-004（云函数）
-样本范围: 5 只样本
-硬约束: 否
-
-测试方法:
-    对 api-lof-history?code=xxx&days=30 取样，按 §6.3 schema 校验
-
-通过条件:
-    items.length ≥ 20 个交易日；字段类型正确
-
-当前状态: pending（骨架阶段，待对应模块交付后填实）
+Method: build dev-004 sample history output and validate the PRD section 6.3
+response for 30-day day granularity history.
+Pass criteria: at least 20 trading-day rows are returned and every row matches
+history item contract.
+Dependency: dev-004 local backend sample-output / uniCloud history function.
+Current status: implemented as local smoke; real deployed API regression waits
+for baseURL.
 """
 from __future__ import annotations
 
 import pytest
 
 from _lib import AC
+from _lib.m1_backend import build_sample_api_outputs
+from contract.prd6_contracts import API_LOF_HISTORY_DATA, COMMON_RESPONSE, HISTORY_ITEM, assert_contract
 
 META = AC.I3
 
 
 @pytest.mark.ac_i
-@pytest.mark.pending
-def test_ac_i3_skeleton():
-    """骨架: 仅校验 AC 元信息绑定，等模块到位后填实。"""
+def test_ac_i3_history_sample_output_has_30_day_contract(project_root):
     assert META.code == "AC-I3"
-    # TODO 模块就绪后填实——
-    #   - 对 api-lof-history?code=xxx&days=30 取样，按 §6.3 schema 校验
-    # 通过条件: items.length ≥ 20 个交易日；字段类型正确
+    response = build_sample_api_outputs(project_root)["history"]
+    data = response["data"]
 
+    assert_contract("api-lof-history.response", response, COMMON_RESPONSE)
+    assert_contract("api-lof-history.data", data, API_LOF_HISTORY_DATA)
+    assert data["granularity"] == "day"
+    assert len(data["items"]) >= 20
+    for item in data["items"]:
+        assert_contract("api-lof-history.items[]", item, HISTORY_ITEM)

@@ -1,33 +1,44 @@
-"""AC-I2.test.py — AC-I2 验收脚本骨架。
+"""AC-I2: api-lof-detail local M1 smoke acceptance.
 
-AC 编号: AC-I2
-依赖模块: dev-004（云函数）
-样本范围: 5 只样本
-硬约束: 否
-
-测试方法:
-    对 api-lof-detail?code=xxx 取 5 只样本，断言返回 6 块字段全在
-
-通过条件:
-    6 块齐：coverage_top10 / coverage_breakdown / benchmark_components / holdings_top10 / realtime / pctile_30d
-
-当前状态: pending（骨架阶段，待对应模块交付后填实）
+Method: build dev-004 sample detail output and validate the PRD section 6.2
+response, including the six required PRD 9 blocks.
+Pass criteria: detail response contains coverage_top10, coverage_breakdown,
+benchmark_components, holdings_top10, realtime, pctile_30d and nested fields
+match the contract.
+Dependency: dev-004 local backend sample-output / uniCloud detail function.
+Current status: implemented as local smoke; real deployed API regression waits
+for baseURL.
 """
 from __future__ import annotations
 
 import pytest
 
 from _lib import AC
+from _lib.m1_backend import build_sample_api_outputs
+from contract.prd6_contracts import (
+    API_LOF_DETAIL_DATA,
+    API_LOF_DETAIL_REQUIRED_BLOCKS,
+    BENCHMARK_COMPONENT,
+    COMMON_RESPONSE,
+    COVERAGE_BREAKDOWN,
+    REALTIME_BLOCK,
+    assert_contract,
+)
 
 META = AC.I2
 
 
 @pytest.mark.ac_i
-@pytest.mark.pending
-def test_ac_i2_skeleton():
-    """骨架: 仅校验 AC 元信息绑定，等模块到位后填实。"""
+def test_ac_i2_detail_sample_output_contains_six_required_blocks(project_root):
     assert META.code == "AC-I2"
-    # TODO 模块就绪后填实——
-    #   - 对 api-lof-detail?code=xxx 取 5 只样本，断言返回 6 块字段全在
-    # 通过条件: 6 块齐：coverage_top10 / coverage_breakdown / benchmark_components / holdings_top10 / realtime / pctile_30d
+    response = build_sample_api_outputs(project_root)["detail"]
+    data = response["data"]
 
+    assert_contract("api-lof-detail.response", response, COMMON_RESPONSE)
+    assert_contract("api-lof-detail.data", data, API_LOF_DETAIL_DATA)
+    assert API_LOF_DETAIL_REQUIRED_BLOCKS <= set(data)
+    assert_contract("api-lof-detail.coverage_breakdown", data["coverage_breakdown"], COVERAGE_BREAKDOWN)
+    assert data["benchmark_components"]
+    for component in data["benchmark_components"]:
+        assert_contract("api-lof-detail.benchmark_components[]", component, BENCHMARK_COMPONENT)
+    assert_contract("api-lof-detail.realtime", data["realtime"], REALTIME_BLOCK)

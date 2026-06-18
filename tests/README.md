@@ -114,3 +114,36 @@ python -m pytest --collect-only -q -k AC-P1
 - 大部分 AC 骨架不跑真实功能，直到 dev-003 / dev-004 对应模块交付后才逐条移除 `pending`；当前已填实 AC-S3 / AC-T1。
 - contract 测试只校验 PRD §6 字段结构，不验证真实后端可用性、性能或数据库状态。
 - AC-S1 需要连续 3 个真实交易日统计，当前只能保持 pending。
+
+---
+
+## M1 backend local smoke update (2026-06-18)
+
+### Coverage
+
+| AC | Current method | Result | Notes |
+| --- | --- | --- | --- |
+| AC-P2 | `build_sample_api_outputs` validates list coverage against watchlist-v2 / benchmark-v2 policy | pass | Keeps static asset acceptance and adds backend sample API coverage regression |
+| AC-C1 | `build_realtime_snapshot` validates one complete 30-LOF realtime minute | pass / partial | M1 local smoke passes; full trading-day replay waits for a real one-day collection log |
+| AC-C2 | Failure retry flow | pending | Waiting for dev-004 executable trace: source failure -> 3 retries -> log and skip |
+| AC-I1 | list sample output + PRD 6.1 contract + local p95 proxy | pass | No live cloud access; rerun same AC when baseURL is available |
+| AC-I2 | detail sample output + PRD 6.2 contract + six required blocks | pass | Validates structure; non-empty holdings assertion waits for real holdings data |
+| AC-I3 | history sample output + PRD 6.3 contract | pass | Validates day granularity and at least 20 history records |
+| AC-I4 | ingest sample body + local `contract-smoke` / `local-api-smoke` | pass | Covers 4010, 4001, 4290 and accepted=30 local paths |
+| AC-S1 | uniCloud quota accounting | pending / hard | Waiting for 3 trading days of quota evidence or an offline quota-count fixture |
+
+### Local commands
+
+```powershell
+cd .worktrees/dev-005-test
+python -m pytest -q tests/ac/AC-I1.test.py tests/ac/AC-I2.test.py tests/ac/AC-I3.test.py tests/ac/AC-I4.test.py tests/ac/AC-C1.test.py tests/ac/AC-C2.test.py tests/ac/AC-S1.test.py tests/ac/AC-P2.test.py
+cd tests
+python -m pytest -q -m "ac_i or ac_c or ac_s or ac_p"
+python -m pytest -q
+```
+
+### CI placeholder
+
+- M1 local smoke can run in CI with `cd tests; python -m pytest -q -m "ac_i or ac_c or ac_p"`.
+- `AC-S1` remains pending by default because it needs real quota evidence.
+- Live API baseURL regression is not part of default CI, to avoid paid cloud or external dependencies.

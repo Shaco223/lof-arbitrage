@@ -18,6 +18,7 @@ from pathlib import Path
 import pytest
 
 from _lib import AC
+from _lib.m1_backend import build_sample_api_outputs
 
 META = AC.P2
 EXPECTED_TOTAL = 30
@@ -94,3 +95,29 @@ def test_ac_p2_watchlist_v2_benchmark_coverage(project_root):
     assert len(conflict_399987_rows) == 1
     assert conflict_399987_rows[0]["code"] == "160632"
     assert conflict_399987_rows[0]["index_code"] == "399987.SZ"
+
+
+@pytest.mark.ac_p
+def test_ac_p2_backend_sample_api_coverage_matches_v2_policy(project_root):
+    """AC-P2: backend sample list output must preserve v2 coverage policy."""
+    assert META.code == "AC-P2"
+    watchlist = read_csv(project_root / "assets" / "lof-watchlist-v2.csv")
+    fund_type_by_code = {row["code"]: row["type"] for row in watchlist}
+    list_response = build_sample_api_outputs(project_root)["list"]
+    items = list_response["data"]["items"]
+
+    assert len(items) == EXPECTED_TOTAL
+    assert {item["code"] for item in items} == set(fund_type_by_code)
+
+    coverage_by_code = {item["code"]: item["coverage"] for item in items}
+    average_coverage = sum(coverage_by_code.values()) / len(coverage_by_code)
+    low_coverage_codes = [
+        code for code, coverage in coverage_by_code.items()
+        if coverage < LOW_COVERAGE_THRESHOLD
+    ]
+
+    assert average_coverage >= MIN_AVG_COVERAGE
+    assert len(low_coverage_codes) <= MAX_LOW_COVERAGE_COUNT
+    for code, fund_type in fund_type_by_code.items():
+        if fund_type in FULL_COVERAGE_TYPES:
+            assert coverage_by_code[code] == 1.0

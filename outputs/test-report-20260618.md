@@ -334,3 +334,55 @@ No new blocking / major / normal issues found in this round.
 ### Note
 
 - AC-P2 currently verifies static watchlist-v2 and benchmark-v2 structure, weights, and conflict constraints. After dev-004 switches runtime defaults to v2 and emits real coverage, rerun the same AC against fetcher/API output.
+
+---
+
+# Test Report - M1 backend local smoke acceptance
+
+- Date: 2026-06-18
+- Tester: dev-005
+- worktree: `.worktrees/dev-005-test`
+- Branch: `feat/tests-ac-skeleton`
+- Baseline: `origin/main = 65a276d`
+- Scope: fill M1 local smoke acceptance for AC-I1~I4, AC-C1/C2, AC-P2 sample API coverage, and AC-S1 quota placeholder after dev-004 backend v2 smoke merge.
+
+## Result
+
+| Item | Result |
+| --- | --- |
+| AC-I1 | Pass: sample list output matches PRD 6.1 and local builder p95 <= 800ms |
+| AC-I2 | Pass: sample detail output matches PRD 6.2 and contains 6 required blocks |
+| AC-I3 | Pass: sample history output matches PRD 6.3, day granularity, >= 20 records |
+| AC-I4 | Pass: ingest body contract plus local `contract-smoke` / `local-api-smoke` cover success and error codes |
+| AC-C1 | Pass / partial: one local realtime snapshot minute contains 30 unique LOF rows with valid coverage/source_quality |
+| AC-C2 | Pending: waiting for executable retry trace from dev-004 |
+| AC-P2 | Pass: static v2 assets still pass; backend sample list coverage matches v2 policy |
+| AC-S1 | Pending / hard: waiting for 3 trading days of quota evidence or offline quota-count fixture |
+| Target AC pytest | `9 passed, 2 skipped` |
+| M1 marker pytest | `11 passed, 3 skipped, 16 deselected` |
+| tests full pytest | `21 passed, 9 skipped` |
+| root pytest | `30 passed, 1 skipped` |
+| git diff check | Pass |
+| Blockers for dev-003/dev-004 | No blocking bug found; AC-C2/S1 remain evidence-dependent pending items |
+
+## Commands
+
+```powershell
+cd .worktrees/dev-005-test
+python -m pytest -q tests/ac/AC-I1.test.py tests/ac/AC-I2.test.py tests/ac/AC-I3.test.py tests/ac/AC-I4.test.py tests/ac/AC-C1.test.py tests/ac/AC-C2.test.py tests/ac/AC-S1.test.py tests/ac/AC-P2.test.py
+cd tests
+python -m pytest -q -m "ac_i or ac_c or ac_s or ac_p"
+python -m pytest -q
+python -m pytest -q ..
+git diff --check
+```
+
+## Bug List
+
+No new blocking / major / normal issues found in this round.
+
+### Pending Evidence
+
+- AC-C2: waiting for dev-004 failure/retry sample output: source failure -> 3 retries -> log and skip.
+- AC-S1: waiting for dev-004/dev-001 quota evidence: cloud function calls, database reads, database writes for 3 trading days.
+- Real deployed API regression is not executed in this round because no paid cloud / live uniCloud access should be used by dev-005 M1 local smoke.
