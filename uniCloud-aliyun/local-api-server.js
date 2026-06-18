@@ -91,7 +91,7 @@ function start() {
   const port = Number(process.env.LOCAL_API_PORT || process.env.PORT || DEFAULT_PORT);
   const server = createLocalApiServer();
   server.listen(port, '127.0.0.1', () => {
-    console.log(`LOF local API listening on http://localhost:${port}`);
+    console.log(`LOF local API listening on http://127.0.0.1:${port}`);
     console.log(`Functions: lof-list / lof-detail / lof-history / lof-ingest`);
     console.log(`Local ingest token env: UNICLOUD_INGEST_TOKEN (default: ${DEFAULT_TOKEN})`);
   });

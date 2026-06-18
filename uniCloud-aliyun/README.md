@@ -56,8 +56,19 @@ $env:UNICLOUD_INGEST_TOKEN='local-dev-token'
 node local-api-server.js
 ```
 
-Base URL：`http://localhost:8787`。接口路径与线上一致：`lof-list` / `lof-detail` / `lof-history` / `lof-ingest`。本地 smoke：
+Base URL：`http://127.0.0.1:8787`。接口路径与线上一致：`lof-list` / `lof-detail` / `lof-history` / `lof-ingest`。本地 smoke：
 
 ```powershell
 node uniCloud-aliyun\tests\local-http-smoke.test.js
 ```
+
+
+## M2.2 本地分钟快照
+
+追加本地分钟快照，不上云：
+
+```powershell
+node uniCloud-aliyun\local-minute-snapshots.js --output outputs\local-minute-snapshots-v2.jsonl
+```
+
+每行包含 `ts` 和 30 条 `items`，用于本地联调与后续历史沉淀验证。

@@ -161,7 +161,7 @@ node local-api-server.js
 启动后 base URL：
 
 ```text
-http://localhost:8787
+http://127.0.0.1:8787
 ```
 
 四个接口路径与线上一致：
@@ -175,7 +175,7 @@ http://localhost:8787
 
 ```env
 VITE_USE_MOCK=false
-VITE_API_BASE=http://localhost:8787
+VITE_API_BASE=http://127.0.0.1:8787
 VITE_API_FN_LIST=lof-list
 VITE_API_FN_DETAIL=lof-detail
 VITE_API_FN_HISTORY=lof-history
@@ -196,3 +196,28 @@ node uniCloud-aliyun\tests\local-http-smoke.test.js
 - `lof-detail` 返回 `coverage_breakdown` 与 `realtime`。
 - `lof-history?days=30` 返回不少于 20 个交易日样例。
 - `lof-ingest` 保留 token 校验：缺 token 返回 `4010`，带本地 token 正常返回 `accepted=30,rejected=0`。
+
+
+## M2.2 本地分钟快照沉淀
+
+本地分钟快照仅写入本机文件，不调用线上 uniCloud，不消耗 RU/WU。默认输出文件：`outputs/local-minute-snapshots-v2.jsonl`。
+
+追加一条 30 只 LOF 的分钟快照：
+
+```powershell
+node uniCloud-aliyun\local-minute-snapshots.js --output outputs\local-minute-snapshots-v2.jsonl
+```
+
+指定时间戳追加：
+
+```powershell
+node uniCloud-aliyun\local-minute-snapshots.js --output outputs\local-minute-snapshots-v2.jsonl --ts 2026-06-18T10:31:00+08:00
+```
+
+JSONL 每行结构：
+
+```json
+{"ts":"2026-06-18T10:31:00+08:00","items":[{"code":"160119","price":1.1804,"iopv":1.146,"premium":0.030017,"coverage":1,"source_quality":"ok"}]}
+```
+
+实际每行 `items` 固定包含 30 条 v2 自选池快照。当前 M2.2 使用本地样例数据沉淀链路；不作为真实套利价格依据。
