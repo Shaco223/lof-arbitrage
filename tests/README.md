@@ -189,3 +189,15 @@ python -m pytest -q
 - AC-I3: failed because `lof-history?days=30` returned 1 row, below the `>=20` trading-day requirement.
 - AC-I4: missing-token path pass (`4010`); positive ingest write remains pending without private token.
 - AC-C1/C2 local regression: pass; AC-S1 remains hard pending.
+
+---
+
+## Real API regression after frontend merge (2026-06-18)
+
+- Baseline: `origin/main = 8c226e0`.
+- AC-I1: structure still pass with 30 rows; p95 still fail (`~9647ms > 800ms`).
+- AC-I2: detail contract still pass.
+- AC-I3: still fail because `lof-history?days=30` returns 1 row.
+- AC-I4: missing-token path still pass (`4010`); positive write remains pending without private token.
+- AC-C1/C2: local regression pass (`3 passed, 1 skipped`, AC-S1 skipped/hard pending).
+- Source quality: real `lof-list` has 30 rows, all `source_quality=ok`; no degraded/stale real sample in this run.

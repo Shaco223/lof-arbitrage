@@ -546,3 +546,228 @@ python -m pytest -q tests/ac/AC-C1.test.py tests/ac/AC-C2.test.py tests/ac/AC-S1
 
 - AC-I4 positive ingest write: waiting for private token execution by dev-004 or local environment variable outside git.
 - AC-S1: waiting for 3 real trading days of uniCloud quota evidence.
+
+---
+
+# Test Report - Real API regression after frontend merge
+
+- Date: 2026-06-18
+- Tester: dev-005
+- worktree: `.worktrees/dev-005-test`
+- Branch: `feat/tests-ac-skeleton`
+- Baseline: `origin/main = 8c226e0`
+- API Base: `https://fc-mp-8550b592-295c-49da-a33a-57df17e450a1.next.bspapp.com`
+- Scope: rerun real API acceptance after dev-003 frontend real API merge; cover AC-I1/I2/I3/I4 safe path and AC-C1/C2 local regression. No token was used or committed.
+
+## Result
+
+| Item | Result |
+| --- | --- |
+| AC-I1 structure | Pass: `lof-list` returned 30 rows with PRD 6.1 fields |
+| AC-I1 p95 | Fail: p95 sample was about `9647ms`, above `800ms` |
+| AC-I2 | Pass: `lof-detail` returned required detail blocks |
+| AC-I3 | Fail: `lof-history?days=30` returned 1 row, below `>=20` |
+| AC-I4 missing token | Pass: `lof-ingest` without token returned `4010` |
+| AC-I4 positive write | Pending: requires private token execution by dev-004 or local env outside git |
+| AC-C1/C2 regression | Pass: `3 passed, 1 skipped`; AC-S1 remains skipped/hard pending |
+| Default tests | Pass: `23 passed, 13 skipped` with real API tests skipped by default |
+| Source quality sample | `lof-list` returned 30 rows; `source_quality=ok` for all 30 rows; no degraded/stale sample observed |
+| AC-S1 | Still pending / hard; this run only records smoke observation, not 3-day quota evidence |
+
+## Commands
+
+```powershell
+cd .worktrees/dev-005-test
+git fetch origin
+git rebase origin/main
+$env:REAL_API_BASE='https://fc-mp-8550b592-295c-49da-a33a-57df17e450a1.next.bspapp.com'
+$env:REAL_API_P95_REPEAT='5'
+python -m pytest -q tests/e2e/test_real_api_acceptance.py -ra
+python -m pytest -q tests/ac/AC-C1.test.py tests/ac/AC-C2.test.py tests/ac/AC-S1.test.py
+python -m pytest -q tests
+git diff --check
+```
+
+## Bug List
+
+### BUG-REAL-001
+- AC ID: AC-I1
+- Endpoint / page: `GET /lof-list?sort=code`
+- Environment: real uniCloud API base `https://fc-mp-8550b592-295c-49da-a33a-57df17e450a1.next.bspapp.com`
+- Reproduction steps: set `REAL_API_BASE`, set `REAL_API_P95_REPEAT=5`, run `python -m pytest -q tests/e2e/test_real_api_acceptance.py -ra`
+- Expected result: p95 response time `<= 800ms` and 30-row structure compliant response
+- Actual result: 30-row structure passed, but p95 was about `9647ms` (`9647.255ms` in latest regression)
+- Severity: blocking
+- Responsible Agent: dev-004
+- CC: dev-001
+
+### BUG-REAL-002
+- AC ID: AC-I3
+- Endpoint / page: `GET /lof-history?code=160119&days=30`
+- Environment: real uniCloud API base `https://fc-mp-8550b592-295c-49da-a33a-57df17e450a1.next.bspapp.com`
+- Reproduction steps: set `REAL_API_BASE`, run `python -m pytest -q tests/e2e/test_real_api_acceptance.py -ra`
+- Expected result: `granularity == day` and at least 20 trading-day rows under `days=30`
+- Actual result: `granularity == day`, but returned 1 row
+- Severity: blocking
+- Responsible Agent: dev-004
+- CC: dev-001
+
+### Pending Evidence
+
+- AC-I4 positive ingest write: waiting for private token execution by dev-004 or local environment variable outside git.
+- AC-S1: waiting for 3 real trading days of uniCloud quota evidence.
+
+---
+
+# Test Report - Real API e2e rerun after backend fix 08448d9
+
+- Date: 2026-06-18
+- Tester: dev-005
+- worktree: `.worktrees/dev-005-test`
+- Branch: `feat/tests-ac-skeleton`
+- Baseline: `origin/main = 08448d9`
+- API Base: `https://fc-mp-8550b592-295c-49da-a33a-57df17e450a1.next.bspapp.com`
+- Scope: rerun real API acceptance after dev-004 real uniCloud read-interface stability fix; cover AC-I1/I2/I3/I4 safe path and default tests. No ingest token was used or committed. Owner裁决：功能链路可用，性能待优化，BUG-REAL-001 不阻塞当前真实联调。
+
+## Result
+
+| Item | Result |
+| --- | --- |
+| Rebase | Done: `git rebase origin/main` reported current branch up to date; local HEAD contains `08448d9` plus dev-005 test-report commits |
+| Required env | Set: `REAL_API_BASE`, `REAL_API_P95_REPEAT=5`, `NO_PROXY=.next.bspapp.com`; also set lowercase `no_proxy` during diagnostic rerun |
+| AC-I1 structure | Pass: `lof-list` returned 30 rows with PRD 6.1 fields |
+| AC-I1 p95 | Owner裁决后置: final rerun assertion p95 sample `1491.339ms` > `800ms`; sample timings included one `8726.968ms` outlier；不阻塞当前真实联调 |
+| AC-I2 | Pass on final rerun: `lof-detail` returned required detail blocks |
+| AC-I3 | Pass on final rerun: `lof-history?days=30` returned enough day granularity history rows |
+| AC-I4 missing token | Pass on final rerun: `lof-ingest` without token returned `4010` |
+| AC-I4 positive write | Pending: `REAL_API_INGEST_TOKEN` not configured; skipped as expected, no token committed |
+| Default tests | Pass: `23 passed, 13 skipped` |
+| AC-S1 | Still pending / hard; this run only records smoke observation, not 3-day quota evidence |
+
+## Commands
+
+```powershell
+cd .worktrees/dev-005-test
+git status --short --branch
+git fetch origin
+git rebase origin/main
+$env:REAL_API_BASE='https://fc-mp-8550b592-295c-49da-a33a-57df17e450a1.next.bspapp.com'
+$env:REAL_API_P95_REPEAT='5'
+$env:NO_PROXY='.next.bspapp.com'
+python -m pytest -q tests/e2e/test_real_api_acceptance.py -ra
+python -m pytest -q tests
+
+# Diagnostic rerun after initial urllib timeout / SSL handshake timeout:
+$env:NO_PROXY='.next.bspapp.com'
+$env:no_proxy='.next.bspapp.com'
+curl.exe -L --max-time 20 --connect-timeout 10 -sS -w "`nHTTP_CODE=%{http_code} TOTAL_TIME=%{time_total}`n" "https://fc-mp-8550b592-295c-49da-a33a-57df17e450a1.next.bspapp.com/lof-list?sort=code"
+python -m pytest -q tests/e2e/test_real_api_acceptance.py -ra
+```
+
+## Evidence
+
+- First required e2e run: `2 failed, 2 passed, 1 skipped`; AC-I1 and AC-I2 hit socket / SSL timeout before stable response, AC-I4 positive ingest skipped because token not configured.
+- Network diagnostic: DNS resolved to `203.107.60.33`; `Test-NetConnection` TCP 443 succeeded; curl probe returned HTTP 200 in about `2.335s`.
+- Final e2e rerun: `1 failed, 3 passed, 1 skipped`; only AC-I1 p95 still failed. Owner裁决：功能链路可用，性能待优化，不阻塞当前真实联调。
+- Default regression: `python -m pytest -q tests` -> `23 passed, 13 skipped`.
+
+## Bug List
+
+### BUG-REAL-001
+- Status: remains open; owner裁决降级为后置性能优化项
+- AC ID: AC-I1
+- Endpoint / page: `GET /lof-list?sort=code`
+- Environment: real uniCloud API base `https://fc-mp-8550b592-295c-49da-a33a-57df17e450a1.next.bspapp.com`, `NO_PROXY=.next.bspapp.com`, `REAL_API_P95_REPEAT=5`
+- Reproduction steps: set required env, run `python -m pytest -q tests/e2e/test_real_api_acceptance.py -ra`
+- Expected result: p95 response time `<= 800ms` and 30-row structure compliant response
+- Actual result: 30-row structure passed, but final rerun p95 assertion value was `1491.339ms`; sample timings included one `8726.968ms` outlier
+- Severity: performance optimization / post-M1 follow-up, not blocking current real integration by owner裁决
+- Responsible Agent: dev-004
+- CC: dev-001
+
+### BUG-REAL-002
+- Status: closed by 08448d9 final rerun
+- AC ID: AC-I3
+- Endpoint / page: `GET /lof-history?code=160119&days=30`
+- Environment: real uniCloud API base `https://fc-mp-8550b592-295c-49da-a33a-57df17e450a1.next.bspapp.com`, `NO_PROXY=.next.bspapp.com`
+- Reproduction steps: set required env, run `python -m pytest -q tests/e2e/test_real_api_acceptance.py -ra`
+- Expected result: `granularity == day` and at least 20 trading-day rows under `days=30`
+- Actual result: final rerun passed AC-I3 contract and history length assertions
+- Severity: blocking before fix; closed after fix
+- Responsible Agent: dev-004
+- CC: dev-001
+
+### Pending Evidence
+
+- AC-I4 positive ingest write: still pending because `REAL_API_INGEST_TOKEN` is not configured in dev-005 environment; no conclusion about cloud DB `resource exhausted` in this run.
+- AC-S1: still hard pending, waiting for 3 real trading days of uniCloud function/database quota evidence.
+
+---
+
+# Test Report - Local real API e2e after strategy switch
+
+- Date: 2026-06-18
+- Tester: dev-005
+- worktree: `.worktrees/dev-005-test`
+- Branch: `feat/tests-ac-skeleton`
+- Baseline: `origin/main = 3f8c3e2`
+- Local API: `http://localhost:8787` / `http://127.0.0.1:8787`
+- Scope: switch real API e2e from online uniCloud to local real API service; no online `next.bspapp.com` request was used in this round.
+
+## Result
+
+| Item | Result |
+| --- | --- |
+| Rebase | Done: rebased onto `origin/main = 3f8c3e2` |
+| Local API service | Already listening on `127.0.0.1:8787`, process command `node local-api-server.js` |
+| `http://127.0.0.1:8787` | Pass: `5 passed in 0.62s` with `REAL_API_BASE=http://127.0.0.1:8787` and `REAL_API_INGEST_TOKEN=local-dev-token` |
+| `http://localhost:8787` | Fail: AC-I1 p95 failed; `1 failed, 4 passed`, p95 about `2038.962ms` > `800ms` |
+| BUG-LOCAL-001 | Open as local name-resolution / proxy-path issue; not an API functional blocker |
+| Follow-up local integration base URL | Use `http://127.0.0.1:8787` by default |
+| AC-I1 | Functional pass on local API via `127.0.0.1`; `localhost` path fails performance only |
+| AC-I2 | Pass on local API |
+| AC-I3 | Pass on local API |
+| AC-I4 missing token | Pass on local API |
+| AC-I4 positive ingest | Pass on local API with `local-dev-token`; online token not used |
+| Default tests | Pass: `28 passed, 8 skipped` |
+| AC-S1 | Still hard pending; online RU/WU overage recorded as quota risk evidence, not release evidence |
+
+## Commands
+
+```powershell
+cd .worktrees/dev-005-test
+git fetch origin
+git rebase origin/main
+
+# Verify local service
+curl.exe -sS -w "`nHTTP_CODE=%{http_code} TOTAL_TIME=%{time_total}`n" "http://localhost:8787/lof-list?sort=code"
+
+# PM-requested localhost target
+$env:REAL_API_BASE='http://localhost:8787'
+$env:REAL_API_INGEST_TOKEN='local-dev-token'
+python -m pytest -q tests/e2e/test_real_api_acceptance.py -ra
+
+# Follow-up default local target
+$env:REAL_API_BASE='http://127.0.0.1:8787'
+$env:REAL_API_INGEST_TOKEN='local-dev-token'
+python -m pytest -q tests/e2e/test_real_api_acceptance.py -ra
+python -m pytest -q tests
+```
+
+## Bug List
+
+### BUG-LOCAL-001
+- AC ID: AC-I1
+- Endpoint / page: `GET /lof-list?sort=code`
+- Environment: local real API service, Python `urllib`, Windows loopback
+- Reproduction steps: set `REAL_API_BASE=http://localhost:8787`, set `REAL_API_INGEST_TOKEN=local-dev-token`, run `python -m pytest -q tests/e2e/test_real_api_acceptance.py -ra`
+- Expected result: local API p95 `<= 800ms`
+- Actual result: `localhost` target produced about `2.0s` per Python `urllib` request and failed AC-I1 p95; same service via `127.0.0.1` passed all e2e tests in `0.62s`
+- Severity: normal; local name-resolution / proxy-path issue, not an API functional blocker
+- Follow-up: use `http://127.0.0.1:8787` for local integration by default
+- Responsible Agent: dev-004 for local API guidance / dev-005 for test command documentation
+- CC: dev-001
+
+### Pending Evidence
+
+- AC-S1: still hard pending; online quota overage `865RU / 500RU`, `436WU / 300WU` is recorded as risk evidence only.
