@@ -1,0 +1,26 @@
+{
+  "_doc": "AC-P1 离线 fixtures —— 5 只指数 LOF 的官方净值反推数据。当前为占位结构，后续 dev-005 会用 dev-004 接出来的数据源 + 官方公告 NAV 重填。",
+  "schema": {
+    "code": "string, 6 位场内代码",
+    "name": "string",
+    "type": "enum: index/industry/active",
+    "trade_date": "YYYY-MM-DD",
+    "official_nav_close": "number, 官方收盘 NAV（下一日 09:00 公告）",
+    "minutes": [
+      {
+        "ts": "ISO8601 +08:00",
+        "lof_price": "number, LOF 二级市场现价",
+        "iopv_estimated": "number, 拉取器输出 IOPV",
+        "premium_real_pseudo": "number, 用 official_nav 反推的真实溢价（占位置 null，等数据回填）",
+        "premium_estimated": "number, 拉取器输出溢价"
+      }
+    ]
+  },
+  "samples": [
+    {"code": "161725", "name": "招商中证白酒指数(LOF)A", "type": "index", "trade_date": null, "official_nav_close": null, "minutes": []},
+    {"code": "160706", "name": "嘉实沪深300(LOF)",      "type": "index", "trade_date": null, "official_nav_close": null, "minutes": []},
+    {"code": "501050", "name": "华夏中证500ETF联接(LOF)","type": "index", "trade_date": null, "official_nav_close": null, "minutes": []},
+    {"code": "160119", "name": "南方中证500(LOF)A",     "type": "index", "trade_date": null, "official_nav_close": null, "minutes": []},
+    {"code": "160222", "name": "国泰国证食品饮料行业指数(LOF)", "type": "index", "trade_date": null, "official_nav_close": null, "minutes": []}
+  ]
+}

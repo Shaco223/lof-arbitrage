@@ -1,4 +1,4 @@
-﻿# ===== 通用 =====
+# ===== 通用 =====
 .DS_Store
 Thumbs.db
 *.log
@@ -60,6 +60,7 @@ uniCloud-aliyun/cloudfunctions/common/uni-config-center/
 # ===== 输出与缓存（项目特定）=====
 outputs/*
 !outputs/.gitkeep
+!outputs/test-report-20260618.md
 assets/cache/
 assets/*.cache.json
 
