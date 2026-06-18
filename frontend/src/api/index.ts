@@ -1,4 +1,4 @@
-﻿// 统一请求层
+// 统一请求层
 // - 默认走 uni.request 调 uniCloud URL 化云函数（VITE_API_BASE + /<云函数名>）
 // - 当 VITE_USE_MOCK=true（默认）时直接返回本地 mock，确保 dev-004 接口未上线时三页可跑通
 // - 全部走 PRD §6 通用响应包装：{ code, message, data }
@@ -26,6 +26,13 @@ const useMock = (): boolean =>
 
 const apiBase = (): string =>
   (import.meta.env.VITE_API_BASE || '').replace(/\/+$/, '')
+
+const apiFunctions = {
+  list: import.meta.env.VITE_API_FN_LIST || 'api-lof-list',
+  detail: import.meta.env.VITE_API_FN_DETAIL || 'api-lof-detail',
+  history: import.meta.env.VITE_API_FN_HISTORY || 'api-lof-history',
+  ingest: import.meta.env.VITE_API_FN_INGEST || 'ingest-realtime'
+}
 
 interface RawRequest {
   /** 云函数名，例如 api-lof-list */
@@ -82,7 +89,7 @@ async function rawRequest<T>(opts: RawRequest): Promise<T> {
 export async function getLofList(params: ListParams = {}): Promise<LofListData> {
   if (useMock()) return mockListResponse(params)
   return rawRequest<LofListData>({
-    fn: 'api-lof-list',
+    fn: apiFunctions.list,
     method: 'GET',
     query: { sort: params.sort, type: params.type }
   })
@@ -92,7 +99,7 @@ export async function getLofList(params: ListParams = {}): Promise<LofListData> 
 export async function getLofDetail(params: DetailParams): Promise<LofDetailData> {
   if (useMock()) return mockDetailResponse(params.code)
   return rawRequest<LofDetailData>({
-    fn: 'api-lof-detail',
+    fn: apiFunctions.detail,
     method: 'GET',
     query: { code: params.code }
   })
@@ -102,7 +109,7 @@ export async function getLofDetail(params: DetailParams): Promise<LofDetailData>
 export async function getLofHistory(params: HistoryParams): Promise<LofHistoryData> {
   if (useMock()) return mockHistoryResponse(params.code, params.days)
   return rawRequest<LofHistoryData>({
-    fn: 'api-lof-history',
+    fn: apiFunctions.history,
     method: 'GET',
     query: {
       code: params.code,
@@ -119,7 +126,7 @@ export async function ingestRealtimeMockOnly(
 ): Promise<IngestRealtimeData> {
   if (useMock()) return mockIngestRealtimeResponse(body)
   return rawRequest<IngestRealtimeData>({
-    fn: 'ingest-realtime',
+    fn: apiFunctions.ingest,
     method: 'POST',
     body: body as unknown as Record<string, unknown>,
     header: { 'X-Ingest-Token': token }

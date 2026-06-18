@@ -1,4 +1,4 @@
-﻿# frontend · uni-app（一期 H5 / 二期微信小程序）
+# frontend · uni-app（一期 H5 / 二期微信小程序）
 
 ## 职责范围
 - Dashboard：LOF 实时溢价列表，字段按 PRD §4.3 / §6.1 展示；mock 默认池已切到 `assets/lof-watchlist-v2.csv` 的 30 只。
@@ -60,6 +60,11 @@ npm run build:mp-weixin
 VITE_API_BASE=https://xxx.next.bspapp.com
 VITE_USE_MOCK=false
 VITE_POLL_INTERVAL_MS=60000
+# Defaults follow PRD section 6; if dev-004 uses lof-list/lof-detail/lof-history/lof-ingest, change only these values
+VITE_API_FN_LIST=api-lof-list
+VITE_API_FN_DETAIL=api-lof-detail
+VITE_API_FN_HISTORY=api-lof-history
+VITE_API_FN_INGEST=ingest-realtime
 ```
 
 - `VITE_USE_MOCK=true`：三页使用 `src/mock/index.ts`，可脱离后端演示。

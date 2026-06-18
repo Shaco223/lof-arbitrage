@@ -1,4 +1,4 @@
-﻿/* eslint-disable */
+/* eslint-disable */
 /// <reference types='@dcloudio/types' />
 import 'vue'
 
@@ -12,6 +12,10 @@ interface ImportMetaEnv {
   readonly VITE_API_BASE: string
   readonly VITE_USE_MOCK: string
   readonly VITE_POLL_INTERVAL_MS: string
+  readonly VITE_API_FN_LIST?: string
+  readonly VITE_API_FN_DETAIL?: string
+  readonly VITE_API_FN_HISTORY?: string
+  readonly VITE_API_FN_INGEST?: string
 }
 interface ImportMeta {
   readonly env: ImportMetaEnv
