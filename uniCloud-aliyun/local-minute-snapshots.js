@@ -10,14 +10,7 @@ function buildMinuteSnapshot(dataset = DEFAULT_DATASET, ts = new Date().toISOStr
   const realtimeRows = Array.isArray(dataset.lof_realtime) ? dataset.lof_realtime : [];
   const items = realtimeRows
     .slice(0, 30)
-    .map((item) => ({
-      code: String(item.code),
-      price: Number(item.price),
-      iopv: Number(item.iopv),
-      premium: Number(item.premium),
-      coverage: Number(item.coverage),
-      source_quality: item.source_quality || 'ok'
-    }));
+    .map(normalizeSnapshotItem);
 
   return { ts, items };
 }
@@ -26,11 +19,43 @@ function appendMinuteSnapshot(options = {}) {
   const dataset = options.dataset || DEFAULT_DATASET;
   const outputPath = path.resolve(options.outputPath || process.env.LOCAL_MINUTE_SNAPSHOT_FILE || DEFAULT_OUTPUT);
   const ts = options.ts || process.env.LOCAL_MINUTE_SNAPSHOT_TS || new Date().toISOString();
-  const snapshot = buildMinuteSnapshot(dataset, ts);
+  const snapshot = options.snapshot ? normalizeSnapshot(options.snapshot, ts) : buildMinuteSnapshot(dataset, ts);
 
   fs.mkdirSync(path.dirname(outputPath), { recursive: true });
   fs.appendFileSync(outputPath, JSON.stringify(snapshot) + '\n', 'utf8');
   return { outputPath, snapshot };
+}
+
+function loadLatestMinuteSnapshot(outputPath = process.env.LOCAL_MINUTE_SNAPSHOT_FILE || DEFAULT_OUTPUT) {
+  const filePath = path.resolve(outputPath);
+  if (!fs.existsSync(filePath)) return null;
+  const lines = fs.readFileSync(filePath, 'utf8').split(/\r?\n/).filter((line) => line.trim());
+  if (!lines.length) return null;
+  return JSON.parse(lines[lines.length - 1]);
+}
+
+function normalizeSnapshot(snapshot, fallbackTs) {
+  return {
+    ts: snapshot.ts || fallbackTs,
+    items: Array.isArray(snapshot.items) ? snapshot.items.map(normalizeSnapshotItem) : []
+  };
+}
+
+function normalizeSnapshotItem(item) {
+  return {
+    code: String(item.code),
+    price: nullableNumber(item.price),
+    iopv: nullableNumber(item.iopv),
+    premium: nullableNumber(item.premium),
+    coverage: nullableNumber(item.coverage),
+    source_quality: item.source_quality || 'ok'
+  };
+}
+
+function nullableNumber(value) {
+  if (value === null || value === undefined || value === '') return null;
+  const number = Number(value);
+  return Number.isFinite(number) ? number : null;
 }
 
 function parseArgs(argv) {
@@ -60,4 +85,4 @@ function runCli() {
 
 if (require.main === module) runCli();
 
-module.exports = { DEFAULT_OUTPUT, buildMinuteSnapshot, appendMinuteSnapshot };
+module.exports = { DEFAULT_OUTPUT, buildMinuteSnapshot, appendMinuteSnapshot, loadLatestMinuteSnapshot };

@@ -3,6 +3,7 @@
 const http = require('http');
 const { URL } = require('url');
 const { createMockUniCloud } = require('./tests/mock-unicloud');
+const { loadLatestMinuteSnapshot } = require('./local-minute-snapshots');
 
 const dataset = require('./tests/sample-dataset.json');
 const lofList = require('./cloudfunctions/lof-list/index');
@@ -20,7 +21,7 @@ const ROUTES = {
 };
 
 function createLocalApiServer(options = {}) {
-  const state = clone(options.dataset || dataset);
+  const state = applyMinuteSnapshot(clone(options.dataset || dataset), options.minuteSnapshotFile);
   const token = options.token || process.env.UNICLOUD_INGEST_TOKEN || DEFAULT_TOKEN;
   const maxBatchSize = String(options.maxBatchSize || process.env.MAX_INGEST_BATCH_SIZE || '100');
 
@@ -53,6 +54,29 @@ function createLocalApiServer(options = {}) {
       writeJson(res, 500, { code: 5000, message: 'server error', data: {} });
     }
   });
+}
+
+function applyMinuteSnapshot(state, explicitSnapshotFile) {
+  const snapshotFile = explicitSnapshotFile || process.env.LOCAL_MINUTE_SNAPSHOT_FILE;
+  if (!snapshotFile) return state;
+  const snapshot = loadLatestMinuteSnapshot(snapshotFile);
+  if (!snapshot || !Array.isArray(snapshot.items) || !snapshot.items.length) return state;
+
+  const byCode = new Map(snapshot.items.map((item) => [String(item.code), item]));
+  state.lof_realtime = (state.lof_realtime || []).map((row) => {
+    const item = byCode.get(String(row.code));
+    if (!item) return row;
+    return {
+      ...row,
+      ts: snapshot.ts,
+      price: item.price,
+      iopv: item.iopv,
+      premium: item.premium,
+      coverage: item.coverage,
+      source_quality: item.source_quality || 'degraded'
+    };
+  });
+  return state;
 }
 
 function readBody(req) {
@@ -99,4 +123,4 @@ function start() {
 
 if (require.main === module) start();
 
-module.exports = { createLocalApiServer, DEFAULT_PORT, DEFAULT_TOKEN };
+module.exports = { createLocalApiServer, DEFAULT_PORT, DEFAULT_TOKEN, applyMinuteSnapshot };
