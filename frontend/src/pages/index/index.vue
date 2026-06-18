@@ -1,5 +1,5 @@
 ﻿<script setup lang="ts">
-// Dashboard：30 只 LOF 实时排行（mock 阶段精简池，接口结构严格按 PRD §6）
+// Dashboard：30 只 LOF 实时排行，接口结构严格按 PRD §6。
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { onPullDownRefresh } from '@dcloudio/uni-app'
 import { getLofList } from '@/api'
@@ -8,6 +8,7 @@ import { fmtNum, fmtPct, freshnessLabel, coverageLevel, coverageLevelLabel } fro
 import { useSettingsStore } from '@/store/settings'
 
 const settings = useSettingsStore()
+const isMockMode = String(import.meta.env.VITE_USE_MOCK).toLowerCase() === 'true'
 const loading = ref(false)
 const error = ref('')
 const list = ref<LofListItem[]>([])
@@ -43,6 +44,13 @@ const refreshText = computed(() => {
 
 function typeLabel(value: FundType) {
   return value === 'index' ? '指数' : value === 'industry' ? '行业' : '主动'
+}
+
+function sourceQualityLabel(value: LofListItem['source_quality']) {
+  if (value === 'stale') return '数据滞后'
+  if (value === 'degraded') return '低流动性/降级'
+  if (value === 'ok') return '高置信'
+  return ''
 }
 
 function isAlert(item: LofListItem) {
@@ -100,7 +108,7 @@ onUnmounted(() => {
     <view class="hero card">
       <view class="hero-main">
         <view class="hero-title">LOF 实时溢价监控</view>
-        <view class="hero-sub">按 PRD §6 mock 接口运行，60s 自动轮询</view>
+        <view class="hero-sub">按 PRD §6 {{ isMockMode ? 'mock' : '真实 uniCloud' }} 接口运行，60s 自动轮询</view>
       </view>
       <view class="hero-badge">
         <text class="badge-num">{{ highSignalCount }}</text>
@@ -161,7 +169,7 @@ onUnmounted(() => {
             <text
               class="coverage-pill"
               :class="`coverage-${coverageLevel(item.coverage)}`"
-            >覆盖率 {{ fmtPct(item.coverage, 0) }} · {{ coverageLevelLabel(coverageLevel(item.coverage)) }}</text>
+            >覆盖率 {{ fmtPct(item.coverage, 0) }} · {{ sourceQualityLabel(item.source_quality) || coverageLevelLabel(coverageLevel(item.coverage)) }}</text>
           </view>
         </view>
         <view class="quote-grid">
