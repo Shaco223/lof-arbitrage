@@ -46,6 +46,9 @@ npm run dev:h5
 # mock 是否覆盖 PRD §6 list/detail/history/ingest 字段
 npm run check:mock-contract
 
+# Real API config check for current dev-004 uniCloud function names
+npm run check:real-api-config
+
 # H5 构建
 npm run build:h5
 
@@ -60,11 +63,11 @@ npm run build:mp-weixin
 VITE_API_BASE=https://xxx.next.bspapp.com
 VITE_USE_MOCK=false
 VITE_POLL_INTERVAL_MS=60000
-# Defaults follow PRD section 6; if dev-004 uses lof-list/lof-detail/lof-history/lof-ingest, change only these values
-VITE_API_FN_LIST=api-lof-list
-VITE_API_FN_DETAIL=api-lof-detail
-VITE_API_FN_HISTORY=api-lof-history
-VITE_API_FN_INGEST=ingest-realtime
+# Defaults follow dev-004 current uniCloud function directories; response fields still follow PRD section 6
+VITE_API_FN_LIST=lof-list
+VITE_API_FN_DETAIL=lof-detail
+VITE_API_FN_HISTORY=lof-history
+VITE_API_FN_INGEST=lof-ingest
 ```
 
 - `VITE_USE_MOCK=true`：三页使用 `src/mock/index.ts`，可脱离后端演示。
