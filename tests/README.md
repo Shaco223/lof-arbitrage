@@ -201,3 +201,17 @@ python -m pytest -q
 - AC-I4: missing-token path still pass (`4010`); positive write remains pending without private token.
 - AC-C1/C2: local regression pass (`3 passed, 1 skipped`, AC-S1 skipped/hard pending).
 - Source quality: real `lof-list` has 30 rows, all `source_quality=ok`; no degraded/stale real sample in this run.
+
+---
+
+## M2 local real API acceptance prep (2026-06-18)
+
+- Checklist: `tests/m2-local-acceptance-checklist.md`.
+- Default local API base: `http://127.0.0.1:8787`.
+- Online uniCloud is not part of routine integration; use `ALLOW_ONLINE_REAL_API=1` only after dev-001 approval.
+- New pending skeletons:
+  - `tests/e2e/test_m2_dashboard_alerts.py` for Dashboard high premium / high discount / neutral / `source_quality` risk overlay, low-liquidity warning, 60s polling, manual refresh, and non-trading-session banner.
+  - `tests/e2e/test_m2_minute_snapshot_jsonl.py` for local minute snapshot JSONL generation, one-line-per-minute batch shape, 30-code completeness, timezone timestamp, and local-first history persistence.
+- `tests/e2e/test_m2_minute_snapshot_jsonl.py` is runnable after dev-004 local snapshot delivery; Dashboard alert tests remain pending until dev-003/dev-004 M2 samples/UI hooks are available.
+- `AC-S1` remains hard pending; online over-quota evidence is recorded as risk only.
+- M2 product scope excludes QDII, online high-frequency integration, and AC-S1 release.

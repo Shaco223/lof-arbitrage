@@ -1,8 +1,8 @@
-"""Real uniCloud API e2e acceptance tests.
+"""Local real API e2e acceptance tests.
 
-These tests run only when REAL_API_BASE is provided. They do not require or
-store the ingest token. The positive ingest write path stays pending unless a
-private REAL_API_INGEST_TOKEN is configured outside git.
+By default these tests target the local real API service at 127.0.0.1:8787.
+Online uniCloud endpoints are skipped unless ALLOW_ONLINE_REAL_API=1 is set by
+the project manager for a low-frequency smoke run.
 """
 from __future__ import annotations
 
@@ -12,6 +12,7 @@ import time
 import urllib.error
 import urllib.parse
 import urllib.request
+from functools import lru_cache
 from typing import Any
 
 import pytest
@@ -30,14 +31,19 @@ from contract.prd6_contracts import (
     assert_contract,
 )
 
-REAL_API_BASE = os.getenv("REAL_API_BASE", "").rstrip("/")
+DEFAULT_LOCAL_API_BASE = "http://127.0.0.1:8787"
+REAL_API_BASE = os.getenv("REAL_API_BASE", DEFAULT_LOCAL_API_BASE).rstrip("/")
 FN_LIST = os.getenv("REAL_API_FN_LIST", "lof-list")
 FN_DETAIL = os.getenv("REAL_API_FN_DETAIL", "lof-detail")
 FN_HISTORY = os.getenv("REAL_API_FN_HISTORY", "lof-history")
 FN_INGEST = os.getenv("REAL_API_FN_INGEST", "lof-ingest")
 P95_REPEAT = int(os.getenv("REAL_API_P95_REPEAT", "20"))
+ALLOW_ONLINE_REAL_API = os.getenv("ALLOW_ONLINE_REAL_API") == "1"
 
-pytestmark = pytest.mark.skipif(not REAL_API_BASE, reason="REAL_API_BASE not configured")
+pytestmark = pytest.mark.skipif(
+    "next.bspapp.com" in REAL_API_BASE and not ALLOW_ONLINE_REAL_API,
+    reason="online uniCloud smoke requires ALLOW_ONLINE_REAL_API=1",
+)
 
 
 def call_api(fn: str, query: dict[str, Any] | None = None, method: str = "GET", body: dict[str, Any] | None = None, headers: dict[str, str] | None = None) -> tuple[dict[str, Any], float, int]:
@@ -67,6 +73,32 @@ def percentile_95(values: list[float]) -> float:
     ordered = sorted(values)
     index = max(0, int(len(ordered) * 0.95) - 1)
     return ordered[index]
+
+
+def is_local_api_base() -> bool:
+    host = urllib.parse.urlparse(REAL_API_BASE).hostname
+    return host in {"127.0.0.1", "::1", "localhost"}
+
+
+def is_deprecated_localhost_base() -> bool:
+    return urllib.parse.urlparse(REAL_API_BASE).hostname == "localhost"
+
+
+@lru_cache(maxsize=1)
+def local_api_available() -> bool:
+    try:
+        call_api(FN_LIST, {"sort": "code"})
+        return True
+    except (OSError, TimeoutError, urllib.error.URLError):
+        return False
+
+
+@pytest.fixture(scope="session", autouse=True)
+def require_real_api_available() -> None:
+    if is_deprecated_localhost_base():
+        pytest.fail("localhost:8787 is not an acceptance base URL; use http://127.0.0.1:8787")
+    if is_local_api_base() and not local_api_available():
+        pytest.skip(f"local real API not available at {REAL_API_BASE}")
 
 
 @pytest.fixture(scope="session")
