@@ -39,13 +39,19 @@ lof-fetcher/
 cd lof-fetcher
 pip install -r requirements.txt
 python -m pytest -q
-$env:PYTHONPATH='.'; python scripts\validate_watchlist.py --watchlist ..\assets\lof-watchlist-v1.csv --output ..\assets\watchlist-v1-validation.md
+$env:PYTHONPATH='.'; python scripts\validate_watchlist.py --watchlist ..\assets\lof-watchlist-v1.csv --benchmark ..\assets\benchmark-mapping-v1.csv --output ..\assets\watchlist-v1-validation.md
 ```
 
 ## 元数据验证说明
 - 默认数据源：东方财富 `https://fund.eastmoney.com/pingzhongdata/{code}.js`。
 - HTTP 客户端统一 `trust_env=False`，避免本机代理污染公开接口访问。
 - `pending_verify` 条目只在报告中标记回推，最终是否替换由 dev-001/dev-002 决策。
+
+## 运行与运维文档
+- 本机运行 SOP：`docs/runbook.md`
+- 数据源失败兜底：`docs/source-fallback.md`
+- NAV 反推溢价口径：`docs/nav-premium-calibration.md`
+- watchlist 验证数据源说明：`docs/watchlist-validation-sources.md`
 
 ## 不要做
 - 不直接对前端开放接口（前端只读 uniCloud REST API）

@@ -38,6 +38,9 @@ uniCloud-aliyun/
 - 资源不存在：`4040`
 - 服务异常：`5000`
 
+## 部署文档
+- HBuilderX / uniCloud 阿里云部署说明：`docs/deploy.md`
+
 ## 不要做
 - 不直接拉外部数据源（这是 lof-fetcher 的职责）
 - 不超免费额度：云函数 5 万/日、库读 5 万、库写 3 万
