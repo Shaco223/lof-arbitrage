@@ -7,7 +7,12 @@ const fs = require('fs');
 const { createMockUniCloud } = require('./tests/mock-unicloud');
 const { loadLatestMinuteSnapshot } = require('./local-minute-snapshots');
 
-const dataset = require('./tests/sample-dataset.json');
+const SAMPLE_DATASET_PATH = path.join(__dirname, 'tests', 'sample-dataset.json');
+
+function readSampleDatasetSync() {
+  const text = fs.readFileSync(SAMPLE_DATASET_PATH, 'utf8');
+  return JSON.parse(text);
+}
 
 const DEFAULT_PORT = 8787;
 const DEFAULT_TOKEN = 'local-dev-token';
@@ -38,7 +43,7 @@ function loadHandler(pathname, freshRequire) {
 }
 
 function createLocalApiServer(options = {}) {
-  const baseDataset = options.dataset || dataset;
+  const explicitDataset = options.dataset || null;
   const explicitSnapshotFile = options.minuteSnapshotFile;
   const token = options.token || process.env.UNICLOUD_INGEST_TOKEN || DEFAULT_TOKEN;
   const maxBatchSize = String(options.maxBatchSize || process.env.MAX_INGEST_BATCH_SIZE || '100');
@@ -46,25 +51,31 @@ function createLocalApiServer(options = {}) {
   process.env.UNICLOUD_INGEST_TOKEN = token;
   process.env.MAX_INGEST_BATCH_SIZE = maxBatchSize;
 
-  let cache = { mtimeMs: -1, file: null, t: 0, state: null };
+  let cache = { datasetMtimeMs: -1, snapshotMtimeMs: -1, snapshotFile: null, t: 0, state: null };
 
   function getFreshState() {
-    const file = explicitSnapshotFile || process.env.LOCAL_MINUTE_SNAPSHOT_FILE || null;
-    let mtimeMs = 0;
-    if (file) {
-      try { mtimeMs = fs.statSync(file).mtimeMs; } catch (_) { mtimeMs = 0; }
+    const snapshotFile = explicitSnapshotFile || process.env.LOCAL_MINUTE_SNAPSHOT_FILE || null;
+    let snapshotMtimeMs = 0;
+    if (snapshotFile) {
+      try { snapshotMtimeMs = fs.statSync(snapshotFile).mtimeMs; } catch (_) { snapshotMtimeMs = 0; }
+    }
+    let datasetMtimeMs = 0;
+    if (!explicitDataset) {
+      try { datasetMtimeMs = fs.statSync(SAMPLE_DATASET_PATH).mtimeMs; } catch (_) { datasetMtimeMs = 0; }
     }
     const now = Date.now();
     if (
       cache.state &&
-      cache.file === file &&
-      cache.mtimeMs === mtimeMs &&
+      cache.snapshotFile === snapshotFile &&
+      cache.snapshotMtimeMs === snapshotMtimeMs &&
+      cache.datasetMtimeMs === datasetMtimeMs &&
       (now - cache.t) < STATE_CACHE_TTL_MS
     ) {
       return { state: cache.state, fresh: false };
     }
-    const state = applyMinuteSnapshot(clone(baseDataset), file);
-    cache = { mtimeMs, file, t: now, state };
+    const baseDataset = explicitDataset || readSampleDatasetSync();
+    const state = applyMinuteSnapshot(clone(baseDataset), snapshotFile);
+    cache = { datasetMtimeMs, snapshotMtimeMs, snapshotFile, t: now, state };
     return { state, fresh: true };
   }
 
