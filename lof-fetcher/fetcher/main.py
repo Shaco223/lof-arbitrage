@@ -1,4 +1,4 @@
-﻿from __future__ import annotations
+from __future__ import annotations
 
 import argparse
 from pathlib import Path
@@ -8,9 +8,19 @@ from loguru import logger
 
 from fetcher.pipeline.quota import write_quota_report
 from fetcher.pipeline.real_poc import build_poc_report, run_long_run, write_poc_outputs
+from fetcher.pipeline.real_watchlist import (
+    DEFAULT_OUTPUT_DIR,
+    DEFAULT_SNAPSHOT_NAME,
+    DEFAULT_WATCHLIST_PATH,
+    build_watchlist_report,
+    fetch_watchlist_payloads,
+    load_watchlist,
+    run_watchlist_long_run,
+    write_watchlist_outputs,
+)
 from fetcher.pipeline.retry_trace import build_retry_trace_samples
 from fetcher.pipeline.snapshot import write_sample_outputs
-from fetcher.sources.csv_assets import load_benchmark_mapping, load_watchlist
+from fetcher.sources.csv_assets import load_benchmark_mapping
 
 
 def main(argv: Sequence[str] | None = None) -> None:
@@ -39,6 +49,29 @@ def main(argv: Sequence[str] | None = None) -> None:
         logger.info("real POC summary: {}", report["summary"])
         for name, path in files.items():
             logger.info("wrote real POC {} to {}", name, path)
+        return
+
+    if args.command == "real-watchlist":
+        metas = load_watchlist(args.watchlist)
+        if args.duration_minutes and args.duration_minutes > 0:
+            summary = run_watchlist_long_run(
+                duration_minutes=args.duration_minutes,
+                interval_seconds=args.interval_seconds,
+                output_dir=args.output_dir,
+                snapshot_file=args.snapshot_file,
+                metas=metas,
+                ts_start=args.ts,
+            )
+            logger.info("real watchlist long-run summary: {}", summary)
+            return
+        from datetime import datetime
+        ts = args.ts or datetime.now().astimezone().isoformat(timespec="seconds")
+        payloads = fetch_watchlist_payloads(metas)
+        report = build_watchlist_report(metas, payloads, ts=ts)
+        files = write_watchlist_outputs(report, args.output_dir, args.snapshot_file)
+        logger.info("real watchlist summary: {}", report["summary"])
+        for name, path in files.items():
+            logger.info("wrote real watchlist {} to {}", name, path)
         return
 
     if args.command == "ac-evidence":
@@ -73,6 +106,21 @@ def _build_parser() -> argparse.ArgumentParser:
                           help="run periodically for N minutes (long-run mode); 0 = single shot")
     real_poc.add_argument("--interval-seconds", type=float, default=60.0,
                           help="seconds between iterations in long-run mode")
+
+    watchlist = subparsers.add_parser(
+        "real-watchlist",
+        help="run real-market collection across the full watchlist-v2 (30 codes)",
+    )
+    watchlist.add_argument("--output-dir", type=Path, default=Path("../outputs"))
+    watchlist.add_argument(
+        "--snapshot-file",
+        type=Path,
+        default=Path("../outputs/local-minute-snapshots-watchlist-v2.jsonl"),
+    )
+    watchlist.add_argument("--watchlist", type=Path, default=DEFAULT_WATCHLIST_PATH)
+    watchlist.add_argument("--ts", default=None)
+    watchlist.add_argument("--duration-minutes", type=float, default=0.0)
+    watchlist.add_argument("--interval-seconds", type=float, default=60.0)
 
     evidence = subparsers.add_parser("ac-evidence", help="write AC-C2 retry trace and AC-S1 quota estimate")
     evidence.add_argument("--output-dir", type=Path, default=Path("../outputs"))

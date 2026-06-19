@@ -188,3 +188,47 @@ Remove-Item Env:\LOF_POC_BLOCK_NAV
 - `outputs/degraded-evidence/backend-real-poc-long-run-v2.json` ? `degraded_total + stale_total > 0`
 
 ???????????? `LOF_POC_BLOCK_NAV` ??? `LOF_POC_BLOCK_PRICE` ??????????????????????????????????
+
+
+## M3 watchlist-v2 30 只全量长跑 (real-watchlist)
+
+### 命令
+
+```powershell
+cd lof-fetcher
+# 单次（功能 smoke）
+python -m fetcher.main real-watchlist --output-dir ..\outputs\watchlist-smoke --snapshot-file ..\outputs\watchlist-smoke\snap-once.jsonl
+
+# >=10 分钟长跑（推荐交易日盘中执行，间隔 60s，11 次以上）
+python -m fetcher.main real-watchlist --output-dir ..\outputs --snapshot-file ..\outputs\local-minute-snapshots-watchlist-v2.jsonl --duration-minutes 11 --interval-seconds 60
+```
+
+### 产物
+
+- `outputs/local-minute-snapshots-watchlist-v2.jsonl`：每行一个 minute batch，30 条 item，仅暴露 §6 字段（code/price/iopv/premium/coverage/source_quality）。
+- `outputs/backend-real-watchlist-report-v2.json`：最近一次 minute 完整快照，含每只主源命中、备源链路、失败原因、单次耗时。
+- `outputs/backend-real-watchlist-long-run-v2.json`：长跑摘要（迭代次数、起止时间、累计 ok/degraded/stale）。
+- `outputs/backend-real-watchlist-stability-v2.json`：30 只稳定性聚合（每只 ok_ratio、avg_elapsed_ms、primary_source_hits、failure_reasons、recommendation）。
+- `outputs/backend-real-watchlist-stability-v2.md`：30 只稳定性结论 markdown，便于回推 PM/dev-002。
+
+### 推荐口径
+
+| recommendation | 阈值 | 含义 |
+| --- | --- | --- |
+| keep | ok_ratio ≥ 0.95 | 主源稳定命中，可全量保留 |
+| watch | 0.80 ≤ ok_ratio < 0.95 | 偶发降级，建议交易日复跑确认 |
+| replace | ok_ratio < 0.80 | 主源持续失败，建议进入 watchlist-v2.1 评审替换 |
+
+### 节假日 / 非交易日 smoke 结论
+
+**当前为节假日盘后**，仅做功能 smoke 验证，不作为 30 只稳定性结论：
+
+- 单次（2026-06-19 12:51 +08:00）：30/30 ok，全部 `tencent_quote` 主源命中，零备源，单只单次 94-302 ms（含 nav 一次 fundgz 调用），合计 4.1 s。
+- 行业/主动型与 active_low_liquidity 13 只在功能 smoke 上无差异（全部 ok）。
+- 节假日数据为缓存（`estimate_time=2026-06-18 15:00`），不构成真实稳定性证据；正式 30 只长跑结论必须在交易日盘中（09:30-11:30 / 13:00-15:00）补跑 ≥10 分钟。
+
+### 约束
+
+- 不打 `next.bspapp.com`，不消耗线上 RU/WU。
+- snapshot JSONL 仅暴露 §6 复用字段，未引入新契约字段；`primary_price_source`/`price_attempts` 等仅落入 report/stability，不进入前端契约。
+- stale 计数沿用 PRD §M2-B 连续两分钟失败口径。

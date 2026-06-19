@@ -45,72 +45,98 @@ class RealTimePocClient:
         }
 
     def fetch_market_price(self, code: str) -> dict[str, Any]:
+        result, _attempts = self._attempt_market_price(code)
+        return result
+
+    def fetch_market_price_detailed(self, code: str) -> dict[str, Any]:
+        """Same as :meth:`fetch_market_price` but also exposes per-source attempts."""
+        result, attempts = self._attempt_market_price(code)
+        result = dict(result)
+        result["attempts"] = attempts
+        return result
+
+    def _attempt_market_price(self, code: str) -> tuple[dict[str, Any], list[dict[str, Any]]]:
+        attempts: list[dict[str, Any]] = []
         if _is_blocked("LOF_POC_BLOCK_PRICE"):
-            return {
-                "source": "tencent_quote,eastmoney_kline,eastmoney_push2,sina",
-                "elapsed_ms": 0,
-                "error": "tencent_quote_BlockedByEnv;eastmoney_kline_BlockedByEnv;eastmoney_push2_BlockedByEnv;sina_BlockedByEnv",
-            }
+            blocked_sources = ["tencent_quote", "eastmoney_kline", "eastmoney_push2", "sina"]
+            for source in blocked_sources:
+                attempts.append({"source": source, "elapsed_ms": 0, "error": "BlockedByEnv"})
+            return (
+                {
+                    "source": ",".join(blocked_sources),
+                    "elapsed_ms": 0,
+                    "error": ";".join(f"{s}_BlockedByEnv" for s in blocked_sources),
+                },
+                attempts,
+            )
 
         elapsed_ms = 0
         errors: list[str] = []
 
         symbol = market_symbol(code)
-        start = time.perf_counter()
-        try:
-            response = self._client.get(f"https://qt.gtimg.cn/q={symbol}")
-            elapsed_ms += elapsed_since_ms(start)
-            response.raise_for_status()
-            payload = parse_tencent_quote_payload(response.text)
-            payload.update({"source": "tencent_quote", "elapsed_ms": elapsed_ms})
-            return payload
-        except (httpx.HTTPError, ValueError) as exc:
-            elapsed_ms += elapsed_since_ms(start)
-            errors.append(f"tencent_quote_{type(exc).__name__}")
-
         secid = eastmoney_secid(code)
-        start = time.perf_counter()
-        try:
-            url = f"https://push2his.eastmoney.com/api/qt/stock/kline/get?secid={secid}&fields1=f1&fields2=f51,f52&klt=1&fqt=1&beg=0&end=20500101&lmt=1"
-            response = self._client.get(url)
-            elapsed_ms += elapsed_since_ms(start)
-            response.raise_for_status()
-            payload = parse_eastmoney_kline_payload(response.text)
-            payload.update({"source": "eastmoney_kline", "elapsed_ms": elapsed_ms})
-            return payload
-        except (httpx.HTTPError, ValueError, json.JSONDecodeError) as exc:
-            elapsed_ms += elapsed_since_ms(start)
-            errors.append(f"eastmoney_kline_{type(exc).__name__}")
 
-        start = time.perf_counter()
-        try:
-            response = self._client.get(f"https://push2.eastmoney.com/api/qt/stock/get?secid={secid}&fields=f43,f57,f58,f60")
-            elapsed_ms += elapsed_since_ms(start)
-            response.raise_for_status()
-            payload = parse_eastmoney_push2_payload(response.text)
-            payload.update({"source": "eastmoney_push2", "elapsed_ms": elapsed_ms})
-            return payload
-        except (httpx.HTTPError, ValueError, json.JSONDecodeError) as exc:
-            elapsed_ms += elapsed_since_ms(start)
-            errors.append(f"eastmoney_push2_{type(exc).__name__}")
+        sources = [
+            ("tencent_quote", lambda: self._client.get(f"https://qt.gtimg.cn/q={symbol}"), lambda r: parse_tencent_quote_payload(r.text)),
+            (
+                "eastmoney_kline",
+                lambda: self._client.get(
+                    f"https://push2his.eastmoney.com/api/qt/stock/kline/get?secid={secid}&fields1=f1&fields2=f51,f52&klt=1&fqt=1&beg=0&end=20500101&lmt=1"
+                ),
+                lambda r: parse_eastmoney_kline_payload(r.text),
+            ),
+            (
+                "eastmoney_push2",
+                lambda: self._client.get(
+                    f"https://push2.eastmoney.com/api/qt/stock/get?secid={secid}&fields=f43,f57,f58,f60"
+                ),
+                lambda r: parse_eastmoney_push2_payload(r.text),
+            ),
+            ("sina", lambda: self._client.get(f"https://hq.sinajs.cn/list={symbol}"), lambda r: parse_sina_payload(symbol, r.text)),
+        ]
 
-        start = time.perf_counter()
-        try:
-            response = self._client.get(f"https://hq.sinajs.cn/list={symbol}")
-            elapsed_ms += elapsed_since_ms(start)
-            response.raise_for_status()
-            payload = parse_sina_payload(symbol, response.text)
-            payload.update({"source": "sina", "elapsed_ms": elapsed_ms})
-            return payload
-        except (httpx.HTTPError, ValueError) as exc:
-            elapsed_ms += elapsed_since_ms(start)
-            errors.append(f"sina_{type(exc).__name__}")
+        for source_name, fetcher_fn, parser_fn in sources:
+            start = time.perf_counter()
+            try:
+                response = fetcher_fn()
+                step_ms = elapsed_since_ms(start)
+                elapsed_ms += step_ms
+                response.raise_for_status()
+                payload = parser_fn(response)
+                payload.update({"source": source_name, "elapsed_ms": elapsed_ms})
+                attempts.append({"source": source_name, "elapsed_ms": step_ms, "hit": True})
+                return payload, attempts
+            except (httpx.HTTPError, ValueError, json.JSONDecodeError) as exc:
+                step_ms = elapsed_since_ms(start)
+                elapsed_ms += step_ms
+                err_label = type(exc).__name__
+                errors.append(f"{source_name}_{err_label}")
+                attempts.append({"source": source_name, "elapsed_ms": step_ms, "error": err_label})
 
-        return {"source": "tencent_quote,eastmoney_kline,eastmoney_push2,sina", "elapsed_ms": elapsed_ms, "error": ";".join(errors)}
+        return (
+            {
+                "source": "tencent_quote,eastmoney_kline,eastmoney_push2,sina",
+                "elapsed_ms": elapsed_ms,
+                "error": ";".join(errors),
+            },
+            attempts,
+        )
 
     def fetch_estimated_nav(self, code: str) -> dict[str, Any]:
+        result, _attempts = self._attempt_estimated_nav(code)
+        return result
+
+    def fetch_estimated_nav_detailed(self, code: str) -> dict[str, Any]:
+        result, attempts = self._attempt_estimated_nav(code)
+        result = dict(result)
+        result["attempts"] = attempts
+        return result
+
+    def _attempt_estimated_nav(self, code: str) -> tuple[dict[str, Any], list[dict[str, Any]]]:
+        attempts: list[dict[str, Any]] = []
         if _is_blocked("LOF_POC_BLOCK_NAV"):
-            return {"source": "fundgz", "elapsed_ms": 0, "error": "nav_BlockedByEnv"}
+            attempts.append({"source": "fundgz", "elapsed_ms": 0, "error": "BlockedByEnv"})
+            return ({"source": "fundgz", "elapsed_ms": 0, "error": "nav_BlockedByEnv"}, attempts)
 
         start = time.perf_counter()
         try:
@@ -119,9 +145,13 @@ class RealTimePocClient:
             response.raise_for_status()
             payload = parse_fundgz_payload(response.text)
             payload.update({"source": "fundgz", "elapsed_ms": elapsed_ms})
-            return payload
+            attempts.append({"source": "fundgz", "elapsed_ms": elapsed_ms, "hit": True})
+            return payload, attempts
         except (httpx.HTTPError, ValueError, json.JSONDecodeError) as exc:
-            return {"source": "fundgz", "elapsed_ms": elapsed_since_ms(start), "error": f"nav_{type(exc).__name__}"}
+            elapsed_ms = elapsed_since_ms(start)
+            err_label = type(exc).__name__
+            attempts.append({"source": "fundgz", "elapsed_ms": elapsed_ms, "error": err_label})
+            return ({"source": "fundgz", "elapsed_ms": elapsed_ms, "error": f"nav_{err_label}"}, attempts)
 
 
 def market_symbol(code: str) -> str:
