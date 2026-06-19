@@ -90,3 +90,30 @@ def test_realtime_source_parsers_support_public_payloads():
     assert fundgz["name"] == "白酒LOF"
     assert fundgz["iopv"] == 1.12
     assert fundgz["nav"] == 1.1
+
+
+
+def test_parse_realtime_source_marks_degraded_when_iopv_drifts_more_than_1pct():
+    payloads = {
+        "161725": {
+            "price": {"price": 1.234, "name": "TEST", "elapsed_ms": 10, "source": "tencent_quote"},
+            "nav": {"iopv": 1.20, "nav": 1.10, "elapsed_ms": 8, "source": "fundgz", "estimate_time": "2026-06-19 10:34"},
+        },
+        "161005": {
+            "price": {"price": 2.0, "name": "TEST", "elapsed_ms": 5, "source": "tencent_quote"},
+            "nav": {"iopv": 1.005, "nav": 1.000, "elapsed_ms": 5, "source": "fundgz", "estimate_time": "2026-06-19 10:34"},
+        },
+    }
+
+    result = parse_realtime_source_payload(["161725", "161005"], payloads, ts="2026-06-19T10:35:00+08:00", stale_threshold_seconds=300)
+
+    drift_item = result["items"][0]
+    assert drift_item["nav_drift_pct"] is not None
+    assert abs(drift_item["nav_drift_pct"]) >= 0.01
+    assert drift_item["source_quality"] == "degraded"
+    assert "nav_estimate_drift" in drift_item["failure_reason"]
+
+    ok_item = result["items"][1]
+    assert ok_item["source_quality"] == "ok"
+    assert ok_item["nav_drift_pct"] is not None
+    assert abs(ok_item["nav_drift_pct"]) < 0.01

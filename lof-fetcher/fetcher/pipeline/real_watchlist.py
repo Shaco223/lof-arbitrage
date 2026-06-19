@@ -18,6 +18,8 @@ DEFAULT_LONG_RUN_NAME = "backend-real-watchlist-long-run-v2.json"
 DEFAULT_STABILITY_NAME = "backend-real-watchlist-stability-v2.md"
 DEFAULT_STABILITY_JSON = "backend-real-watchlist-stability-v2.json"
 SECTION6_SNAPSHOT_KEYS = ("code", "price", "iopv", "premium", "coverage", "source_quality")
+# PRD 1.2 AC-P3: abs(iopv - nav_official) / nav_official >= 1% -> degraded
+NAV_DRIFT_DEGRADED_THRESHOLD = 0.01
 
 
 def load_default_watchlist() -> list[LofMeta]:
@@ -59,12 +61,19 @@ def build_watchlist_report(
         elapsed_total_ms += item_elapsed
         price = _number_or_none(price_payload.get("price"))
         iopv = _number_or_none(nav_payload.get("iopv"))
+        nav_official = _number_or_none(nav_payload.get("nav"))
         premium = (
             calculate_premium(price, iopv)
             if price is not None and iopv is not None and iopv > 0
             else None
         )
         failure_reason = _failure_reason(price_payload, nav_payload, price, iopv)
+        nav_drift_pct = None
+        if iopv is not None and nav_official is not None and nav_official > 0:
+            nav_drift_pct = round((iopv - nav_official) / nav_official, 6)
+            if abs(nav_drift_pct) >= NAV_DRIFT_DEGRADED_THRESHOLD:
+                drift_tag = f"nav_estimate_drift:{nav_drift_pct:+.4f}"
+                failure_reason = ";".join(filter(None, [failure_reason, drift_tag]))
         if premium is not None and not failure_reason:
             source_quality = "ok"
             ok_count += 1
@@ -83,6 +92,8 @@ def build_watchlist_report(
                 "scale_yi": meta.scale_yi,
                 "price": price,
                 "iopv": iopv,
+                "nav_official": nav_official,
+                "nav_drift_pct": nav_drift_pct,
                 "premium": premium,
                 "coverage": 1.0 if source_quality == "ok" else 0.0,
                 "source_quality": source_quality,

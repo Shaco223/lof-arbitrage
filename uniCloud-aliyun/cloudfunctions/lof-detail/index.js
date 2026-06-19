@@ -1,8 +1,11 @@
-'use strict';
+﻿'use strict';
 
 const { ok, fail, normalizeQuery } = require('./response');
 
 let fallbackDetails = null;
+
+const SUBSCRIBE_DEFAULT = 'unknown';
+const REDEEM_DEFAULT = 'unknown';
 
 exports.main = async (event) => {
   const db = uniCloud.database();
@@ -18,34 +21,102 @@ exports.main = async (event) => {
     const holdingsRes = await db.collection('lof_holdings').where({ code }).orderBy('weight', 'desc').limit(10).get();
     const realtimeRes = await db.collection('lof_realtime').where({ code }).orderBy('ts', 'desc').limit(1).get();
     const historyRes = await db.collection('lof_history').where({ code }).orderBy('date', 'desc').limit(1).get();
-    const realtime = (realtimeRes.data || [])[0] || null;
+    const realtime = (realtimeRes.data || [])[0] || {};
     const latestHistory = (historyRes.data || [])[0] || {};
+
+    const navOfficial = numberOrNull(realtime.nav_official);
+    const price = numberOrNull(realtime.price);
+    const iopv = numberOrNull(realtime.iopv);
+    const premiumNav = computePremiumNav(price, navOfficial);
+    const premiumError = computePremiumError(iopv, navOfficial);
+    const navEstimateErrorPct = computeNavEstimateErrorPct(premiumError, navOfficial);
+
+    const fundScale = numberOrNull(meta.fund_scale != null ? meta.fund_scale : meta.scale_yi);
+    const status = meta.status || 'active';
 
     return ok({
       code: meta.code,
       name: meta.name,
       type: meta.type,
+      status,
       scale_yi: meta.scale_yi,
+      fund_scale: fundScale,
+      circulating_shares: numberOrNull(meta.circulating_shares),
+      price,
+      price_change_pct: numberOrNull(realtime.price_change_pct),
+      volume_amount: numberOrNull(realtime.volume_amount),
+      iopv,
+      premium: numberOrNull(realtime.premium),
+      nav_official: navOfficial,
+      nav_official_date: realtime.nav_official_date || null,
+      premium_nav: premiumNav,
+      premium_error: premiumError,
+      nav_estimate_error_pct: navEstimateErrorPct,
+      coverage: numberOrNull(realtime.coverage),
+      pctile_30d: numberOrNull(latestHistory.premium_pctile_30d),
+      source_quality: realtime.source_quality || 'stale',
+      subscribe_status: meta.subscribe_status || SUBSCRIBE_DEFAULT,
+      redeem_status: meta.redeem_status || REDEEM_DEFAULT,
       coverage_top10: meta.coverage_top10,
       coverage_breakdown: meta.coverage_breakdown || { top10_weight: meta.coverage_top10, benchmark_assigned_weight: 0, cash_weight: 0 },
       benchmark_raw: meta.benchmark_raw,
       benchmark_components: meta.benchmark_components || [],
-      holdings_top10: (holdingsRes.data || []).map((item) => ({ stock_code: item.stock_code, stock_name: item.stock_name, weight: item.weight })),
-      realtime: realtime ? {
+      holdings_top10: (holdingsRes.data || []).map((item) => buildHolding(item)),
+      realtime: realtime && realtime.ts ? {
         ts: realtime.ts,
-        price: realtime.price,
-        iopv: realtime.iopv,
-        premium: realtime.premium,
-        coverage: realtime.coverage,
+        price,
+        iopv,
+        premium: numberOrNull(realtime.premium),
+        coverage: numberOrNull(realtime.coverage),
         source_quality: realtime.source_quality || 'stale'
-      } : null,
-      pctile_30d: latestHistory.premium_pctile_30d
+      } : null
     });
   } catch (error) {
     console.error(error);
     return fallbackDetail(code);
   }
 };
+
+function buildHolding(item) {
+  const weight = numberOrNull(item.weight);
+  const priceChangePct = numberOrNull(item.price_change_pct);
+  let contributionPct = null;
+  if (weight != null && priceChangePct != null) {
+    contributionPct = round6(weight * priceChangePct);
+  }
+  return {
+    stock_code: item.stock_code,
+    stock_name: item.stock_name,
+    weight,
+    price_change_pct: priceChangePct,
+    contribution_pct: contributionPct
+  };
+}
+
+function computePremiumNav(price, navOfficial) {
+  if (price == null || navOfficial == null || navOfficial <= 0) return null;
+  return round6((price - navOfficial) / navOfficial);
+}
+
+function computePremiumError(iopv, navOfficial) {
+  if (iopv == null || navOfficial == null) return null;
+  return round6(iopv - navOfficial);
+}
+
+function computeNavEstimateErrorPct(premiumError, navOfficial) {
+  if (premiumError == null || navOfficial == null || navOfficial <= 0) return null;
+  return round6(premiumError / navOfficial);
+}
+
+function numberOrNull(value) {
+  if (value === null || value === undefined || value === '') return null;
+  const number = Number(value);
+  return Number.isFinite(number) ? number : null;
+}
+
+function round6(value) {
+  return Math.round(value * 1000000) / 1000000;
+}
 
 function fallbackDetail(code) {
   if (!fallbackDetails) fallbackDetails = require('./fallback-detail.json');

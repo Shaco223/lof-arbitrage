@@ -1,10 +1,14 @@
-'use strict';
+﻿'use strict';
 
 const { ok, fail, normalizeQuery } = require('./response');
 
 const CACHE_TTL_MS = 60 * 1000;
 let listCache = null;
 let fallbackList = null;
+
+const STATUS_FALLBACK = { active: 'active', active_low_liquidity: 'active_low_liquidity' };
+const SUBSCRIBE_DEFAULT = 'unknown';
+const REDEEM_DEFAULT = 'unknown';
 
 exports.main = async (event) => {
   const db = uniCloud.database();
@@ -45,21 +49,7 @@ exports.main = async (event) => {
 
     const realtimeByCode = latestByCode(realtimeRes.data || []);
     const historyByCode = latestByCode(historyRes.data || []);
-    const items = metas.map((meta) => {
-      const rt = realtimeByCode[meta.code] || {};
-      const hist = historyByCode[meta.code] || {};
-      return {
-        code: meta.code,
-        name: meta.name,
-        type: meta.type,
-        price: rt.price,
-        iopv: rt.iopv,
-        premium: rt.premium,
-        coverage: rt.coverage,
-        pctile_30d: hist.premium_pctile_30d,
-        source_quality: rt.source_quality || 'stale'
-      };
-    });
+    const items = metas.map((meta) => buildListItem(meta, realtimeByCode[meta.code] || {}, historyByCode[meta.code] || {}));
 
     const latestTs = Object.values(realtimeByCode).map((item) => item.ts).filter(Boolean).sort().pop() || null;
     if (items.length) listCache = { createdAt: Date.now(), payload: { ts: latestTs, items } };
@@ -69,6 +59,79 @@ exports.main = async (event) => {
     return ok(buildResponseFromCache(getFallbackList(), sort, fundType));
   }
 };
+
+function buildListItem(meta, rt, hist) {
+  const navOfficial = numberOrNull(rt.nav_official);
+  const price = numberOrNull(rt.price);
+  const iopv = numberOrNull(rt.iopv);
+  const premiumNav = computePremiumNav(price, navOfficial);
+  const premiumError = computePremiumError(iopv, navOfficial);
+  return {
+    code: meta.code,
+    name: meta.name,
+    type: meta.type,
+    status: STATUS_FALLBACK[meta.status] || 'active',
+    price,
+    price_change_pct: numberOrNull(rt.price_change_pct),
+    volume_amount: numberOrNull(rt.volume_amount),
+    iopv,
+    premium: numberOrNull(rt.premium),
+    nav_official: navOfficial,
+    nav_official_date: rt.nav_official_date || null,
+    premium_nav: premiumNav,
+    premium_error: premiumError,
+    coverage: numberOrNull(rt.coverage),
+    pctile_30d: numberOrNull(hist.premium_pctile_30d),
+    source_quality: rt.source_quality || 'stale',
+    subscribe_status: meta.subscribe_status || SUBSCRIBE_DEFAULT,
+    redeem_status: meta.redeem_status || REDEEM_DEFAULT,
+    fund_scale: numberOrNull(meta.fund_scale != null ? meta.fund_scale : meta.scale_yi),
+    circulating_shares: numberOrNull(meta.circulating_shares)
+  };
+}
+
+function fillListItemDefaults(item) {
+  const navOfficial = numberOrNull(item.nav_official);
+  const price = numberOrNull(item.price);
+  const iopv = numberOrNull(item.iopv);
+  const defaults = {
+    status: 'active',
+    price_change_pct: null,
+    volume_amount: null,
+    nav_official: navOfficial,
+    nav_official_date: null,
+    premium_nav: computePremiumNav(price, navOfficial),
+    premium_error: computePremiumError(iopv, navOfficial),
+    subscribe_status: SUBSCRIBE_DEFAULT,
+    redeem_status: REDEEM_DEFAULT,
+    fund_scale: null,
+    circulating_shares: null
+  };
+  for (const key of Object.keys(defaults)) {
+    if (item[key] === undefined) item[key] = defaults[key];
+  }
+  return item;
+}
+
+function computePremiumNav(price, navOfficial) {
+  if (price == null || navOfficial == null || navOfficial <= 0) return null;
+  return round6((price - navOfficial) / navOfficial);
+}
+
+function computePremiumError(iopv, navOfficial) {
+  if (iopv == null || navOfficial == null) return null;
+  return round6(iopv - navOfficial);
+}
+
+function round6(value) {
+  return Math.round(value * 1000000) / 1000000;
+}
+
+function numberOrNull(value) {
+  if (value === null || value === undefined || value === '') return null;
+  const number = Number(value);
+  return Number.isFinite(number) ? number : null;
+}
 
 function latestByCode(rows) {
   const map = {};
@@ -88,7 +151,7 @@ function sortItems(items, sort) {
 function buildResponseFromCache(payload, sort, fundType) {
   const items = payload.items
     .filter((item) => fundType === 'all' || item.type === fundType)
-    .map((item) => ({ ...item }));
+    .map((item) => fillListItemDefaults({ ...item }));
   sortItems(items, sort);
   return { ts: payload.ts, items };
 }

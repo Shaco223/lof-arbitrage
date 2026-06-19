@@ -13,6 +13,8 @@ from fetcher.sources.realtime_poc import POC_CODES, RealTimePocClient
 DEFAULT_SNAPSHOT_PATH = Path(__file__).resolve().parents[3] / "outputs" / "local-minute-snapshots-v2.jsonl"
 DEFAULT_REPORT_NAME = "backend-real-poc-report-v2.json"
 DEFAULT_STALE_THRESHOLD_SECONDS = 86400
+# PRD 1.2 AC-P3: abs(iopv - nav_official) / nav_official >= 1% -> degraded
+NAV_DRIFT_DEGRADED_THRESHOLD = 0.01
 
 
 def build_poc_report(
@@ -57,6 +59,7 @@ def parse_realtime_source_payload(
         elapsed_ms += int(price_payload.get("elapsed_ms") or 0) + int(nav_payload.get("elapsed_ms") or 0)
         price = _number_or_none(price_payload.get("price"))
         iopv = _number_or_none(nav_payload.get("iopv"))
+        nav_official = _number_or_none(nav_payload.get("nav"))
         premium = calculate_premium(price, iopv) if price is not None and iopv is not None and iopv > 0 else None
         failure_reason = _failure_reason(price_payload, nav_payload, price, iopv)
 
@@ -64,9 +67,20 @@ def parse_realtime_source_payload(
         if stale_reason:
             failure_reason = ";".join(filter(None, [failure_reason, stale_reason]))
 
+        nav_drift_pct = None
+        nav_drift_reason = ""
+        if iopv is not None and nav_official is not None and nav_official > 0:
+            nav_drift_pct = round((iopv - nav_official) / nav_official, 6)
+            if abs(nav_drift_pct) >= NAV_DRIFT_DEGRADED_THRESHOLD:
+                nav_drift_reason = f"nav_estimate_drift:{nav_drift_pct:+.4f}"
+                failure_reason = ";".join(filter(None, [failure_reason, nav_drift_reason]))
+
         if stale_reason:
             source_quality = "stale"
             stale_count += 1
+        elif nav_drift_reason:
+            source_quality = "degraded"
+            degraded_count += 1
         elif premium is not None and not failure_reason:
             source_quality = "ok"
             ok_count += 1
@@ -80,6 +94,8 @@ def parse_realtime_source_payload(
                 "name": price_payload.get("name") or nav_payload.get("name") or code,
                 "price": price,
                 "iopv": iopv,
+                "nav_official": nav_official,
+                "nav_drift_pct": nav_drift_pct,
                 "premium": premium,
                 "coverage": 1.0 if source_quality == "ok" else 0.0,
                 "source_quality": source_quality,

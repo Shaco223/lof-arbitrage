@@ -5,7 +5,7 @@
       "code": "161725",
       "name": "招商中证白酒指数(LOF)A",
       "type": "index",
-      "scale_yi": 300.0,
+      "scale_yi": 300,
       "status": "active",
       "coverage_top10": 0.475,
       "coverage_breakdown": {
@@ -25,19 +25,23 @@
           "name": "银行活期存款利率",
           "weight": 0.05
         }
-      ]
+      ],
+      "fund_scale": 300,
+      "subscribe_status": "unknown",
+      "redeem_status": "unknown",
+      "circulating_shares": 180
     },
     {
       "code": "161005",
       "name": "富国天惠成长混合(LOF)A",
       "type": "active",
-      "scale_yi": 180.0,
+      "scale_yi": 180,
       "status": "active",
       "coverage_top10": 0.355,
       "coverage_breakdown": {
         "top10_weight": 0.355,
-        "benchmark_assigned_weight": 1.0,
-        "cash_weight": 0.0
+        "benchmark_assigned_weight": 1,
+        "cash_weight": 0
       },
       "benchmark_raw": "沪深300指数收益率×80%+中证综合债券指数收益率×20%",
       "benchmark_components": [
@@ -51,19 +55,23 @@
           "name": "中证综合债券指数",
           "weight": 0.2
         }
-      ]
+      ],
+      "fund_scale": 180,
+      "subscribe_status": "unknown",
+      "redeem_status": "unknown",
+      "circulating_shares": 108
     },
     {
       "code": "163406",
       "name": "兴全合润混合A",
       "type": "active",
-      "scale_yi": 150.0,
+      "scale_yi": 150,
       "status": "active",
       "coverage_top10": 0.39,
       "coverage_breakdown": {
         "top10_weight": 0.39,
-        "benchmark_assigned_weight": 1.0,
-        "cash_weight": 0.0
+        "benchmark_assigned_weight": 1,
+        "cash_weight": 0
       },
       "benchmark_raw": "沪深300指数收益率×75%+上证国债指数收益率×25%",
       "benchmark_components": [
@@ -77,13 +85,17 @@
           "name": "上证国债指数",
           "weight": 0.25
         }
-      ]
+      ],
+      "fund_scale": 150,
+      "subscribe_status": "unknown",
+      "redeem_status": "unknown",
+      "circulating_shares": 90
     },
     {
       "code": "160706",
       "name": "嘉实沪深300ETF联接A",
       "type": "index",
-      "scale_yi": 80.0,
+      "scale_yi": 80,
       "status": "active",
       "coverage_top10": 0.475,
       "coverage_breakdown": {
@@ -103,13 +115,17 @@
           "name": "银行活期存款利率",
           "weight": 0.05
         }
-      ]
+      ],
+      "fund_scale": 80,
+      "subscribe_status": "unknown",
+      "redeem_status": "unknown",
+      "circulating_shares": 48
     },
     {
       "code": "501050",
       "name": "华夏上证50AH优选指数A",
       "type": "index",
-      "scale_yi": 40.0,
+      "scale_yi": 40,
       "status": "active",
       "coverage_top10": 0.475,
       "coverage_breakdown": {
@@ -129,19 +145,23 @@
           "name": "银行活期存款利率",
           "weight": 0.05
         }
-      ]
+      ],
+      "fund_scale": 40,
+      "subscribe_status": "unknown",
+      "redeem_status": "unknown",
+      "circulating_shares": 24
     },
     {
       "code": "160505",
       "name": "博时主题行业混合(LOF)",
       "type": "active",
-      "scale_yi": 30.0,
+      "scale_yi": 30,
       "status": "active",
       "coverage_top10": 0.495,
       "coverage_breakdown": {
         "top10_weight": 0.495,
-        "benchmark_assigned_weight": 1.0,
-        "cash_weight": 0.0
+        "benchmark_assigned_weight": 1,
+        "cash_weight": 0
       },
       "benchmark_raw": "沪深300指数收益率×80%+中证综合债券指数收益率×20%",
       "benchmark_components": [
@@ -155,19 +175,23 @@
           "name": "中证综合债券指数",
           "weight": 0.2
         }
-      ]
+      ],
+      "fund_scale": 30,
+      "subscribe_status": "unknown",
+      "redeem_status": "unknown",
+      "circulating_shares": 18
     },
     {
       "code": "162605",
       "name": "景顺长城鼎益混合(LOF)A",
       "type": "active",
-      "scale_yi": 30.0,
+      "scale_yi": 30,
       "status": "active",
       "coverage_top10": 0.32,
       "coverage_breakdown": {
         "top10_weight": 0.32,
-        "benchmark_assigned_weight": 1.0,
-        "cash_weight": 0.0
+        "benchmark_assigned_weight": 1,
+        "cash_weight": 0
       },
       "benchmark_raw": "沪深300指数收益率×80%+中证综合债券指数收益率×20%",
       "benchmark_components": [
@@ -181,13 +205,17 @@
           "name": "中证综合债券指数",
           "weight": 0.2
         }
-      ]
+      ],
+      "fund_scale": 30,
+      "subscribe_status": "unknown",
+      "redeem_status": "unknown",
+      "circulating_shares": 18
     },
     {
       "code": "161024",
       "name": "富国中证军工指数(LOF)A",
       "type": "index",
-      "scale_yi": 18.0,
+      "scale_yi": 18,
       "status": "active",
       "coverage_top10": 0.475,
       "coverage_breakdown": {
@@ -207,13 +235,17 @@
           "name": "银行活期存款利率",
           "weight": 0.05
         }
-      ]
+      ],
+      "fund_scale": 18,
+      "subscribe_status": "unknown",
+      "redeem_status": "unknown",
+      "circulating_shares": 10.8
     },
     {
       "code": "160119",
       "name": "南方中证500ETF联接(LOF)A",
       "type": "index",
-      "scale_yi": 15.0,
+      "scale_yi": 15,
       "status": "active",
       "coverage_top10": 0.475,
       "coverage_breakdown": {
@@ -233,13 +265,17 @@
           "name": "银行活期存款利率",
           "weight": 0.05
         }
-      ]
+      ],
+      "fund_scale": 15,
+      "subscribe_status": "unknown",
+      "redeem_status": "unknown",
+      "circulating_shares": 9
     },
     {
       "code": "160632",
       "name": "鹏华酒A",
       "type": "industry",
-      "scale_yi": 12.0,
+      "scale_yi": 12,
       "status": "active",
       "coverage_top10": 0.425,
       "coverage_breakdown": {
@@ -259,19 +295,23 @@
           "name": "银行活期存款利率",
           "weight": 0.05
         }
-      ]
+      ],
+      "fund_scale": 12,
+      "subscribe_status": "unknown",
+      "redeem_status": "unknown",
+      "circulating_shares": 7.2
     },
     {
       "code": "160220",
       "name": "国泰民益混合(LOF)A",
       "type": "active",
-      "scale_yi": 3.0,
+      "scale_yi": 3,
       "status": "active",
       "coverage_top10": 0.46,
       "coverage_breakdown": {
         "top10_weight": 0.46,
-        "benchmark_assigned_weight": 1.0,
-        "cash_weight": 0.0
+        "benchmark_assigned_weight": 1,
+        "cash_weight": 0
       },
       "benchmark_raw": "沪深300指数收益率×60%+中证综合债券指数收益率×40%",
       "benchmark_components": [
@@ -285,19 +325,23 @@
           "name": "中证综合债券指数",
           "weight": 0.4
         }
-      ]
+      ],
+      "fund_scale": 3,
+      "subscribe_status": "unknown",
+      "redeem_status": "unknown",
+      "circulating_shares": 1.8
     },
     {
       "code": "161903",
       "name": "万家行业优选混合(LOF)",
       "type": "active",
-      "scale_yi": 8.0,
+      "scale_yi": 8,
       "status": "active",
       "coverage_top10": 0.495,
       "coverage_breakdown": {
         "top10_weight": 0.495,
-        "benchmark_assigned_weight": 1.0,
-        "cash_weight": 0.0
+        "benchmark_assigned_weight": 1,
+        "cash_weight": 0
       },
       "benchmark_raw": "沪深300指数收益率×75%+中证综合债券指数收益率×25%",
       "benchmark_components": [
@@ -311,19 +355,23 @@
           "name": "中证综合债券指数",
           "weight": 0.25
         }
-      ]
+      ],
+      "fund_scale": 8,
+      "subscribe_status": "unknown",
+      "redeem_status": "unknown",
+      "circulating_shares": 4.8
     },
     {
       "code": "501227",
       "name": "泓德红利优选混合(LOF)A",
       "type": "active",
-      "scale_yi": 12.0,
+      "scale_yi": 12,
       "status": "active",
       "coverage_top10": 0.32,
       "coverage_breakdown": {
         "top10_weight": 0.32,
-        "benchmark_assigned_weight": 1.0,
-        "cash_weight": 0.0
+        "benchmark_assigned_weight": 1,
+        "cash_weight": 0
       },
       "benchmark_raw": "沪深300指数收益率×75%+中证综合债券指数收益率×25%",
       "benchmark_components": [
@@ -337,19 +385,23 @@
           "name": "中证综合债券指数",
           "weight": 0.25
         }
-      ]
+      ],
+      "fund_scale": 12,
+      "subscribe_status": "unknown",
+      "redeem_status": "unknown",
+      "circulating_shares": 7.2
     },
     {
       "code": "501205",
       "name": "鹏华创新未来混合(LOF)C",
       "type": "active",
-      "scale_yi": 12.0,
+      "scale_yi": 12,
       "status": "active",
       "coverage_top10": 0.355,
       "coverage_breakdown": {
         "top10_weight": 0.355,
-        "benchmark_assigned_weight": 1.0,
-        "cash_weight": 0.0
+        "benchmark_assigned_weight": 1,
+        "cash_weight": 0
       },
       "benchmark_raw": "沪深300指数收益率×75%+中证综合债券指数收益率×25%",
       "benchmark_components": [
@@ -363,19 +415,23 @@
           "name": "中证综合债券指数",
           "weight": 0.25
         }
-      ]
+      ],
+      "fund_scale": 12,
+      "subscribe_status": "unknown",
+      "redeem_status": "unknown",
+      "circulating_shares": 7.2
     },
     {
       "code": "501096",
       "name": "国联安科创混合(LOF)",
       "type": "active",
-      "scale_yi": 6.0,
+      "scale_yi": 6,
       "status": "active",
       "coverage_top10": 0.39,
       "coverage_breakdown": {
         "top10_weight": 0.39,
-        "benchmark_assigned_weight": 1.0,
-        "cash_weight": 0.0
+        "benchmark_assigned_weight": 1,
+        "cash_weight": 0
       },
       "benchmark_raw": "中国战略新兴产业成份指数收益率×70%+中证综合债券指数收益率×30%",
       "benchmark_components": [
@@ -389,19 +445,23 @@
           "name": "中证综合债券指数",
           "weight": 0.3
         }
-      ]
+      ],
+      "fund_scale": 6,
+      "subscribe_status": "unknown",
+      "redeem_status": "unknown",
+      "circulating_shares": 3.6
     },
     {
       "code": "501099",
       "name": "平安新兴产业混合(LOF)",
       "type": "active",
-      "scale_yi": 6.0,
+      "scale_yi": 6,
       "status": "active",
       "coverage_top10": 0.425,
       "coverage_breakdown": {
         "top10_weight": 0.425,
-        "benchmark_assigned_weight": 1.0,
-        "cash_weight": 0.0
+        "benchmark_assigned_weight": 1,
+        "cash_weight": 0
       },
       "benchmark_raw": "中国战略新兴产业成份指数收益率×70%+中证综合债券指数收益率×30%",
       "benchmark_components": [
@@ -415,19 +475,23 @@
           "name": "中证综合债券指数",
           "weight": 0.3
         }
-      ]
+      ],
+      "fund_scale": 6,
+      "subscribe_status": "unknown",
+      "redeem_status": "unknown",
+      "circulating_shares": 3.6
     },
     {
       "code": "501201",
       "name": "红土创新科技创新股票(LOF)A",
       "type": "active",
-      "scale_yi": 6.0,
+      "scale_yi": 6,
       "status": "active",
       "coverage_top10": 0.46,
       "coverage_breakdown": {
         "top10_weight": 0.46,
-        "benchmark_assigned_weight": 1.0,
-        "cash_weight": 0.0
+        "benchmark_assigned_weight": 1,
+        "cash_weight": 0
       },
       "benchmark_raw": "中国战略新兴产业成份指数收益率×80%+中证综合债券指数收益率×20%",
       "benchmark_components": [
@@ -441,19 +505,23 @@
           "name": "中证综合债券指数",
           "weight": 0.2
         }
-      ]
+      ],
+      "fund_scale": 6,
+      "subscribe_status": "unknown",
+      "redeem_status": "unknown",
+      "circulating_shares": 3.6
     },
     {
       "code": "501203",
       "name": "易方达创新未来混合(LOF)",
       "type": "active",
-      "scale_yi": 5.0,
+      "scale_yi": 5,
       "status": "active_low_liquidity",
       "coverage_top10": 0.495,
       "coverage_breakdown": {
         "top10_weight": 0.495,
-        "benchmark_assigned_weight": 1.0,
-        "cash_weight": 0.0
+        "benchmark_assigned_weight": 1,
+        "cash_weight": 0
       },
       "benchmark_raw": "沪深300指数收益率×75%+中证综合债券指数收益率×25%",
       "benchmark_components": [
@@ -467,19 +535,23 @@
           "name": "中证综合债券指数",
           "weight": 0.25
         }
-      ]
+      ],
+      "fund_scale": 5,
+      "subscribe_status": "unknown",
+      "redeem_status": "unknown",
+      "circulating_shares": 3
     },
     {
       "code": "501208",
       "name": "中欧创新未来混合(LOF)",
       "type": "active",
-      "scale_yi": 5.0,
+      "scale_yi": 5,
       "status": "active_low_liquidity",
       "coverage_top10": 0.32,
       "coverage_breakdown": {
         "top10_weight": 0.32,
-        "benchmark_assigned_weight": 1.0,
-        "cash_weight": 0.0
+        "benchmark_assigned_weight": 1,
+        "cash_weight": 0
       },
       "benchmark_raw": "沪深300指数收益率×75%+中证综合债券指数收益率×25%",
       "benchmark_components": [
@@ -493,19 +565,23 @@
           "name": "中证综合债券指数",
           "weight": 0.25
         }
-      ]
+      ],
+      "fund_scale": 5,
+      "subscribe_status": "unknown",
+      "redeem_status": "unknown",
+      "circulating_shares": 3
     },
     {
       "code": "501085",
       "name": "财通科创主题灵活配置混合(LOF)",
       "type": "active",
-      "scale_yi": 4.0,
+      "scale_yi": 4,
       "status": "active_low_liquidity",
       "coverage_top10": 0.355,
       "coverage_breakdown": {
         "top10_weight": 0.355,
-        "benchmark_assigned_weight": 1.0,
-        "cash_weight": 0.0
+        "benchmark_assigned_weight": 1,
+        "cash_weight": 0
       },
       "benchmark_raw": "中国战略新兴产业成份指数收益率×70%+中证综合债券指数收益率×30%",
       "benchmark_components": [
@@ -519,19 +595,23 @@
           "name": "中证综合债券指数",
           "weight": 0.3
         }
-      ]
+      ],
+      "fund_scale": 4,
+      "subscribe_status": "unknown",
+      "redeem_status": "unknown",
+      "circulating_shares": 2.4
     },
     {
       "code": "501219",
       "name": "华夏智胜先锋股票(LOF)A",
       "type": "active",
-      "scale_yi": 4.0,
+      "scale_yi": 4,
       "status": "active_low_liquidity",
       "coverage_top10": 0.39,
       "coverage_breakdown": {
         "top10_weight": 0.39,
-        "benchmark_assigned_weight": 1.0,
-        "cash_weight": 0.0
+        "benchmark_assigned_weight": 1,
+        "cash_weight": 0
       },
       "benchmark_raw": "中证800指数收益率×80%+中证综合债券指数收益率×20%",
       "benchmark_components": [
@@ -545,19 +625,23 @@
           "name": "中证综合债券指数",
           "weight": 0.2
         }
-      ]
+      ],
+      "fund_scale": 4,
+      "subscribe_status": "unknown",
+      "redeem_status": "unknown",
+      "circulating_shares": 2.4
     },
     {
       "code": "501095",
       "name": "中银证券科技创新混合(LOF)",
       "type": "active",
-      "scale_yi": 4.0,
+      "scale_yi": 4,
       "status": "active_low_liquidity",
       "coverage_top10": 0.425,
       "coverage_breakdown": {
         "top10_weight": 0.425,
-        "benchmark_assigned_weight": 1.0,
-        "cash_weight": 0.0
+        "benchmark_assigned_weight": 1,
+        "cash_weight": 0
       },
       "benchmark_raw": "中国战略新兴产业成份指数收益率×70%+中证综合债券指数收益率×30%",
       "benchmark_components": [
@@ -571,19 +655,23 @@
           "name": "中证综合债券指数",
           "weight": 0.3
         }
-      ]
+      ],
+      "fund_scale": 4,
+      "subscribe_status": "unknown",
+      "redeem_status": "unknown",
+      "circulating_shares": 2.4
     },
     {
       "code": "501077",
       "name": "富国创新企业灵活配置混合(LOF)A",
       "type": "active",
-      "scale_yi": 4.0,
+      "scale_yi": 4,
       "status": "active_low_liquidity",
       "coverage_top10": 0.46,
       "coverage_breakdown": {
         "top10_weight": 0.46,
-        "benchmark_assigned_weight": 1.0,
-        "cash_weight": 0.0
+        "benchmark_assigned_weight": 1,
+        "cash_weight": 0
       },
       "benchmark_raw": "沪深300指数收益率×75%+中证综合债券指数收益率×25%",
       "benchmark_components": [
@@ -597,13 +685,17 @@
           "name": "中证综合债券指数",
           "weight": 0.25
         }
-      ]
+      ],
+      "fund_scale": 4,
+      "subscribe_status": "unknown",
+      "redeem_status": "unknown",
+      "circulating_shares": 2.4
     },
     {
       "code": "501057",
       "name": "汇添富中证新能源汽车产业指数(LOF)A",
       "type": "index",
-      "scale_yi": 4.0,
+      "scale_yi": 4,
       "status": "active_low_liquidity",
       "coverage_top10": 0.475,
       "coverage_breakdown": {
@@ -623,19 +715,23 @@
           "name": "银行活期存款利率",
           "weight": 0.05
         }
-      ]
+      ],
+      "fund_scale": 4,
+      "subscribe_status": "unknown",
+      "redeem_status": "unknown",
+      "circulating_shares": 2.4
     },
     {
       "code": "501206",
       "name": "汇添富创新未来混合(LOF)",
       "type": "active",
-      "scale_yi": 4.0,
+      "scale_yi": 4,
       "status": "active_low_liquidity",
       "coverage_top10": 0.32,
       "coverage_breakdown": {
         "top10_weight": 0.32,
-        "benchmark_assigned_weight": 1.0,
-        "cash_weight": 0.0
+        "benchmark_assigned_weight": 1,
+        "cash_weight": 0
       },
       "benchmark_raw": "沪深300指数收益率×75%+中证综合债券指数收益率×25%",
       "benchmark_components": [
@@ -649,19 +745,23 @@
           "name": "中证综合债券指数",
           "weight": 0.25
         }
-      ]
+      ],
+      "fund_scale": 4,
+      "subscribe_status": "unknown",
+      "redeem_status": "unknown",
+      "circulating_shares": 2.4
     },
     {
       "code": "501078",
       "name": "广发科创主题灵活配置混合(LOF)",
       "type": "active",
-      "scale_yi": 4.0,
+      "scale_yi": 4,
       "status": "active_low_liquidity",
       "coverage_top10": 0.355,
       "coverage_breakdown": {
         "top10_weight": 0.355,
-        "benchmark_assigned_weight": 1.0,
-        "cash_weight": 0.0
+        "benchmark_assigned_weight": 1,
+        "cash_weight": 0
       },
       "benchmark_raw": "中国战略新兴产业成份指数收益率×70%+中证综合债券指数收益率×30%",
       "benchmark_components": [
@@ -675,19 +775,23 @@
           "name": "中证综合债券指数",
           "weight": 0.3
         }
-      ]
+      ],
+      "fund_scale": 4,
+      "subscribe_status": "unknown",
+      "redeem_status": "unknown",
+      "circulating_shares": 2.4
     },
     {
       "code": "501097",
       "name": "国寿安保科技创新混合(LOF)",
       "type": "active",
-      "scale_yi": 4.0,
+      "scale_yi": 4,
       "status": "active_low_liquidity",
       "coverage_top10": 0.39,
       "coverage_breakdown": {
         "top10_weight": 0.39,
-        "benchmark_assigned_weight": 1.0,
-        "cash_weight": 0.0
+        "benchmark_assigned_weight": 1,
+        "cash_weight": 0
       },
       "benchmark_raw": "中国战略新兴产业成份指数收益率×70%+中证综合债券指数收益率×30%",
       "benchmark_components": [
@@ -701,13 +805,17 @@
           "name": "中证综合债券指数",
           "weight": 0.3
         }
-      ]
+      ],
+      "fund_scale": 4,
+      "subscribe_status": "unknown",
+      "redeem_status": "unknown",
+      "circulating_shares": 2.4
     },
     {
       "code": "501090",
       "name": "华宝中证消费龙头ETF联接A",
       "type": "index",
-      "scale_yi": 4.0,
+      "scale_yi": 4,
       "status": "active_low_liquidity",
       "coverage_top10": 0.475,
       "coverage_breakdown": {
@@ -727,19 +835,23 @@
           "name": "银行活期存款利率",
           "weight": 0.05
         }
-      ]
+      ],
+      "fund_scale": 4,
+      "subscribe_status": "unknown",
+      "redeem_status": "unknown",
+      "circulating_shares": 2.4
     },
     {
       "code": "501081",
       "name": "中欧科创主题混合(LOF)A",
       "type": "active",
-      "scale_yi": 4.0,
+      "scale_yi": 4,
       "status": "active_low_liquidity",
       "coverage_top10": 0.46,
       "coverage_breakdown": {
         "top10_weight": 0.46,
-        "benchmark_assigned_weight": 1.0,
-        "cash_weight": 0.0
+        "benchmark_assigned_weight": 1,
+        "cash_weight": 0
       },
       "benchmark_raw": "中国战略新兴产业成份指数收益率×70%+中证综合债券指数收益率×30%",
       "benchmark_components": [
@@ -753,13 +865,17 @@
           "name": "中证综合债券指数",
           "weight": 0.3
         }
-      ]
+      ],
+      "fund_scale": 4,
+      "subscribe_status": "unknown",
+      "redeem_status": "unknown",
+      "circulating_shares": 2.4
     },
     {
       "code": "501311",
       "name": "嘉实港股通新经济指数A",
       "type": "index",
-      "scale_yi": 4.0,
+      "scale_yi": 4,
       "status": "active_low_liquidity",
       "coverage_top10": 0.475,
       "coverage_breakdown": {
@@ -779,7 +895,11 @@
           "name": "银行活期存款利率",
           "weight": 0.05
         }
-      ]
+      ],
+      "fund_scale": 4,
+      "subscribe_status": "unknown",
+      "redeem_status": "unknown",
+      "circulating_shares": 2.4
     }
   ],
   "lof_realtime": [
@@ -789,8 +909,12 @@
       "price": 0.8347,
       "iopv": 0.85,
       "premium": -0.018,
-      "coverage": 1.0,
-      "source_quality": "ok"
+      "coverage": 1,
+      "source_quality": "ok",
+      "price_change_pct": -0.014932,
+      "volume_amount": 4280.6,
+      "nav_official": 0.8487,
+      "nav_official_date": "2026-06-17"
     },
     {
       "code": "161005",
@@ -798,8 +922,12 @@
       "price": 0.8764,
       "iopv": 0.887,
       "premium": -0.01195,
-      "coverage": 1.0,
-      "source_quality": "ok"
+      "coverage": 1,
+      "source_quality": "ok",
+      "price_change_pct": -0.012,
+      "volume_amount": 5600,
+      "nav_official": 0.8859,
+      "nav_official_date": "2026-06-17"
     },
     {
       "code": "163406",
@@ -807,17 +935,25 @@
       "price": 0.9185,
       "iopv": 0.924,
       "premium": -0.005952,
-      "coverage": 1.0,
-      "source_quality": "ok"
+      "coverage": 1,
+      "source_quality": "ok",
+      "price_change_pct": -0.01498,
+      "volume_amount": 4259,
+      "nav_official": 0.9226,
+      "nav_official_date": "2026-06-17"
     },
     {
       "code": "160706",
       "ts": "2026-06-18T10:31:00+08:00",
       "price": 0.961,
       "iopv": 0.961,
-      "premium": 0.0,
-      "coverage": 1.0,
-      "source_quality": "ok"
+      "premium": 0,
+      "coverage": 1,
+      "source_quality": "ok",
+      "price_change_pct": -0.017596,
+      "volume_amount": 3081.8,
+      "nav_official": 0.9593,
+      "nav_official_date": "2026-06-17"
     },
     {
       "code": "501050",
@@ -825,8 +961,12 @@
       "price": 1.004,
       "iopv": 0.998,
       "premium": 0.006012,
-      "coverage": 1.0,
-      "source_quality": "ok"
+      "coverage": 1,
+      "source_quality": "ok",
+      "price_change_pct": -0.014832,
+      "volume_amount": 4325.6,
+      "nav_official": 0.9965,
+      "nav_official_date": "2026-06-17"
     },
     {
       "code": "160505",
@@ -834,8 +974,12 @@
       "price": 1.0474,
       "iopv": 1.035,
       "premium": 0.011981,
-      "coverage": 1.0,
-      "source_quality": "ok"
+      "coverage": 1,
+      "source_quality": "ok",
+      "price_change_pct": 0.002168,
+      "volume_amount": 11975.6,
+      "nav_official": 1.0352,
+      "nav_official_date": "2026-06-17"
     },
     {
       "code": "162605",
@@ -843,8 +987,12 @@
       "price": 1.0913,
       "iopv": 1.072,
       "premium": 0.018004,
-      "coverage": 1.0,
-      "source_quality": "ok"
+      "coverage": 1,
+      "source_quality": "ok",
+      "price_change_pct": -0.008396,
+      "volume_amount": 7221.8,
+      "nav_official": 1.0711,
+      "nav_official_date": "2026-06-17"
     },
     {
       "code": "161024",
@@ -852,8 +1000,12 @@
       "price": 1.1356,
       "iopv": 1.109,
       "premium": 0.023986,
-      "coverage": 1.0,
-      "source_quality": "ok"
+      "coverage": 1,
+      "source_quality": "ok",
+      "price_change_pct": 0.019492,
+      "volume_amount": 19771.4,
+      "nav_official": 1.1112,
+      "nav_official_date": "2026-06-17"
     },
     {
       "code": "160119",
@@ -861,8 +1013,12 @@
       "price": 1.1804,
       "iopv": 1.146,
       "premium": 0.030017,
-      "coverage": 1.0,
-      "source_quality": "ok"
+      "coverage": 1,
+      "source_quality": "ok",
+      "price_change_pct": -0.00882,
+      "volume_amount": 7031,
+      "nav_official": 1.145,
+      "nav_official_date": "2026-06-17"
     },
     {
       "code": "160632",
@@ -870,8 +1026,12 @@
       "price": 1.2256,
       "iopv": 1.183,
       "premium": 0.03601,
-      "coverage": 1.0,
-      "source_quality": "ok"
+      "coverage": 1,
+      "source_quality": "ok",
+      "price_change_pct": 0.004532,
+      "volume_amount": 13039.4,
+      "nav_official": 1.1835,
+      "nav_official_date": "2026-06-17"
     },
     {
       "code": "160220",
@@ -879,8 +1039,12 @@
       "price": 1.198,
       "iopv": 1.22,
       "premium": -0.018033,
-      "coverage": 1.0,
-      "source_quality": "ok"
+      "coverage": 1,
+      "source_quality": "ok",
+      "price_change_pct": 0.001864,
+      "volume_amount": 11838.8,
+      "nav_official": 1.2202,
+      "nav_official_date": "2026-06-17"
     },
     {
       "code": "161903",
@@ -888,8 +1052,12 @@
       "price": 1.2419,
       "iopv": 1.257,
       "premium": -0.012013,
-      "coverage": 1.0,
-      "source_quality": "ok"
+      "coverage": 1,
+      "source_quality": "ok",
+      "price_change_pct": 0.00946,
+      "volume_amount": 15257,
+      "nav_official": 1.2582,
+      "nav_official_date": "2026-06-17"
     },
     {
       "code": "501227",
@@ -897,17 +1065,25 @@
       "price": 0.8449,
       "iopv": 0.85,
       "premium": -0.006,
-      "coverage": 1.0,
-      "source_quality": "ok"
+      "coverage": 1,
+      "source_quality": "ok",
+      "price_change_pct": -0.00568,
+      "volume_amount": 8444,
+      "nav_official": 0.8495,
+      "nav_official_date": "2026-06-17"
     },
     {
       "code": "501205",
       "ts": "2026-06-18T10:31:00+08:00",
       "price": 0.887,
       "iopv": 0.887,
-      "premium": 0.0,
-      "coverage": 1.0,
-      "source_quality": "ok"
+      "premium": 0,
+      "coverage": 1,
+      "source_quality": "ok",
+      "price_change_pct": -0.002256,
+      "volume_amount": 9984.8,
+      "nav_official": 0.8868,
+      "nav_official_date": "2026-06-17"
     },
     {
       "code": "501096",
@@ -915,8 +1091,12 @@
       "price": 0.9295,
       "iopv": 0.924,
       "premium": 0.005952,
-      "coverage": 1.0,
-      "source_quality": "ok"
+      "coverage": 1,
+      "source_quality": "ok",
+      "price_change_pct": -0.009944,
+      "volume_amount": 6525.2,
+      "nav_official": 0.9231,
+      "nav_official_date": "2026-06-17"
     },
     {
       "code": "501099",
@@ -924,8 +1104,12 @@
       "price": 0.9725,
       "iopv": 0.961,
       "premium": 0.011967,
-      "coverage": 1.0,
-      "source_quality": "ok"
+      "coverage": 1,
+      "source_quality": "ok",
+      "price_change_pct": 0.001484,
+      "volume_amount": 11667.8,
+      "nav_official": 0.9611,
+      "nav_official_date": "2026-06-17"
     },
     {
       "code": "501201",
@@ -933,8 +1117,12 @@
       "price": 1.016,
       "iopv": 0.998,
       "premium": 0.018036,
-      "coverage": 1.0,
-      "source_quality": "ok"
+      "coverage": 1,
+      "source_quality": "ok",
+      "price_change_pct": -0.00416,
+      "volume_amount": 9128,
+      "nav_official": 0.9976,
+      "nav_official_date": "2026-06-17"
     },
     {
       "code": "501203",
@@ -942,8 +1130,12 @@
       "price": 1.0598,
       "iopv": 1.035,
       "premium": 0.023961,
-      "coverage": 1.0,
-      "source_quality": "ok"
+      "coverage": 1,
+      "source_quality": "ok",
+      "price_change_pct": 0.016792,
+      "volume_amount": 18556.4,
+      "nav_official": 1.0367,
+      "nav_official_date": "2026-06-17"
     },
     {
       "code": "501208",
@@ -951,8 +1143,12 @@
       "price": 1.1042,
       "iopv": 1.072,
       "premium": 0.030037,
-      "coverage": 1.0,
-      "source_quality": "ok"
+      "coverage": 1,
+      "source_quality": "ok",
+      "price_change_pct": -0.017492,
+      "volume_amount": 3128.6,
+      "nav_official": 1.0701,
+      "nav_official_date": "2026-06-17"
     },
     {
       "code": "501085",
@@ -960,8 +1156,12 @@
       "price": 1.1489,
       "iopv": 1.109,
       "premium": 0.035978,
-      "coverage": 1.0,
-      "source_quality": "ok"
+      "coverage": 1,
+      "source_quality": "ok",
+      "price_change_pct": -0.010136,
+      "volume_amount": 6438.8,
+      "nav_official": 1.1079,
+      "nav_official_date": "2026-06-17"
     },
     {
       "code": "501219",
@@ -969,8 +1169,12 @@
       "price": 1.1254,
       "iopv": 1.146,
       "premium": -0.017976,
-      "coverage": 1.0,
-      "source_quality": "ok"
+      "coverage": 1,
+      "source_quality": "ok",
+      "price_change_pct": 0.009364,
+      "volume_amount": 15213.8,
+      "nav_official": 1.1471,
+      "nav_official_date": "2026-06-17"
     },
     {
       "code": "501095",
@@ -978,8 +1182,12 @@
       "price": 1.1688,
       "iopv": 1.183,
       "premium": -0.012003,
-      "coverage": 1.0,
-      "source_quality": "ok"
+      "coverage": 1,
+      "source_quality": "ok",
+      "price_change_pct": -0.00042,
+      "volume_amount": 10811,
+      "nav_official": 1.183,
+      "nav_official_date": "2026-06-17"
     },
     {
       "code": "501077",
@@ -987,17 +1195,25 @@
       "price": 1.2127,
       "iopv": 1.22,
       "premium": -0.005984,
-      "coverage": 1.0,
-      "source_quality": "ok"
+      "coverage": 1,
+      "source_quality": "ok",
+      "price_change_pct": 0.010812,
+      "volume_amount": 15865.4,
+      "nav_official": 1.2213,
+      "nav_official_date": "2026-06-17"
     },
     {
       "code": "501057",
       "ts": "2026-06-18T10:31:00+08:00",
       "price": 1.257,
       "iopv": 1.257,
-      "premium": 0.0,
-      "coverage": 1.0,
-      "source_quality": "ok"
+      "premium": 0,
+      "coverage": 1,
+      "source_quality": "ok",
+      "price_change_pct": -0.005308,
+      "volume_amount": 8611.4,
+      "nav_official": 1.2563,
+      "nav_official_date": "2026-06-17"
     },
     {
       "code": "501206",
@@ -1005,8 +1221,12 @@
       "price": 0.8551,
       "iopv": 0.85,
       "premium": 0.006,
-      "coverage": 1.0,
-      "source_quality": "ok"
+      "coverage": 1,
+      "source_quality": "ok",
+      "price_change_pct": 0.009172,
+      "volume_amount": 15127.4,
+      "nav_official": 0.8508,
+      "nav_official_date": "2026-06-17"
     },
     {
       "code": "501078",
@@ -1014,8 +1234,12 @@
       "price": 0.8976,
       "iopv": 0.887,
       "premium": 0.01195,
-      "coverage": 1.0,
-      "source_quality": "ok"
+      "coverage": 1,
+      "source_quality": "ok",
+      "price_change_pct": -0.004424,
+      "volume_amount": 9009.2,
+      "nav_official": 0.8866,
+      "nav_official_date": "2026-06-17"
     },
     {
       "code": "501097",
@@ -1023,8 +1247,12 @@
       "price": 0.9406,
       "iopv": 0.924,
       "premium": 0.017965,
-      "coverage": 1.0,
-      "source_quality": "ok"
+      "coverage": 1,
+      "source_quality": "ok",
+      "price_change_pct": -0.019468,
+      "volume_amount": 2239.4,
+      "nav_official": 0.9222,
+      "nav_official_date": "2026-06-17"
     },
     {
       "code": "501090",
@@ -1032,8 +1260,12 @@
       "price": 0.9841,
       "iopv": 0.961,
       "premium": 0.024037,
-      "coverage": 1.0,
-      "source_quality": "ok"
+      "coverage": 1,
+      "source_quality": "ok",
+      "price_change_pct": 0.0072,
+      "volume_amount": 14240,
+      "nav_official": 0.9617,
+      "nav_official_date": "2026-06-17"
     },
     {
       "code": "501081",
@@ -1041,8 +1273,12 @@
       "price": 1.0279,
       "iopv": 0.998,
       "premium": 0.02996,
-      "coverage": 1.0,
-      "source_quality": "ok"
+      "coverage": 1,
+      "source_quality": "ok",
+      "price_change_pct": -0.01204,
+      "volume_amount": 5582,
+      "nav_official": 0.9968,
+      "nav_official_date": "2026-06-17"
     },
     {
       "code": "501311",
@@ -1050,8 +1286,12 @@
       "price": 1.0723,
       "iopv": 1.035,
       "premium": 0.036039,
-      "coverage": 1.0,
-      "source_quality": "ok"
+      "coverage": 1,
+      "source_quality": "ok",
+      "price_change_pct": -0.008968,
+      "volume_amount": 6964.4,
+      "nav_official": 1.0341,
+      "nav_official_date": "2026-06-17"
     }
   ],
   "lof_history": [
@@ -1061,7 +1301,7 @@
       "close_price": 1.0652,
       "official_nav": 1.037,
       "premium_close": 0.0272,
-      "premium_pctile_30d": 1.0
+      "premium_pctile_30d": 1
     },
     {
       "code": "161725",
@@ -1301,7 +1541,7 @@
       "close_price": 1.0652,
       "official_nav": 1.037,
       "premium_close": 0.0272,
-      "premium_pctile_30d": 1.0
+      "premium_pctile_30d": 1
     },
     {
       "code": "161005",
@@ -1541,7 +1781,7 @@
       "close_price": 1.0652,
       "official_nav": 1.037,
       "premium_close": 0.0272,
-      "premium_pctile_30d": 1.0
+      "premium_pctile_30d": 1
     },
     {
       "code": "163406",
@@ -1781,7 +2021,7 @@
       "close_price": 1.0652,
       "official_nav": 1.037,
       "premium_close": 0.0272,
-      "premium_pctile_30d": 1.0
+      "premium_pctile_30d": 1
     },
     {
       "code": "160706",
@@ -2021,7 +2261,7 @@
       "close_price": 1.0652,
       "official_nav": 1.037,
       "premium_close": 0.0272,
-      "premium_pctile_30d": 1.0
+      "premium_pctile_30d": 1
     },
     {
       "code": "501050",
@@ -2261,7 +2501,7 @@
       "close_price": 1.0652,
       "official_nav": 1.037,
       "premium_close": 0.0272,
-      "premium_pctile_30d": 1.0
+      "premium_pctile_30d": 1
     },
     {
       "code": "160505",
@@ -2501,7 +2741,7 @@
       "close_price": 1.0652,
       "official_nav": 1.037,
       "premium_close": 0.0272,
-      "premium_pctile_30d": 1.0
+      "premium_pctile_30d": 1
     },
     {
       "code": "162605",
@@ -2741,7 +2981,7 @@
       "close_price": 1.0652,
       "official_nav": 1.037,
       "premium_close": 0.0272,
-      "premium_pctile_30d": 1.0
+      "premium_pctile_30d": 1
     },
     {
       "code": "161024",
@@ -2981,7 +3221,7 @@
       "close_price": 1.0652,
       "official_nav": 1.037,
       "premium_close": 0.0272,
-      "premium_pctile_30d": 1.0
+      "premium_pctile_30d": 1
     },
     {
       "code": "160119",
@@ -3221,7 +3461,7 @@
       "close_price": 1.0652,
       "official_nav": 1.037,
       "premium_close": 0.0272,
-      "premium_pctile_30d": 1.0
+      "premium_pctile_30d": 1
     },
     {
       "code": "160632",
@@ -3461,7 +3701,7 @@
       "close_price": 1.0652,
       "official_nav": 1.037,
       "premium_close": 0.0272,
-      "premium_pctile_30d": 1.0
+      "premium_pctile_30d": 1
     },
     {
       "code": "160220",
@@ -3701,7 +3941,7 @@
       "close_price": 1.0652,
       "official_nav": 1.037,
       "premium_close": 0.0272,
-      "premium_pctile_30d": 1.0
+      "premium_pctile_30d": 1
     },
     {
       "code": "161903",
@@ -3941,7 +4181,7 @@
       "close_price": 1.0652,
       "official_nav": 1.037,
       "premium_close": 0.0272,
-      "premium_pctile_30d": 1.0
+      "premium_pctile_30d": 1
     },
     {
       "code": "501227",
@@ -4181,7 +4421,7 @@
       "close_price": 1.0652,
       "official_nav": 1.037,
       "premium_close": 0.0272,
-      "premium_pctile_30d": 1.0
+      "premium_pctile_30d": 1
     },
     {
       "code": "501205",
@@ -4421,7 +4661,7 @@
       "close_price": 1.0652,
       "official_nav": 1.037,
       "premium_close": 0.0272,
-      "premium_pctile_30d": 1.0
+      "premium_pctile_30d": 1
     },
     {
       "code": "501096",
@@ -4661,7 +4901,7 @@
       "close_price": 1.0652,
       "official_nav": 1.037,
       "premium_close": 0.0272,
-      "premium_pctile_30d": 1.0
+      "premium_pctile_30d": 1
     },
     {
       "code": "501099",
@@ -4901,7 +5141,7 @@
       "close_price": 1.0652,
       "official_nav": 1.037,
       "premium_close": 0.0272,
-      "premium_pctile_30d": 1.0
+      "premium_pctile_30d": 1
     },
     {
       "code": "501201",
@@ -5141,7 +5381,7 @@
       "close_price": 1.0652,
       "official_nav": 1.037,
       "premium_close": 0.0272,
-      "premium_pctile_30d": 1.0
+      "premium_pctile_30d": 1
     },
     {
       "code": "501203",
@@ -5381,7 +5621,7 @@
       "close_price": 1.0652,
       "official_nav": 1.037,
       "premium_close": 0.0272,
-      "premium_pctile_30d": 1.0
+      "premium_pctile_30d": 1
     },
     {
       "code": "501208",
@@ -5621,7 +5861,7 @@
       "close_price": 1.0652,
       "official_nav": 1.037,
       "premium_close": 0.0272,
-      "premium_pctile_30d": 1.0
+      "premium_pctile_30d": 1
     },
     {
       "code": "501085",
@@ -5861,7 +6101,7 @@
       "close_price": 1.0652,
       "official_nav": 1.037,
       "premium_close": 0.0272,
-      "premium_pctile_30d": 1.0
+      "premium_pctile_30d": 1
     },
     {
       "code": "501219",
@@ -6101,7 +6341,7 @@
       "close_price": 1.0652,
       "official_nav": 1.037,
       "premium_close": 0.0272,
-      "premium_pctile_30d": 1.0
+      "premium_pctile_30d": 1
     },
     {
       "code": "501095",
@@ -6341,7 +6581,7 @@
       "close_price": 1.0652,
       "official_nav": 1.037,
       "premium_close": 0.0272,
-      "premium_pctile_30d": 1.0
+      "premium_pctile_30d": 1
     },
     {
       "code": "501077",
@@ -6581,7 +6821,7 @@
       "close_price": 1.0652,
       "official_nav": 1.037,
       "premium_close": 0.0272,
-      "premium_pctile_30d": 1.0
+      "premium_pctile_30d": 1
     },
     {
       "code": "501057",
@@ -6821,7 +7061,7 @@
       "close_price": 1.0652,
       "official_nav": 1.037,
       "premium_close": 0.0272,
-      "premium_pctile_30d": 1.0
+      "premium_pctile_30d": 1
     },
     {
       "code": "501206",
@@ -7061,7 +7301,7 @@
       "close_price": 1.0652,
       "official_nav": 1.037,
       "premium_close": 0.0272,
-      "premium_pctile_30d": 1.0
+      "premium_pctile_30d": 1
     },
     {
       "code": "501078",
@@ -7301,7 +7541,7 @@
       "close_price": 1.0652,
       "official_nav": 1.037,
       "premium_close": 0.0272,
-      "premium_pctile_30d": 1.0
+      "premium_pctile_30d": 1
     },
     {
       "code": "501097",
@@ -7541,7 +7781,7 @@
       "close_price": 1.0652,
       "official_nav": 1.037,
       "premium_close": 0.0272,
-      "premium_pctile_30d": 1.0
+      "premium_pctile_30d": 1
     },
     {
       "code": "501090",
@@ -7781,7 +8021,7 @@
       "close_price": 1.0652,
       "official_nav": 1.037,
       "premium_close": 0.0272,
-      "premium_pctile_30d": 1.0
+      "premium_pctile_30d": 1
     },
     {
       "code": "501081",
@@ -8021,7 +8261,7 @@
       "close_price": 1.0652,
       "official_nav": 1.037,
       "premium_close": 0.0272,
-      "premium_pctile_30d": 1.0
+      "premium_pctile_30d": 1
     },
     {
       "code": "501311",
@@ -8262,630 +8502,720 @@
       "report_date": "2026-03-31",
       "stock_code": "S00001",
       "stock_name": "样例持仓1",
-      "weight": 0.08
+      "weight": 0.08,
+      "price_change_pct": -0.02547
     },
     {
       "code": "161725",
       "report_date": "2026-03-31",
       "stock_code": "S00002",
       "stock_name": "样例持仓2",
-      "weight": 0.07
+      "weight": 0.07,
+      "price_change_pct": 0.020244
     },
     {
       "code": "161725",
       "report_date": "2026-03-31",
       "stock_code": "S00003",
       "stock_name": "样例持仓3",
-      "weight": 0.06
+      "weight": 0.06,
+      "price_change_pct": 0.005958
     },
     {
       "code": "161005",
       "report_date": "2026-03-31",
       "stock_code": "S00001",
       "stock_name": "样例持仓1",
-      "weight": 0.08
+      "weight": 0.08,
+      "price_change_pct": 0.013056
     },
     {
       "code": "161005",
       "report_date": "2026-03-31",
       "stock_code": "S00002",
       "stock_name": "样例持仓2",
-      "weight": 0.07
+      "weight": 0.07,
+      "price_change_pct": -0.029802
     },
     {
       "code": "161005",
       "report_date": "2026-03-31",
       "stock_code": "S00003",
       "stock_name": "样例持仓3",
-      "weight": 0.06
+      "weight": 0.06,
+      "price_change_pct": -0.015516
     },
     {
       "code": "163406",
       "report_date": "2026-03-31",
       "stock_code": "S00001",
       "stock_name": "样例持仓1",
-      "weight": 0.08
+      "weight": 0.08,
+      "price_change_pct": -0.004422
     },
     {
       "code": "163406",
       "report_date": "2026-03-31",
       "stock_code": "S00002",
       "stock_name": "样例持仓2",
-      "weight": 0.07
+      "weight": 0.07,
+      "price_change_pct": -0.018708
     },
     {
       "code": "163406",
       "report_date": "2026-03-31",
       "stock_code": "S00003",
       "stock_name": "样例持仓3",
-      "weight": 0.06
+      "weight": 0.06,
+      "price_change_pct": 0.027006
     },
     {
       "code": "160706",
       "report_date": "2026-03-31",
       "stock_code": "S00001",
       "stock_name": "样例持仓1",
-      "weight": 0.08
+      "weight": 0.08,
+      "price_change_pct": -0.01149
     },
     {
       "code": "160706",
       "report_date": "2026-03-31",
       "stock_code": "S00002",
       "stock_name": "样例持仓2",
-      "weight": 0.07
+      "weight": 0.07,
+      "price_change_pct": -0.028632
     },
     {
       "code": "160706",
       "report_date": "2026-03-31",
       "stock_code": "S00003",
       "stock_name": "样例持仓3",
-      "weight": 0.06
+      "weight": 0.06,
+      "price_change_pct": 0.017082
     },
     {
       "code": "501050",
       "report_date": "2026-03-31",
       "stock_code": "S00001",
       "stock_name": "样例持仓1",
-      "weight": 0.08
+      "weight": 0.08,
+      "price_change_pct": -0.00636
     },
     {
       "code": "501050",
       "report_date": "2026-03-31",
       "stock_code": "S00002",
       "stock_name": "样例持仓2",
-      "weight": 0.07
+      "weight": 0.07,
+      "price_change_pct": 0.010782
     },
     {
       "code": "501050",
       "report_date": "2026-03-31",
       "stock_code": "S00003",
       "stock_name": "样例持仓3",
-      "weight": 0.06
+      "weight": 0.06,
+      "price_change_pct": 0.025068
     },
     {
       "code": "160505",
       "report_date": "2026-03-31",
       "stock_code": "S00001",
       "stock_name": "样例持仓1",
-      "weight": 0.08
+      "weight": 0.08,
+      "price_change_pct": -0.027924
     },
     {
       "code": "160505",
       "report_date": "2026-03-31",
       "stock_code": "S00002",
       "stock_name": "样例持仓2",
-      "weight": 0.07
+      "weight": 0.07,
+      "price_change_pct": -0.013638
     },
     {
       "code": "160505",
       "report_date": "2026-03-31",
       "stock_code": "S00003",
       "stock_name": "样例持仓3",
-      "weight": 0.06
+      "weight": 0.06,
+      "price_change_pct": 0.000648
     },
     {
       "code": "162605",
       "report_date": "2026-03-31",
       "stock_code": "S00001",
       "stock_name": "样例持仓1",
-      "weight": 0.08
+      "weight": 0.08,
+      "price_change_pct": -0.011994
     },
     {
       "code": "162605",
       "report_date": "2026-03-31",
       "stock_code": "S00002",
       "stock_name": "样例持仓2",
-      "weight": 0.07
+      "weight": 0.07,
+      "price_change_pct": -0.029136
     },
     {
       "code": "162605",
       "report_date": "2026-03-31",
       "stock_code": "S00003",
       "stock_name": "样例持仓3",
-      "weight": 0.06
+      "weight": 0.06,
+      "price_change_pct": 0.016578
     },
     {
       "code": "161024",
       "report_date": "2026-03-31",
       "stock_code": "S00001",
       "stock_name": "样例持仓1",
-      "weight": 0.08
+      "weight": 0.08,
+      "price_change_pct": 0.009294
     },
     {
       "code": "161024",
       "report_date": "2026-03-31",
       "stock_code": "S00002",
       "stock_name": "样例持仓2",
-      "weight": 0.07
+      "weight": 0.07,
+      "price_change_pct": -0.007848
     },
     {
       "code": "161024",
       "report_date": "2026-03-31",
       "stock_code": "S00003",
       "stock_name": "样例持仓3",
-      "weight": 0.06
+      "weight": 0.06,
+      "price_change_pct": -0.022134
     },
     {
       "code": "160119",
       "report_date": "2026-03-31",
       "stock_code": "S00001",
       "stock_name": "样例持仓1",
-      "weight": 0.08
+      "weight": 0.08,
+      "price_change_pct": 0.028146
     },
     {
       "code": "160119",
       "report_date": "2026-03-31",
       "stock_code": "S00002",
       "stock_name": "样例持仓2",
-      "weight": 0.07
+      "weight": 0.07,
+      "price_change_pct": 0.01386
     },
     {
       "code": "160119",
       "report_date": "2026-03-31",
       "stock_code": "S00003",
       "stock_name": "样例持仓3",
-      "weight": 0.06
+      "weight": 0.06,
+      "price_change_pct": -0.000426
     },
     {
       "code": "160632",
       "report_date": "2026-03-31",
       "stock_code": "S00001",
       "stock_name": "样例持仓1",
-      "weight": 0.08
+      "weight": 0.08,
+      "price_change_pct": 0.002022
     },
     {
       "code": "160632",
       "report_date": "2026-03-31",
       "stock_code": "S00002",
       "stock_name": "样例持仓2",
-      "weight": 0.07
+      "weight": 0.07,
+      "price_change_pct": -0.01512
     },
     {
       "code": "160632",
       "report_date": "2026-03-31",
       "stock_code": "S00003",
       "stock_name": "样例持仓3",
-      "weight": 0.06
+      "weight": 0.06,
+      "price_change_pct": -0.029406
     },
     {
       "code": "160220",
       "report_date": "2026-03-31",
       "stock_code": "S00001",
       "stock_name": "样例持仓1",
-      "weight": 0.08
+      "weight": 0.08,
+      "price_change_pct": -0.018684
     },
     {
       "code": "160220",
       "report_date": "2026-03-31",
       "stock_code": "S00002",
       "stock_name": "样例持仓2",
-      "weight": 0.07
+      "weight": 0.07,
+      "price_change_pct": -0.004398
     },
     {
       "code": "160220",
       "report_date": "2026-03-31",
       "stock_code": "S00003",
       "stock_name": "样例持仓3",
-      "weight": 0.06
+      "weight": 0.06,
+      "price_change_pct": 0.009888
     },
     {
       "code": "161903",
       "report_date": "2026-03-31",
       "stock_code": "S00001",
       "stock_name": "样例持仓1",
-      "weight": 0.08
+      "weight": 0.08,
+      "price_change_pct": -0.010746
     },
     {
       "code": "161903",
       "report_date": "2026-03-31",
       "stock_code": "S00002",
       "stock_name": "样例持仓2",
-      "weight": 0.07
+      "weight": 0.07,
+      "price_change_pct": -0.027888
     },
     {
       "code": "161903",
       "report_date": "2026-03-31",
       "stock_code": "S00003",
       "stock_name": "样例持仓3",
-      "weight": 0.06
+      "weight": 0.06,
+      "price_change_pct": 0.017826
     },
     {
       "code": "501227",
       "report_date": "2026-03-31",
       "stock_code": "S00001",
       "stock_name": "样例持仓1",
-      "weight": 0.08
+      "weight": 0.08,
+      "price_change_pct": -0.007608
     },
     {
       "code": "501227",
       "report_date": "2026-03-31",
       "stock_code": "S00002",
       "stock_name": "样例持仓2",
-      "weight": 0.07
+      "weight": 0.07,
+      "price_change_pct": 0.009534
     },
     {
       "code": "501227",
       "report_date": "2026-03-31",
       "stock_code": "S00003",
       "stock_name": "样例持仓3",
-      "weight": 0.06
+      "weight": 0.06,
+      "price_change_pct": 0.02382
     },
     {
       "code": "501205",
       "report_date": "2026-03-31",
       "stock_code": "S00001",
       "stock_name": "样例持仓1",
-      "weight": 0.08
+      "weight": 0.08,
+      "price_change_pct": 0.001368
     },
     {
       "code": "501205",
       "report_date": "2026-03-31",
       "stock_code": "S00002",
       "stock_name": "样例持仓2",
-      "weight": 0.07
+      "weight": 0.07,
+      "price_change_pct": 0.01851
     },
     {
       "code": "501205",
       "report_date": "2026-03-31",
       "stock_code": "S00003",
       "stock_name": "样例持仓3",
-      "weight": 0.06
+      "weight": 0.06,
+      "price_change_pct": -0.027204
     },
     {
       "code": "501096",
       "report_date": "2026-03-31",
       "stock_code": "S00001",
       "stock_name": "样例持仓1",
-      "weight": 0.08
+      "weight": 0.08,
+      "price_change_pct": 0.02418
     },
     {
       "code": "501096",
       "report_date": "2026-03-31",
       "stock_code": "S00002",
       "stock_name": "样例持仓2",
-      "weight": 0.07
+      "weight": 0.07,
+      "price_change_pct": -0.021534
     },
     {
       "code": "501096",
       "report_date": "2026-03-31",
       "stock_code": "S00003",
       "stock_name": "样例持仓3",
-      "weight": 0.06
+      "weight": 0.06,
+      "price_change_pct": -0.007248
     },
     {
       "code": "501099",
       "report_date": "2026-03-31",
       "stock_code": "S00001",
       "stock_name": "样例持仓1",
-      "weight": 0.08
+      "weight": 0.08,
+      "price_change_pct": -0.00171
     },
     {
       "code": "501099",
       "report_date": "2026-03-31",
       "stock_code": "S00002",
       "stock_name": "样例持仓2",
-      "weight": 0.07
+      "weight": 0.07,
+      "price_change_pct": -0.015996
     },
     {
       "code": "501099",
       "report_date": "2026-03-31",
       "stock_code": "S00003",
       "stock_name": "样例持仓3",
-      "weight": 0.06
+      "weight": 0.06,
+      "price_change_pct": 0.029718
     },
     {
       "code": "501201",
       "report_date": "2026-03-31",
       "stock_code": "S00001",
       "stock_name": "样例持仓1",
-      "weight": 0.08
+      "weight": 0.08,
+      "price_change_pct": 0.005232
     },
     {
       "code": "501201",
       "report_date": "2026-03-31",
       "stock_code": "S00002",
       "stock_name": "样例持仓2",
-      "weight": 0.07
+      "weight": 0.07,
+      "price_change_pct": 0.022374
     },
     {
       "code": "501201",
       "report_date": "2026-03-31",
       "stock_code": "S00003",
       "stock_name": "样例持仓3",
-      "weight": 0.06
+      "weight": 0.06,
+      "price_change_pct": -0.02334
     },
     {
       "code": "501203",
       "report_date": "2026-03-31",
       "stock_code": "S00001",
       "stock_name": "样例持仓1",
-      "weight": 0.08
+      "weight": 0.08,
+      "price_change_pct": -0.005412
     },
     {
       "code": "501203",
       "report_date": "2026-03-31",
       "stock_code": "S00002",
       "stock_name": "样例持仓2",
-      "weight": 0.07
+      "weight": 0.07,
+      "price_change_pct": 0.008874
     },
     {
       "code": "501203",
       "report_date": "2026-03-31",
       "stock_code": "S00003",
       "stock_name": "样例持仓3",
-      "weight": 0.06
+      "weight": 0.06,
+      "price_change_pct": 0.02316
     },
     {
       "code": "501208",
       "report_date": "2026-03-31",
       "stock_code": "S00001",
       "stock_name": "样例持仓1",
-      "weight": 0.08
+      "weight": 0.08,
+      "price_change_pct": 0.019074
     },
     {
       "code": "501208",
       "report_date": "2026-03-31",
       "stock_code": "S00002",
       "stock_name": "样例持仓2",
-      "weight": 0.07
+      "weight": 0.07,
+      "price_change_pct": 0.004788
     },
     {
       "code": "501208",
       "report_date": "2026-03-31",
       "stock_code": "S00003",
       "stock_name": "样例持仓3",
-      "weight": 0.06
+      "weight": 0.06,
+      "price_change_pct": -0.009498
     },
     {
       "code": "501085",
       "report_date": "2026-03-31",
       "stock_code": "S00001",
       "stock_name": "样例持仓1",
-      "weight": 0.08
+      "weight": 0.08,
+      "price_change_pct": 0.02754
     },
     {
       "code": "501085",
       "report_date": "2026-03-31",
       "stock_code": "S00002",
       "stock_name": "样例持仓2",
-      "weight": 0.07
+      "weight": 0.07,
+      "price_change_pct": -0.018174
     },
     {
       "code": "501085",
       "report_date": "2026-03-31",
       "stock_code": "S00003",
       "stock_name": "样例持仓3",
-      "weight": 0.06
+      "weight": 0.06,
+      "price_change_pct": -0.003888
     },
     {
       "code": "501219",
       "report_date": "2026-03-31",
       "stock_code": "S00001",
       "stock_name": "样例持仓1",
-      "weight": 0.08
+      "weight": 0.08,
+      "price_change_pct": -0.025098
     },
     {
       "code": "501219",
       "report_date": "2026-03-31",
       "stock_code": "S00002",
       "stock_name": "样例持仓2",
-      "weight": 0.07
+      "weight": 0.07,
+      "price_change_pct": 0.01776
     },
     {
       "code": "501219",
       "report_date": "2026-03-31",
       "stock_code": "S00003",
       "stock_name": "样例持仓3",
-      "weight": 0.06
+      "weight": 0.06,
+      "price_change_pct": 0.003474
     },
     {
       "code": "501095",
       "report_date": "2026-03-31",
       "stock_code": "S00001",
       "stock_name": "样例持仓1",
-      "weight": 0.08
+      "weight": 0.08,
+      "price_change_pct": 0.013578
     },
     {
       "code": "501095",
       "report_date": "2026-03-31",
       "stock_code": "S00002",
       "stock_name": "样例持仓2",
-      "weight": 0.07
+      "weight": 0.07,
+      "price_change_pct": -0.000708
     },
     {
       "code": "501095",
       "report_date": "2026-03-31",
       "stock_code": "S00003",
       "stock_name": "样例持仓3",
-      "weight": 0.06
+      "weight": 0.06,
+      "price_change_pct": -0.014994
     },
     {
       "code": "501077",
       "report_date": "2026-03-31",
       "stock_code": "S00001",
       "stock_name": "样例持仓1",
-      "weight": 0.08
+      "weight": 0.08,
+      "price_change_pct": 0.001338
     },
     {
       "code": "501077",
       "report_date": "2026-03-31",
       "stock_code": "S00002",
       "stock_name": "样例持仓2",
-      "weight": 0.07
+      "weight": 0.07,
+      "price_change_pct": -0.012948
     },
     {
       "code": "501077",
       "report_date": "2026-03-31",
       "stock_code": "S00003",
       "stock_name": "样例持仓3",
-      "weight": 0.06
+      "weight": 0.06,
+      "price_change_pct": -0.027234
     },
     {
       "code": "501057",
       "report_date": "2026-03-31",
       "stock_code": "S00001",
       "stock_name": "样例持仓1",
-      "weight": 0.08
+      "weight": 0.08,
+      "price_change_pct": -0.007746
     },
     {
       "code": "501057",
       "report_date": "2026-03-31",
       "stock_code": "S00002",
       "stock_name": "样例持仓2",
-      "weight": 0.07
+      "weight": 0.07,
+      "price_change_pct": -0.024888
     },
     {
       "code": "501057",
       "report_date": "2026-03-31",
       "stock_code": "S00003",
       "stock_name": "样例持仓3",
-      "weight": 0.06
+      "weight": 0.06,
+      "price_change_pct": 0.020826
     },
     {
       "code": "501206",
       "report_date": "2026-03-31",
       "stock_code": "S00001",
       "stock_name": "样例持仓1",
-      "weight": 0.08
+      "weight": 0.08,
+      "price_change_pct": 0.014358
     },
     {
       "code": "501206",
       "report_date": "2026-03-31",
       "stock_code": "S00002",
       "stock_name": "样例持仓2",
-      "weight": 0.07
+      "weight": 0.07,
+      "price_change_pct": -0.002784
     },
     {
       "code": "501206",
       "report_date": "2026-03-31",
       "stock_code": "S00003",
       "stock_name": "样例持仓3",
-      "weight": 0.06
+      "weight": 0.06,
+      "price_change_pct": -0.01707
     },
     {
       "code": "501078",
       "report_date": "2026-03-31",
       "stock_code": "S00001",
       "stock_name": "样例持仓1",
-      "weight": 0.08
+      "weight": 0.08,
+      "price_change_pct": -0.010164
     },
     {
       "code": "501078",
       "report_date": "2026-03-31",
       "stock_code": "S00002",
       "stock_name": "样例持仓2",
-      "weight": 0.07
+      "weight": 0.07,
+      "price_change_pct": 0.004122
     },
     {
       "code": "501078",
       "report_date": "2026-03-31",
       "stock_code": "S00003",
       "stock_name": "样例持仓3",
-      "weight": 0.06
+      "weight": 0.06,
+      "price_change_pct": 0.018408
     },
     {
       "code": "501097",
       "report_date": "2026-03-31",
       "stock_code": "S00001",
       "stock_name": "样例持仓1",
-      "weight": 0.08
+      "weight": 0.08,
+      "price_change_pct": -0.004026
     },
     {
       "code": "501097",
       "report_date": "2026-03-31",
       "stock_code": "S00002",
       "stock_name": "样例持仓2",
-      "weight": 0.07
+      "weight": 0.07,
+      "price_change_pct": -0.021168
     },
     {
       "code": "501097",
       "report_date": "2026-03-31",
       "stock_code": "S00003",
       "stock_name": "样例持仓3",
-      "weight": 0.06
+      "weight": 0.06,
+      "price_change_pct": 0.024546
     },
     {
       "code": "501090",
       "report_date": "2026-03-31",
       "stock_code": "S00001",
       "stock_name": "样例持仓1",
-      "weight": 0.08
+      "weight": 0.08,
+      "price_change_pct": -0.020352
     },
     {
       "code": "501090",
       "report_date": "2026-03-31",
       "stock_code": "S00002",
       "stock_name": "样例持仓2",
-      "weight": 0.07
+      "weight": 0.07,
+      "price_change_pct": -0.00321
     },
     {
       "code": "501090",
       "report_date": "2026-03-31",
       "stock_code": "S00003",
       "stock_name": "样例持仓3",
-      "weight": 0.06
+      "weight": 0.06,
+      "price_change_pct": 0.011076
     },
     {
       "code": "501081",
       "report_date": "2026-03-31",
       "stock_code": "S00001",
       "stock_name": "样例持仓1",
-      "weight": 0.08
+      "weight": 0.08,
+      "price_change_pct": -0.02898
     },
     {
       "code": "501081",
       "report_date": "2026-03-31",
       "stock_code": "S00002",
       "stock_name": "样例持仓2",
-      "weight": 0.07
+      "weight": 0.07,
+      "price_change_pct": -0.014694
     },
     {
       "code": "501081",
       "report_date": "2026-03-31",
       "stock_code": "S00003",
       "stock_name": "样例持仓3",
-      "weight": 0.06
+      "weight": 0.06,
+      "price_change_pct": -0.000408
     },
     {
       "code": "501311",
       "report_date": "2026-03-31",
       "stock_code": "S00001",
       "stock_name": "样例持仓1",
-      "weight": 0.08
+      "weight": 0.08,
+      "price_change_pct": -0.02178
     },
     {
       "code": "501311",
       "report_date": "2026-03-31",
       "stock_code": "S00002",
       "stock_name": "样例持仓2",
-      "weight": 0.07
+      "weight": 0.07,
+      "price_change_pct": -0.007494
     },
     {
       "code": "501311",
       "report_date": "2026-03-31",
       "stock_code": "S00003",
       "stock_name": "样例持仓3",
-      "weight": 0.06
+      "weight": 0.06,
+      "price_change_pct": 0.006792
     }
   ]
 }
