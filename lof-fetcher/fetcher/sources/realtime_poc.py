@@ -1,6 +1,7 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import json
+import os
 import re
 import time
 from dataclasses import dataclass
@@ -18,6 +19,11 @@ class TimedSourceValue:
 
 
 POC_CODES = ["161725", "161005", "160706", "160632", "501203"]
+
+
+def _is_blocked(env_name: str) -> bool:
+    value = os.environ.get(env_name, "")
+    return value.strip().lower() in {"1", "true", "yes", "on"}
 
 
 class RealTimePocClient:
@@ -39,6 +45,13 @@ class RealTimePocClient:
         }
 
     def fetch_market_price(self, code: str) -> dict[str, Any]:
+        if _is_blocked("LOF_POC_BLOCK_PRICE"):
+            return {
+                "source": "tencent_quote,eastmoney_kline,eastmoney_push2,sina",
+                "elapsed_ms": 0,
+                "error": "tencent_quote_BlockedByEnv;eastmoney_kline_BlockedByEnv;eastmoney_push2_BlockedByEnv;sina_BlockedByEnv",
+            }
+
         elapsed_ms = 0
         errors: list[str] = []
 
@@ -96,6 +109,9 @@ class RealTimePocClient:
         return {"source": "tencent_quote,eastmoney_kline,eastmoney_push2,sina", "elapsed_ms": elapsed_ms, "error": ";".join(errors)}
 
     def fetch_estimated_nav(self, code: str) -> dict[str, Any]:
+        if _is_blocked("LOF_POC_BLOCK_NAV"):
+            return {"source": "fundgz", "elapsed_ms": 0, "error": "nav_BlockedByEnv"}
+
         start = time.perf_counter()
         try:
             response = self._client.get(f"https://fundgz.1234567.com.cn/js/{code}.js?rt={int(time.time() * 1000)}")

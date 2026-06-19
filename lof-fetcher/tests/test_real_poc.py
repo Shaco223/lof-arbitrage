@@ -28,6 +28,7 @@ def test_parse_realtime_source_payload_calculates_premium_and_metrics():
         "target_count": 2,
         "ok_count": 1,
         "degraded_count": 1,
+        "stale_count": 0,
         "field_completeness": 0.5,
         "elapsed_ms": 165,
     }

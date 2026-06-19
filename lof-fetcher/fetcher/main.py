@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import argparse
 from pathlib import Path
@@ -7,7 +7,7 @@ from typing import Sequence
 from loguru import logger
 
 from fetcher.pipeline.quota import write_quota_report
-from fetcher.pipeline.real_poc import build_poc_report, write_poc_outputs
+from fetcher.pipeline.real_poc import build_poc_report, run_long_run, write_poc_outputs
 from fetcher.pipeline.retry_trace import build_retry_trace_samples
 from fetcher.pipeline.snapshot import write_sample_outputs
 from fetcher.sources.csv_assets import load_benchmark_mapping, load_watchlist
@@ -24,6 +24,16 @@ def main(argv: Sequence[str] | None = None) -> None:
         return
 
     if args.command == "real-poc":
+        if args.duration_minutes and args.duration_minutes > 0:
+            summary = run_long_run(
+                duration_minutes=args.duration_minutes,
+                interval_seconds=args.interval_seconds,
+                output_dir=args.output_dir,
+                snapshot_file=args.snapshot_file,
+                ts_start=args.ts,
+            )
+            logger.info("real POC long-run summary: {}", summary)
+            return
         report = build_poc_report(ts=args.ts)
         files = write_poc_outputs(report, args.output_dir, args.snapshot_file)
         logger.info("real POC summary: {}", report["summary"])
@@ -59,6 +69,10 @@ def _build_parser() -> argparse.ArgumentParser:
     real_poc.add_argument("--output-dir", type=Path, default=Path("../outputs"))
     real_poc.add_argument("--snapshot-file", type=Path, default=Path("../outputs/local-minute-snapshots-v2.jsonl"))
     real_poc.add_argument("--ts", default=None)
+    real_poc.add_argument("--duration-minutes", type=float, default=0.0,
+                          help="run periodically for N minutes (long-run mode); 0 = single shot")
+    real_poc.add_argument("--interval-seconds", type=float, default=60.0,
+                          help="seconds between iterations in long-run mode")
 
     evidence = subparsers.add_parser("ac-evidence", help="write AC-C2 retry trace and AC-S1 quota estimate")
     evidence.add_argument("--output-dir", type=Path, default=Path("../outputs"))
