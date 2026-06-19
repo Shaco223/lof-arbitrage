@@ -1,10 +1,11 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 // 详情页：实时溢价 / 三段式覆盖率（AC-T1）/ 30 天历史
 import { computed, nextTick, ref } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
 import { getLofDetail, getLofHistory } from '@/api'
 import type { LofDetailData, LofHistoryData } from '@/api/types'
 import { coverageLevel, coverageLevelLabel, fmtDateTime, fmtNum, fmtPct, freshnessLabel } from '@/utils/format'
+import { isLowLiquidity, LOW_LIQUIDITY_LABEL } from '@/utils/low-liquidity'
 
 const detail = ref<LofDetailData | null>(null)
 const history = ref<LofHistoryData | null>(null)
@@ -199,6 +200,7 @@ onLoad((q: Record<string, string> | undefined) => {
         </view>
       </view>
       <view class="fresh-line">数据时间：{{ fmtDateTime(detail.realtime.ts) }}（{{ freshnessLabel(detail.realtime.ts) }}） · {{ sourceQualityLabel(detail.realtime.source_quality) }}</view>
+      <view v-if="isLowLiquidity(detail.code)" class="liquidity-line"><text class="liquidity-pill">{{ LOW_LIQUIDITY_LABEL }}</text></view>
     </view>
 
     <view class="card chart-card" v-if="history">
@@ -267,6 +269,8 @@ onLoad((q: Record<string, string> | undefined) => {
 .quote-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16rpx; }
 .quote-item { display: flex; flex-direction: column; gap: 8rpx; }
 .fresh-line { color: #909399; font-size: 24rpx; margin-top: 18rpx; }
+.liquidity-line { margin-top: 12rpx; }
+.liquidity-pill { display: inline-flex; padding: 4rpx 12rpx; border-radius: 999rpx; font-size: 24rpx; background: #f0f7ff; color: #1f6feb; border: 1rpx solid #c8dcff; }
 .section-head { display: flex; align-items: center; justify-content: space-between; }
 .pctile-box { background: #edf2fc; color: #409eff; padding: 8rpx 16rpx; border-radius: 999rpx; font-size: 24rpx; }
 .legend { display: flex; align-items: center; gap: 10rpx; color: #606266; font-size: 24rpx; margin: 4rpx 0 12rpx; }

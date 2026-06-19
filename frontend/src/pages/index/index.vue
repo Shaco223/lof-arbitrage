@@ -1,10 +1,11 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 // Dashboard：30 只 LOF 实时排行，接口结构严格按 PRD §6。
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { onPullDownRefresh } from '@dcloudio/uni-app'
 import { getLofList } from '@/api'
 import type { FundType, ListParams, LofListItem } from '@/api/types'
 import { fmtNum, fmtPct, freshnessLabel, coverageLevel, coverageLevelLabel, isMarketOpen } from '@/utils/format'
+import { isLowLiquidity, LOW_LIQUIDITY_LABEL } from '@/utils/low-liquidity'
 import { useSettingsStore } from '@/store/settings'
 
 const settings = useSettingsStore()
@@ -218,6 +219,9 @@ onUnmounted(() => {
             >覆盖率 {{ fmtPct(item.coverage, 0) }} · {{ coverageLevelLabel(coverageLevel(item.coverage)) }}</text>
             <text class="quality-pill" :class="sourceQualityClass(item.source_quality)">数据 {{ sourceQualityLabel(item.source_quality) || '正常' }}</text>
           </view>
+          <view v-if="isLowLiquidity(item.code)" class="liquidity-line">
+            <text class="liquidity-pill">{{ LOW_LIQUIDITY_LABEL }}</text>
+          </view>
         </view>
         <view class="quote-grid">
           <text>{{ fmtNum(item.price, 3) }}</text>
@@ -283,6 +287,8 @@ onUnmounted(() => {
 .quality-ok { background: #f4f4f5; color: #606266; }
 .quality-degraded { background: #fdf6ec; color: #e6a23c; }
 .quality-stale { background: #fef0f0; color: #f56c6c; }
+.liquidity-line { margin-top: 8rpx; }
+.liquidity-pill { display: inline-flex; padding: 4rpx 10rpx; border-radius: 999rpx; font-size: 20rpx; background: #f0f7ff; color: #1f6feb; border: 1rpx solid #c8dcff; }
 .quote-grid { display: grid; grid-template-columns: repeat(3, 1fr); align-items: center; gap: 8rpx; text-align: right; font-size: 26rpx; }
 .premium-text { font-size: 30rpx; font-weight: 700; }
 .empty { padding: 48rpx 24rpx; text-align: center; color: #909399; background: #fafafa; border-radius: 16rpx; }
