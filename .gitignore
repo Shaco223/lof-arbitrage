@@ -61,6 +61,7 @@ uniCloud-aliyun/cloudfunctions/common/uni-config-center/
 outputs/*
 !outputs/.gitkeep
 !outputs/test-report-20260618.md
+!outputs/test-report-20260619.md
 assets/cache/
 assets/*.cache.json
 

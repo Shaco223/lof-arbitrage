@@ -104,6 +104,13 @@ python -m pytest --collect-only -q -k AC-P1
 # - run: cd tests && python -m pytest -q --junitxml=../outputs/junit-tests.xml
 ```
 
+## M3 POC 集中验收
+
+- `m3-poc-acceptance-checklist.md` 列出 M3-V1 ~ M3-V6 的测试方法、用例、当前结论与长跑/降级证据缺口。
+- 用例文件：`tests/e2e/test_m3_real_poc.py`，本地命令：`python -m pytest -q e2e/test_m3_real_poc.py -ra`。
+- 报告：`outputs/test-report-20260619.md`。
+- 范围：仅读取 `outputs/backend-real-poc-report-v2.json` / `outputs/local-minute-snapshots-v2.jsonl`，不打线上 uniCloud。
+
 ## M1 Integration Readiness
 
 - `m1-integration-readiness.md` tracks AC-I1~I4 / AC-C1~C2 / AC-P2 / AC-S1 integration inputs, pass criteria, and field-drift bug template.
