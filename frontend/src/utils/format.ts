@@ -6,10 +6,36 @@ export function fmtPct(v: number | undefined | null, digits = 2): string {
   return (v * 100).toFixed(digits) + '%'
 }
 
+/** 带正负号的百分比，用于涨跌幅 */
+export function fmtPctSigned(v: number | undefined | null, digits = 2): string {
+  if (v === undefined || v === null || Number.isNaN(v)) return '--'
+  const pct = v * 100
+  const sign = pct > 0 ? '+' : ''
+  return sign + pct.toFixed(digits) + '%'
+}
+
 /** 数字四舍五入到 N 位 */
 export function fmtNum(v: number | undefined | null, digits = 3): string {
   if (v === undefined || v === null || Number.isNaN(v)) return '--'
   return Number(v).toFixed(digits)
+}
+
+/**
+ * 成交额展示：源单位"万元"。
+ * < 10000 万：直接 x.x 万；>= 10000 万：折算亿
+ */
+export function fmtVolumeWan(v: number | undefined | null): string {
+  if (v === undefined || v === null || Number.isNaN(v)) return '--'
+  const num = Number(v)
+  if (Math.abs(num) >= 10000) return (num / 10000).toFixed(2) + ' 亿'
+  if (Math.abs(num) >= 100) return num.toFixed(0) + ' 万'
+  return num.toFixed(1) + ' 万'
+}
+
+/** 份额（亿份） */
+export function fmtSharesYi(v: number | undefined | null): string {
+  if (v === undefined || v === null || Number.isNaN(v)) return '--'
+  return Number(v).toFixed(2) + ' 亿份'
 }
 
 /** PRD §8 覆盖率三档颜色 */
@@ -57,4 +83,17 @@ export function isMarketOpen(d = new Date()): boolean {
   const morning = total >= 9 * 60 + 30 && total <= 11 * 60 + 30
   const afternoon = total >= 13 * 60 && total <= 15 * 60
   return morning || afternoon
+}
+
+/** 是否为有效数值（非 null / 非 undefined / 非 NaN） */
+export function isFiniteNum(v: unknown): v is number {
+  return typeof v === 'number' && Number.isFinite(v)
+}
+
+/** 字段是否需要渲染：null/undefined/空字符串/'unknown' 一律返回 false（AC-P5） */
+export function shouldRender(v: unknown): boolean {
+  if (v === null || v === undefined) return false
+  if (typeof v === 'string') return v !== '' && v !== 'unknown'
+  if (typeof v === 'number') return Number.isFinite(v)
+  return true
 }

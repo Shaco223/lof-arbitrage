@@ -1,8 +1,13 @@
 ﻿// PRD §5 / §6 字段契约（前后端联调基线）
+// PRD 1.2 字段对齐升级：新增字段为可选，null/unknown 时前端不渲染（AC-P5）
 
 export type FundType = 'index' | 'industry' | 'active'
 export type SourceQuality = 'ok' | 'degraded' | 'stale'
 export type AlertDirection = 'premium' | 'discount'
+/** PRD 1.2 申赎状态：unknown 视为不渲染 */
+export type SubscribeRedeemStatus = 'open' | 'suspended' | 'limited' | 'unknown'
+/** PRD 1.2 LOF 状态：active / 低流动性 active_low_liquidity */
+export type LofStatus = 'active' | 'active_low_liquidity'
 
 /** 列表项（api-lof-list -> data.items[i]） */
 export interface LofListItem {
@@ -18,6 +23,28 @@ export interface LofListItem {
   /** 30 天分位，0~1 */
   pctile_30d: number
   source_quality?: SourceQuality
+  // === PRD 1.2 新增字段（可选；null/unknown 时前端不渲染） ===
+  status?: LofStatus
+  /** 当日涨跌幅，例 0.0123 = +1.23% */
+  price_change_pct?: number | null
+  /** 当日成交额，单位"万元" */
+  volume_amount?: number | null
+  /** 最近披露官方净值 */
+  nav_official?: number | null
+  /** 净值日期，YYYY-MM-DD */
+  nav_official_date?: string | null
+  /** 净值溢价 = (price - nav_official) / nav_official */
+  premium_nav?: number | null
+  /** 估算误差 = iopv - nav_official */
+  premium_error?: number | null
+  /** 申购状态：open/suspended/limited/unknown */
+  subscribe_status?: SubscribeRedeemStatus
+  /** 赎回状态：open/suspended/limited/unknown */
+  redeem_status?: SubscribeRedeemStatus
+  /** 基金规模，单位"亿元" */
+  fund_scale?: number | null
+  /** 场内流通份额，单位"亿份" */
+  circulating_shares?: number | null
 }
 
 /** 列表响应 */
@@ -43,6 +70,11 @@ export interface HoldingTop {
   stock_code: string
   stock_name: string
   weight: number
+  // === PRD 1.2 新增字段（可选；null 时前端不渲染该列） ===
+  /** 个股当日涨跌幅 */
+  price_change_pct?: number | null
+  /** 个股贡献度 = weight * price_change_pct */
+  contribution_pct?: number | null
 }
 
 /** 详情响应 */
@@ -63,8 +95,24 @@ export interface LofDetailData {
     premium: number
     coverage: number
     source_quality: SourceQuality
+    // === PRD 1.2 新增字段（可选） ===
+    price_change_pct?: number | null
+    volume_amount?: number | null
   }
   pctile_30d: number
+  // === PRD 1.2 新增详情字段（可选；null/unknown 时前端不渲染） ===
+  status?: LofStatus
+  price_change_pct?: number | null
+  volume_amount?: number | null
+  nav_official?: number | null
+  nav_official_date?: string | null
+  premium_nav?: number | null
+  premium_error?: number | null
+  nav_estimate_error_pct?: number | null
+  fund_scale?: number | null
+  circulating_shares?: number | null
+  subscribe_status?: SubscribeRedeemStatus
+  redeem_status?: SubscribeRedeemStatus
 }
 
 /** 历史项（api-lof-history） */

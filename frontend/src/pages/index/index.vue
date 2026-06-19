@@ -1,10 +1,20 @@
 <script setup lang="ts">
-// Dashboard：30 只 LOF 实时排行，接口结构严格按 PRD §6。
+// Dashboard：30 只 LOF 实时排行，接口结构严格按 PRD §6（PRD 1.2 字段对齐升级）。
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { onPullDownRefresh } from '@dcloudio/uni-app'
 import { getLofList } from '@/api'
 import type { FundType, ListParams, LofListItem } from '@/api/types'
-import { fmtNum, fmtPct, freshnessLabel, coverageLevel, coverageLevelLabel, isMarketOpen } from '@/utils/format'
+import {
+  fmtNum,
+  fmtPct,
+  fmtPctSigned,
+  fmtVolumeWan,
+  freshnessLabel,
+  coverageLevel,
+  coverageLevelLabel,
+  isMarketOpen,
+  shouldRender
+} from '@/utils/format'
 import { isLowLiquidity, LOW_LIQUIDITY_LABEL } from '@/utils/low-liquidity'
 import { useSettingsStore } from '@/store/settings'
 
@@ -86,10 +96,20 @@ function signalType(item: LofListItem): 'premium' | 'discount' | 'none' {
 }
 
 function signalLabel(item: LofListItem) {
-  const type = signalType(item)
-  if (type === 'premium') return '高溢价'
-  if (type === 'discount') return '高折价'
+  const t = signalType(item)
+  if (t === 'premium') return '高溢价'
+  if (t === 'discount') return '高折价'
   return ''
+}
+
+/**
+ * 低流动性优先读后端真实 status 字段；缺失/不识别时回退本地名单。
+ * 后端已返真实值，避免双源出现矛盾。
+ */
+function showLowLiquidity(item: LofListItem): boolean {
+  if (item.status === 'active_low_liquidity') return true
+  if (item.status === 'active') return false
+  return isLowLiquidity(item.code)
 }
 
 async function loadList(showToast = false) {
@@ -179,7 +199,7 @@ onUnmounted(() => {
       </view>
       <view class="refresh-line">
         <view class="refresh-copy">
-          <text class="text-muted">更新时间：{{ refreshText }}</text>
+          <text class="text-muted">{{ refreshText }}</text>
           <text class="mode-pill">接口：{{ interfaceModeText }}</text>
           <text class="history-note">历史沉淀：本地优先，线上后置</text>
         </view>
@@ -191,10 +211,10 @@ onUnmounted(() => {
 
     <view class="list card">
       <view class="table-head">
-        <text class="col-name">基金</text>
+        <text class="col-name">基金 / 涨跌 / 成交</text>
         <text class="col-num">现价</text>
         <text class="col-num">IOPV</text>
-        <text class="col-rate">溢价</text>
+        <text class="col-rate">估算 / 净值溢价</text>
       </view>
 
       <view
@@ -212,6 +232,12 @@ onUnmounted(() => {
           </view>
           <view class="fund-name">{{ item.name }}</view>
           <view class="meta-line">
+            <text
+              v-if="shouldRender(item.price_change_pct)"
+              class="chg-pill"
+              :class="(item.price_change_pct ?? 0) >= 0 ? 'text-up' : 'text-down'"
+            >涨跌 {{ fmtPctSigned(item.price_change_pct, 2) }}</text>
+            <text v-if="shouldRender(item.volume_amount)" class="volume-pill">成交 {{ fmtVolumeWan(item.volume_amount) }}</text>
             <text>30天分位 {{ fmtPct(item.pctile_30d, 0) }}</text>
             <text
               class="coverage-pill"
@@ -219,14 +245,20 @@ onUnmounted(() => {
             >覆盖率 {{ fmtPct(item.coverage, 0) }} · {{ coverageLevelLabel(coverageLevel(item.coverage)) }}</text>
             <text class="quality-pill" :class="sourceQualityClass(item.source_quality)">数据 {{ sourceQualityLabel(item.source_quality) || '正常' }}</text>
           </view>
-          <view v-if="isLowLiquidity(item.code)" class="liquidity-line">
+          <view v-if="showLowLiquidity(item)" class="liquidity-line">
             <text class="liquidity-pill">{{ LOW_LIQUIDITY_LABEL }}</text>
           </view>
         </view>
         <view class="quote-grid">
-          <text>{{ fmtNum(item.price, 3) }}</text>
-          <text>{{ fmtNum(item.iopv, 3) }}</text>
-          <text :class="[`premium-text`, item.premium >= 0 ? 'text-up' : 'text-down']">{{ fmtPct(item.premium, 2) }}</text>
+          <text class="quote-cell">{{ fmtNum(item.price, 3) }}</text>
+          <text class="quote-cell">{{ fmtNum(item.iopv, 3) }}</text>
+          <view class="premium-stack">
+            <text :class="['premium-text', item.premium >= 0 ? 'text-up' : 'text-down']">估 {{ fmtPct(item.premium, 2) }}</text>
+            <text
+              v-if="shouldRender(item.premium_nav)"
+              :class="['premium-nav', (item.premium_nav ?? 0) >= 0 ? 'text-up' : 'text-down']"
+            >净 {{ fmtPct(item.premium_nav, 2) }}</text>
+          </view>
         </view>
       </view>
 
@@ -263,9 +295,9 @@ onUnmounted(() => {
 .state-box { margin-top: 16rpx; padding: 18rpx; border-radius: 14rpx; font-size: 24rpx; }
 .loading-box { color: #409eff; background: #ecf5ff; }
 .error { color: #f56c6c; background: #fef0f0; }
-.table-head { display: grid; grid-template-columns: 1fr 100rpx 100rpx 120rpx; gap: 8rpx; color: #909399; font-size: 22rpx; padding-bottom: 16rpx; border-bottom: 1rpx solid #ebeef5; }
+.table-head { display: grid; grid-template-columns: 1fr 100rpx 100rpx 160rpx; gap: 8rpx; color: #909399; font-size: 22rpx; padding-bottom: 16rpx; border-bottom: 1rpx solid #ebeef5; }
 .col-num, .col-rate { text-align: right; }
-.fund-row { display: grid; grid-template-columns: 1fr 320rpx; gap: 12rpx; padding: 22rpx 0; border-bottom: 1rpx solid #f0f2f5; }
+.fund-row { display: grid; grid-template-columns: 1fr 360rpx; gap: 12rpx; padding: 22rpx 0; border-bottom: 1rpx solid #f0f2f5; }
 .fund-row.signal-premium, .fund-row.signal-discount { position: relative; margin: 0 -10rpx; padding-left: 10rpx; padding-right: 10rpx; border-radius: 18rpx; }
 .fund-row.signal-premium { background: #fff7f7; box-shadow: inset 0 0 0 2rpx #fde2e2; }
 .fund-row.signal-discount { background: #f0f9eb; box-shadow: inset 0 0 0 2rpx #e1f3d8; }
@@ -274,7 +306,7 @@ onUnmounted(() => {
 .fund-row.signal-discount::before { background: #67c23a; }
 .name-line { display: flex; align-items: center; gap: 8rpx; }
 .fund-code { font-weight: 700; color: #1f2d3d; }
-.type-pill, .alert-pill, .coverage-pill, .quality-pill { display: inline-flex; padding: 4rpx 10rpx; border-radius: 999rpx; font-size: 20rpx; }
+.type-pill, .alert-pill, .coverage-pill, .quality-pill, .chg-pill, .volume-pill { display: inline-flex; padding: 4rpx 10rpx; border-radius: 999rpx; font-size: 20rpx; }
 .type-pill { background: #edf2fc; color: #409eff; }
 .alert-pill { font-weight: 700; }
 .alert-premium { background: #fef0f0; color: #f56c6c; }
@@ -287,9 +319,16 @@ onUnmounted(() => {
 .quality-ok { background: #f4f4f5; color: #606266; }
 .quality-degraded { background: #fdf6ec; color: #e6a23c; }
 .quality-stale { background: #fef0f0; color: #f56c6c; }
+.chg-pill { background: #f5f7fa; }
+.chg-pill.text-up { background: #fef0f0; color: #f56c6c; }
+.chg-pill.text-down { background: #f0f9eb; color: #67c23a; }
+.volume-pill { background: #f0f7ff; color: #1f6feb; }
 .liquidity-line { margin-top: 8rpx; }
 .liquidity-pill { display: inline-flex; padding: 4rpx 10rpx; border-radius: 999rpx; font-size: 20rpx; background: #f0f7ff; color: #1f6feb; border: 1rpx solid #c8dcff; }
 .quote-grid { display: grid; grid-template-columns: repeat(3, 1fr); align-items: center; gap: 8rpx; text-align: right; font-size: 26rpx; }
-.premium-text { font-size: 30rpx; font-weight: 700; }
+.quote-cell { align-self: center; }
+.premium-stack { display: flex; flex-direction: column; align-items: flex-end; gap: 4rpx; }
+.premium-text { font-size: 28rpx; font-weight: 700; }
+.premium-nav { font-size: 22rpx; opacity: 0.85; }
 .empty { padding: 48rpx 24rpx; text-align: center; color: #909399; background: #fafafa; border-radius: 16rpx; }
 </style>
