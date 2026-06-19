@@ -1,44 +1,93 @@
-'use strict';
+﻿'use strict';
 
 const http = require('http');
+const path = require('path');
 const { URL } = require('url');
+const fs = require('fs');
 const { createMockUniCloud } = require('./tests/mock-unicloud');
 const { loadLatestMinuteSnapshot } = require('./local-minute-snapshots');
 
 const dataset = require('./tests/sample-dataset.json');
-const lofList = require('./cloudfunctions/lof-list/index');
-const lofDetail = require('./cloudfunctions/lof-detail/index');
-const lofHistory = require('./cloudfunctions/lof-history/index');
-const lofIngest = require('./cloudfunctions/lof-ingest/index');
 
 const DEFAULT_PORT = 8787;
 const DEFAULT_TOKEN = 'local-dev-token';
-const ROUTES = {
-  '/lof-list': lofList,
-  '/lof-detail': lofDetail,
-  '/lof-history': lofHistory,
-  '/lof-ingest': lofIngest
+const STATE_CACHE_TTL_MS = 1000;
+
+const HANDLER_PATHS = {
+  '/lof-list': require.resolve('./cloudfunctions/lof-list/index'),
+  '/lof-detail': require.resolve('./cloudfunctions/lof-detail/index'),
+  '/lof-history': require.resolve('./cloudfunctions/lof-history/index'),
+  '/lof-ingest': require.resolve('./cloudfunctions/lof-ingest/index')
 };
 
+function loadHandler(pathname, freshRequire) {
+  const modulePath = HANDLER_PATHS[pathname];
+  if (!modulePath) return null;
+  if (freshRequire) {
+    // Drop the handler and any of its sibling helpers (response.js, fallback-list.json, etc.)
+    // so module-level caches inside the cloud function reset on each request.
+    const dirPrefix = path.dirname(modulePath) + path.sep;
+    for (const key of Object.keys(require.cache)) {
+      if (key === modulePath || key.startsWith(dirPrefix)) {
+        delete require.cache[key];
+      }
+    }
+  }
+  // eslint-disable-next-line global-require
+  return require(modulePath);
+}
+
 function createLocalApiServer(options = {}) {
-  const state = applyMinuteSnapshot(clone(options.dataset || dataset), options.minuteSnapshotFile);
+  const baseDataset = options.dataset || dataset;
+  const explicitSnapshotFile = options.minuteSnapshotFile;
   const token = options.token || process.env.UNICLOUD_INGEST_TOKEN || DEFAULT_TOKEN;
   const maxBatchSize = String(options.maxBatchSize || process.env.MAX_INGEST_BATCH_SIZE || '100');
 
-  global.uniCloud = createMockUniCloud(state);
   process.env.UNICLOUD_INGEST_TOKEN = token;
   process.env.MAX_INGEST_BATCH_SIZE = maxBatchSize;
 
+  let cache = { mtimeMs: -1, file: null, t: 0, state: null };
+
+  function getFreshState() {
+    const file = explicitSnapshotFile || process.env.LOCAL_MINUTE_SNAPSHOT_FILE || null;
+    let mtimeMs = 0;
+    if (file) {
+      try { mtimeMs = fs.statSync(file).mtimeMs; } catch (_) { mtimeMs = 0; }
+    }
+    const now = Date.now();
+    if (
+      cache.state &&
+      cache.file === file &&
+      cache.mtimeMs === mtimeMs &&
+      (now - cache.t) < STATE_CACHE_TTL_MS
+    ) {
+      return { state: cache.state, fresh: false };
+    }
+    const state = applyMinuteSnapshot(clone(baseDataset), file);
+    cache = { mtimeMs, file, t: now, state };
+    return { state, fresh: true };
+  }
+
+  // Initialize global.uniCloud once so non-HTTP consumers still see a sane mock.
+  global.uniCloud = createMockUniCloud(getFreshState().state);
+
   return http.createServer(async (req, res) => {
     const requestUrl = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
-    const handler = ROUTES[requestUrl.pathname];
 
-    if (!handler) {
+    if (!HANDLER_PATHS[requestUrl.pathname]) {
       writeJson(res, 404, { code: 4040, message: 'not found', data: {} });
       return;
     }
 
     try {
+      const { state, fresh } = getFreshState();
+      // Refresh state from JSONL on every request (with <=1s mtime micro-cache).
+      global.uniCloud = createMockUniCloud(state);
+      // When dataset changed, also drop cloud-function module caches so any
+      // module-level TTL caches inside handlers (e.g. lof-list 60s cache)
+      // pick up the new state immediately. Cloud function source files are
+      // unchanged; this only resets local require cache.
+      const handler = loadHandler(requestUrl.pathname, fresh);
       const bodyText = await readBody(req);
       const event = {
         queryStringParameters: Object.fromEntries(requestUrl.searchParams.entries()),
@@ -59,7 +108,13 @@ function createLocalApiServer(options = {}) {
 function applyMinuteSnapshot(state, explicitSnapshotFile) {
   const snapshotFile = explicitSnapshotFile || process.env.LOCAL_MINUTE_SNAPSHOT_FILE;
   if (!snapshotFile) return state;
-  const snapshot = loadLatestMinuteSnapshot(snapshotFile);
+  let snapshot = null;
+  try {
+    snapshot = loadLatestMinuteSnapshot(snapshotFile);
+  } catch (error) {
+    console.warn(`[local-api-server] failed to read snapshot ${snapshotFile}: ${error.message}`);
+    return state;
+  }
   if (!snapshot || !Array.isArray(snapshot.items) || !snapshot.items.length) return state;
 
   const byCode = new Map(snapshot.items.map((item) => [String(item.code), item]));
@@ -100,6 +155,8 @@ function writeJson(res, statusCode, payload) {
   const body = JSON.stringify(payload);
   res.writeHead(statusCode, {
     'Content-Type': 'application/json; charset=utf-8',
+    'Cache-Control': 'no-store',
+    'Pragma': 'no-cache',
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Headers': 'Content-Type, X-Ingest-Token',
     'Access-Control-Allow-Methods': 'GET,POST,OPTIONS'
