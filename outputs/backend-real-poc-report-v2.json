@@ -1,0 +1,93 @@
+{
+  "ts": "2026-06-19T12:10:34+08:00",
+  "summary": {
+    "target_count": 5,
+    "ok_count": 5,
+    "degraded_count": 0,
+    "stale_count": 0,
+    "field_completeness": 1.0,
+    "elapsed_ms": 471
+  },
+  "items": [
+    {
+      "code": "161725",
+      "name": "白酒基金LOF",
+      "price": 0.526,
+      "iopv": 0.5233,
+      "premium": 0.00516,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "failure_reason": "",
+      "sources": {
+        "price": "tencent_quote",
+        "nav": "fundgz"
+      },
+      "estimate_time": "2026-06-18 15:00",
+      "elapsed_ms": 201
+    },
+    {
+      "code": "161005",
+      "name": "富国天惠LOF",
+      "price": 3.184,
+      "iopv": 3.189,
+      "premium": -0.001568,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "failure_reason": "",
+      "sources": {
+        "price": "tencent_quote",
+        "nav": "fundgz"
+      },
+      "estimate_time": "2026-06-18 15:00",
+      "elapsed_ms": 47
+    },
+    {
+      "code": "160706",
+      "name": "沪深300LOF",
+      "price": 1.255,
+      "iopv": 1.2604,
+      "premium": -0.004284,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "failure_reason": "",
+      "sources": {
+        "price": "tencent_quote",
+        "nav": "fundgz"
+      },
+      "estimate_time": "2026-06-18 15:00",
+      "elapsed_ms": 110
+    },
+    {
+      "code": "160632",
+      "name": "酒LOF",
+      "price": 0.255,
+      "iopv": 0.2533,
+      "premium": 0.006711,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "failure_reason": "",
+      "sources": {
+        "price": "tencent_quote",
+        "nav": "fundgz"
+      },
+      "estimate_time": "2026-06-18 15:00",
+      "elapsed_ms": 47
+    },
+    {
+      "code": "501203",
+      "name": "易基创新未来LOF",
+      "price": 1.757,
+      "iopv": 1.7815,
+      "premium": -0.013752,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "failure_reason": "",
+      "sources": {
+        "price": "tencent_quote",
+        "nav": "fundgz"
+      },
+      "estimate_time": "2026-06-18 15:00",
+      "elapsed_ms": 66
+    }
+  ]
+}

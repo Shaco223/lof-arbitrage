@@ -114,9 +114,11 @@ def test_m3_v3_valid_minute_ratio_within_snapshot(poc_report: dict) -> None:
     summary = poc_report["summary"]
     target_count = summary["target_count"]
     ok_count = summary["ok_count"]
+    degraded_count = summary["degraded_count"]
+    stale_count = summary.get("stale_count", 0)
     field_completeness = summary["field_completeness"]
     assert target_count == len(POC_CODES)
-    assert ok_count + summary["degraded_count"] == target_count
+    assert ok_count + degraded_count + stale_count == target_count
     assert math.isclose(field_completeness, ok_count / target_count, rel_tol=0, abs_tol=1e-6)
     assert field_completeness >= 0.8, (
         f"current POC field_completeness {field_completeness:.3f} below 80% threshold"
@@ -142,13 +144,18 @@ def test_m3_v4_section6_field_reuse(poc_report: dict, snapshot_lines: list[dict]
     for item in poc_report["items"]:
         assert SECTION6_REUSE_KEYS <= set(item.keys())
         if item["source_quality"] == "ok":
-            assert item["price"] is not None and item["iopv"] is not None
+            assert item["price"] is not None and item["iopv"] is not None and item["premium"] is not None
             recomputed = item["price"] / item["iopv"] - 1
             assert abs(recomputed - item["premium"]) <= PREMIUM_TOLERANCE, (
                 f"premium drift for {item['code']}: report={item['premium']} recomputed={recomputed}"
             )
         else:
             assert item["source_quality"] in {"degraded", "stale"}
+            # degraded/stale rows must not pretend to have a usable premium.
+            assert item["premium"] is None or (item.get("iopv") is None) or (
+                item["price"] is not None and item["iopv"] is not None
+                and abs(item["price"] / item["iopv"] - 1 - item["premium"]) <= PREMIUM_TOLERANCE
+            )
 
 
 @pytest.mark.ac_a
@@ -179,3 +186,61 @@ def test_m3_v6_local_loop_only(poc_report: dict, snapshot_lines: list[dict]) -> 
     assert LOCAL_API_BASE.startswith("http://127.0.0.1"), (
         "acceptance must target the local API base 127.0.0.1:8787"
     )
+
+
+@pytest.mark.ac_c
+def test_m3_v2_long_run_minute_count(project_root: Path, snapshot_lines: list[dict]) -> None:
+    """M3-V2 hard: long-run JSONL must cover >=10 minute batches with 5 POC items each."""
+    long_run_path = project_root / "outputs" / "backend-real-poc-long-run-v2.json"
+    if not long_run_path.exists():
+        pytest.skip(f"long-run summary missing: {long_run_path}; run fetcher real-poc with --duration-minutes >=10")
+    summary = json.loads(long_run_path.read_text(encoding="utf-8"))
+    iterations = int(summary.get("iterations") or 0)
+    duration_seconds = int(summary.get("duration_seconds") or 0)
+    snapshot_count = len(snapshot_lines)
+    assert iterations >= 10, f"long-run iterations {iterations} below 10"
+    assert duration_seconds >= 9 * 60, f"long-run duration {duration_seconds}s below 9 minutes"
+    assert snapshot_count >= 10, f"snapshot JSONL has only {snapshot_count} batches; expected >=10"
+
+
+@pytest.mark.ac_a
+def test_m3_v5_degraded_and_stale_evidence(project_root: Path) -> None:
+    """M3-V5 hard: degraded-evidence JSONL must contain real degraded and stale rows."""
+    base = project_root / "outputs" / "degraded-evidence"
+    single_path = base / "local-minute-snapshots-degraded-single.jsonl"
+    streak_path = base / "local-minute-snapshots-degraded.jsonl"
+    if not single_path.exists() or not streak_path.exists():
+        pytest.skip(
+            "degraded evidence JSONL missing under outputs/degraded-evidence; "
+            "run fetcher real-poc with LOF_POC_BLOCK_NAV=1"
+        )
+
+    def _load(path: Path) -> list[dict]:
+        rows: list[dict] = []
+        for line in path.read_text(encoding="utf-8").splitlines():
+            if line.strip():
+                rows.append(json.loads(line))
+        return rows
+
+    single_rows = _load(single_path)
+    assert single_rows, "degraded-single JSONL is empty"
+    for batch in single_rows:
+        assert batch["items"], "degraded batch must contain items"
+        for item in batch["items"]:
+            assert SECTION6_REUSE_KEYS <= set(item.keys())
+            assert item["source_quality"] == "degraded", (
+                f"degraded JSONL row should be degraded: {item}"
+            )
+            assert item["premium"] is None
+            assert item["coverage"] == 0.0
+
+    streak_rows = _load(streak_path)
+    qualities = [item["source_quality"] for batch in streak_rows for item in batch["items"]]
+    assert "degraded" in qualities, "streak JSONL missing degraded rows"
+    assert "stale" in qualities, "streak JSONL missing stale rows after consecutive failures"
+
+    long_run_path = base / "backend-real-poc-long-run-v2.json"
+    if long_run_path.exists():
+        summary = json.loads(long_run_path.read_text(encoding="utf-8"))
+        assert (summary.get("degraded_total") or 0) > 0
+        assert (summary.get("stale_total") or 0) > 0

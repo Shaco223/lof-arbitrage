@@ -73,3 +73,10 @@ data/snapshots/
 
 # ===== Git worktree isolation =====
 .worktrees/
+
+# ===== M3 POC 长跑/降级证据（dev-005 测试硬校验依赖） =====
+!outputs/backend-real-poc-long-run-v2.json
+!outputs/backend-real-poc-report-v2.json
+!outputs/local-minute-snapshots-v2.jsonl
+!outputs/degraded-evidence/
+!outputs/degraded-evidence/**

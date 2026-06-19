@@ -1,0 +1,93 @@
+{
+  "ts": "2026-06-19T12:00:07+08:00",
+  "summary": {
+    "target_count": 5,
+    "ok_count": 0,
+    "degraded_count": 0,
+    "stale_count": 5,
+    "field_completeness": 0.0,
+    "elapsed_ms": 352
+  },
+  "items": [
+    {
+      "code": "161725",
+      "name": "白酒基金LOF",
+      "price": 0.526,
+      "iopv": null,
+      "premium": null,
+      "coverage": 0.0,
+      "source_quality": "stale",
+      "failure_reason": "nav_BlockedByEnv;missing_estimated_nav;stale_consecutive_failures:2",
+      "sources": {
+        "price": "tencent_quote",
+        "nav": "fundgz"
+      },
+      "estimate_time": "",
+      "elapsed_ms": 177
+    },
+    {
+      "code": "161005",
+      "name": "富国天惠LOF",
+      "price": 3.184,
+      "iopv": null,
+      "premium": null,
+      "coverage": 0.0,
+      "source_quality": "stale",
+      "failure_reason": "nav_BlockedByEnv;missing_estimated_nav;stale_consecutive_failures:2",
+      "sources": {
+        "price": "tencent_quote",
+        "nav": "fundgz"
+      },
+      "estimate_time": "",
+      "elapsed_ms": 44
+    },
+    {
+      "code": "160706",
+      "name": "沪深300LOF",
+      "price": 1.255,
+      "iopv": null,
+      "premium": null,
+      "coverage": 0.0,
+      "source_quality": "stale",
+      "failure_reason": "nav_BlockedByEnv;missing_estimated_nav;stale_consecutive_failures:2",
+      "sources": {
+        "price": "tencent_quote",
+        "nav": "fundgz"
+      },
+      "estimate_time": "",
+      "elapsed_ms": 44
+    },
+    {
+      "code": "160632",
+      "name": "酒LOF",
+      "price": 0.255,
+      "iopv": null,
+      "premium": null,
+      "coverage": 0.0,
+      "source_quality": "stale",
+      "failure_reason": "nav_BlockedByEnv;missing_estimated_nav;stale_consecutive_failures:2",
+      "sources": {
+        "price": "tencent_quote",
+        "nav": "fundgz"
+      },
+      "estimate_time": "",
+      "elapsed_ms": 43
+    },
+    {
+      "code": "501203",
+      "name": "易基创新未来LOF",
+      "price": 1.757,
+      "iopv": null,
+      "premium": null,
+      "coverage": 0.0,
+      "source_quality": "stale",
+      "failure_reason": "nav_BlockedByEnv;missing_estimated_nav;stale_consecutive_failures:2",
+      "sources": {
+        "price": "tencent_quote",
+        "nav": "fundgz"
+      },
+      "estimate_time": "",
+      "elapsed_ms": 44
+    }
+  ]
+}
