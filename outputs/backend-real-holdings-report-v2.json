@@ -1,0 +1,282 @@
+{
+  "summary": {
+    "ts": "2026-06-22T13:47:23+08:00",
+    "target_count": 30,
+    "fetched_count": 29,
+    "missing_count": 1,
+    "stock_universe": 180,
+    "realtime_applied": true
+  },
+  "per_lof": [
+    {
+      "code": "161725",
+      "name": "招商中证白酒指数(LOF)A",
+      "type": "index",
+      "report_date": "2026-03-31",
+      "holdings_count": 10,
+      "error": "",
+      "elapsed_ms": 197
+    },
+    {
+      "code": "161005",
+      "name": "富国天惠成长混合(LOF)A",
+      "type": "active",
+      "report_date": "2026-03-31",
+      "holdings_count": 10,
+      "error": "",
+      "elapsed_ms": 282
+    },
+    {
+      "code": "163406",
+      "name": "兴全合润混合A",
+      "type": "active",
+      "report_date": "2026-03-31",
+      "holdings_count": 10,
+      "error": "",
+      "elapsed_ms": 177
+    },
+    {
+      "code": "160706",
+      "name": "嘉实沪深300ETF联接A",
+      "type": "index",
+      "report_date": "2026-03-31",
+      "holdings_count": 10,
+      "error": "",
+      "elapsed_ms": 310
+    },
+    {
+      "code": "501050",
+      "name": "华夏上证50AH优选指数A",
+      "type": "index",
+      "report_date": "2026-03-31",
+      "holdings_count": 6,
+      "error": "",
+      "elapsed_ms": 109
+    },
+    {
+      "code": "160505",
+      "name": "博时主题行业混合(LOF)",
+      "type": "active",
+      "report_date": "2026-03-31",
+      "holdings_count": 10,
+      "error": "",
+      "elapsed_ms": 187
+    },
+    {
+      "code": "162605",
+      "name": "景顺长城鼎益混合(LOF)A",
+      "type": "active",
+      "report_date": "2026-03-31",
+      "holdings_count": 10,
+      "error": "",
+      "elapsed_ms": 173
+    },
+    {
+      "code": "161024",
+      "name": "富国中证军工指数(LOF)A",
+      "type": "index",
+      "report_date": "2026-03-31",
+      "holdings_count": 10,
+      "error": "",
+      "elapsed_ms": 140
+    },
+    {
+      "code": "160119",
+      "name": "南方中证500ETF联接(LOF)A",
+      "type": "index",
+      "report_date": "2026-03-31",
+      "holdings_count": 10,
+      "error": "",
+      "elapsed_ms": 418
+    },
+    {
+      "code": "160632",
+      "name": "鹏华酒A",
+      "type": "industry",
+      "report_date": "2026-03-31",
+      "holdings_count": 10,
+      "error": "",
+      "elapsed_ms": 106
+    },
+    {
+      "code": "160220",
+      "name": "国泰民益混合(LOF)A",
+      "type": "active",
+      "report_date": "2026-03-31",
+      "holdings_count": 10,
+      "error": "",
+      "elapsed_ms": 116
+    },
+    {
+      "code": "161903",
+      "name": "万家行业优选混合(LOF)",
+      "type": "active",
+      "report_date": "2026-03-31",
+      "holdings_count": 10,
+      "error": "",
+      "elapsed_ms": 166
+    },
+    {
+      "code": "501227",
+      "name": "泓德红利优选混合(LOF)A",
+      "type": "active",
+      "report_date": "2026-03-31",
+      "holdings_count": 10,
+      "error": "",
+      "elapsed_ms": 71
+    },
+    {
+      "code": "501205",
+      "name": "鹏华创新未来混合(LOF)C",
+      "type": "active",
+      "report_date": "2026-03-31",
+      "holdings_count": 9,
+      "error": "",
+      "elapsed_ms": 186
+    },
+    {
+      "code": "501096",
+      "name": "国联安科创混合(LOF)",
+      "type": "active",
+      "report_date": "2026-03-31",
+      "holdings_count": 10,
+      "error": "",
+      "elapsed_ms": 74
+    },
+    {
+      "code": "501099",
+      "name": "平安新兴产业混合(LOF)",
+      "type": "active",
+      "report_date": "2026-03-31",
+      "holdings_count": 10,
+      "error": "",
+      "elapsed_ms": 113
+    },
+    {
+      "code": "501201",
+      "name": "红土创新科技创新股票(LOF)A",
+      "type": "active",
+      "report_date": "2026-03-31",
+      "holdings_count": 10,
+      "error": "",
+      "elapsed_ms": 102
+    },
+    {
+      "code": "501203",
+      "name": "易方达创新未来混合(LOF)",
+      "type": "active",
+      "report_date": "2026-03-31",
+      "holdings_count": 9,
+      "error": "",
+      "elapsed_ms": 130
+    },
+    {
+      "code": "501208",
+      "name": "中欧创新未来混合(LOF)",
+      "type": "active",
+      "report_date": "2026-03-31",
+      "holdings_count": 7,
+      "error": "",
+      "elapsed_ms": 94
+    },
+    {
+      "code": "501085",
+      "name": "财通科创主题灵活配置混合(LOF)",
+      "type": "active",
+      "report_date": "2026-03-31",
+      "holdings_count": 10,
+      "error": "",
+      "elapsed_ms": 86
+    },
+    {
+      "code": "501219",
+      "name": "华夏智胜先锋股票(LOF)A",
+      "type": "active",
+      "report_date": "2026-03-31",
+      "holdings_count": 10,
+      "error": "",
+      "elapsed_ms": 201
+    },
+    {
+      "code": "501095",
+      "name": "中银证券科技创新混合(LOF)",
+      "type": "active",
+      "report_date": "2026-03-31",
+      "holdings_count": 10,
+      "error": "",
+      "elapsed_ms": 88
+    },
+    {
+      "code": "501077",
+      "name": "富国创新企业灵活配置混合(LOF)A",
+      "type": "active",
+      "report_date": "2026-03-31",
+      "holdings_count": 9,
+      "error": "",
+      "elapsed_ms": 112
+    },
+    {
+      "code": "501057",
+      "name": "汇添富中证新能源汽车产业指数(LOF)A",
+      "type": "index",
+      "report_date": "2026-03-31",
+      "holdings_count": 10,
+      "error": "",
+      "elapsed_ms": 120
+    },
+    {
+      "code": "501206",
+      "name": "汇添富创新未来混合(LOF)",
+      "type": "active",
+      "report_date": "2026-03-31",
+      "holdings_count": 8,
+      "error": "",
+      "elapsed_ms": 110
+    },
+    {
+      "code": "501078",
+      "name": "广发科创主题灵活配置混合(LOF)",
+      "type": "active",
+      "report_date": "2026-03-31",
+      "holdings_count": 10,
+      "error": "",
+      "elapsed_ms": 89
+    },
+    {
+      "code": "501097",
+      "name": "国寿安保科技创新混合(LOF)",
+      "type": "active",
+      "report_date": "2026-03-31",
+      "holdings_count": 10,
+      "error": "",
+      "elapsed_ms": 99
+    },
+    {
+      "code": "501090",
+      "name": "华宝中证消费龙头ETF联接A",
+      "type": "index",
+      "report_date": "2026-03-31",
+      "holdings_count": 10,
+      "error": "",
+      "elapsed_ms": 101
+    },
+    {
+      "code": "501081",
+      "name": "中欧科创主题混合(LOF)A",
+      "type": "active",
+      "report_date": "2026-03-31",
+      "holdings_count": 8,
+      "error": "",
+      "elapsed_ms": 111
+    },
+    {
+      "code": "501311",
+      "name": "嘉实港股通新经济指数A",
+      "type": "index",
+      "report_date": "2026-03-31",
+      "holdings_count": 0,
+      "error": "empty_holdings",
+      "elapsed_ms": 115
+    }
+  ]
+}

@@ -18,6 +18,9 @@ from fetcher.pipeline.real_watchlist import (
     run_watchlist_long_run,
     write_watchlist_outputs,
 )
+from fetcher.pipeline.holdings_refresh import (
+    run_holdings_refresh,
+)
 from fetcher.pipeline.retry_trace import build_retry_trace_samples
 from fetcher.pipeline.snapshot import write_sample_outputs
 from fetcher.sources.csv_assets import load_benchmark_mapping
@@ -74,6 +77,16 @@ def main(argv: Sequence[str] | None = None) -> None:
             logger.info("wrote real watchlist {} to {}", name, path)
         return
 
+    if args.command == "holdings-refresh":
+        payload = run_holdings_refresh(
+            output_dir=args.output_dir,
+            ts=args.ts,
+            with_realtime=not args.no_realtime,
+            write_dataset=not args.no_dataset,
+        )
+        logger.info("holdings refresh summary: {}", payload["summary"])
+        return
+
     if args.command == "ac-evidence":
         files = build_retry_trace_samples(args.output_dir)
         quota_path = write_quota_report(args.output_dir / "backend-ac-s1-quota-estimate-v2.json")
@@ -121,6 +134,15 @@ def _build_parser() -> argparse.ArgumentParser:
     watchlist.add_argument("--ts", default=None)
     watchlist.add_argument("--duration-minutes", type=float, default=0.0)
     watchlist.add_argument("--interval-seconds", type=float, default=60.0)
+
+    holdings = subparsers.add_parser(
+        "holdings-refresh",
+        help="fetch real quarterly top-10 holdings + live change pct for watchlist-v2",
+    )
+    holdings.add_argument("--output-dir", type=Path, default=Path("../outputs"))
+    holdings.add_argument("--ts", default=None)
+    holdings.add_argument("--no-realtime", action="store_true", help="skip live stock change pct")
+    holdings.add_argument("--no-dataset", action="store_true", help="do not write sample-dataset.json")
 
     evidence = subparsers.add_parser("ac-evidence", help="write AC-C2 retry trace and AC-S1 quota estimate")
     evidence.add_argument("--output-dir", type=Path, default=Path("../outputs"))

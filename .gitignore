@@ -80,3 +80,12 @@ data/snapshots/
 !outputs/local-minute-snapshots-v2.jsonl
 !outputs/degraded-evidence/
 !outputs/degraded-evidence/**
+
+# ===== M3 ??????? + watchlist ????????dev-004 ???=====
+!outputs/backend-real-holdings-v2.json
+!outputs/backend-real-holdings-report-v2.json
+!outputs/backend-real-watchlist-report-v2.json
+!outputs/backend-real-watchlist-stability-v2.json
+!outputs/backend-real-watchlist-stability-v2.md
+!outputs/backend-real-watchlist-stability-v2-conclusion.md
+!outputs/local-minute-snapshots-watchlist-v2.jsonl

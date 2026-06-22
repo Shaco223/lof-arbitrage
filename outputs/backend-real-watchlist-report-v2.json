@@ -1,0 +1,1033 @@
+{
+  "ts": "2026-06-22T13:51:14+08:00",
+  "summary": {
+    "target_count": 30,
+    "ok_count": 20,
+    "degraded_count": 2,
+    "field_completeness": 0.666667,
+    "elapsed_ms": 2318,
+    "stale_count": 8
+  },
+  "items": [
+    {
+      "code": "161725",
+      "name": "白酒基金LOF",
+      "type": "index",
+      "status": "active",
+      "scale_yi": 300.0,
+      "price": 0.528,
+      "iopv": 0.527,
+      "nav_official": 0.5234,
+      "nav_drift_pct": 0.006878,
+      "premium": 0.001898,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "failure_reason": "",
+      "primary_price_source": "tencent_quote",
+      "primary_nav_source": "fundgz",
+      "backup_price_used": false,
+      "price_attempts": [
+        {
+          "source": "tencent_quote",
+          "elapsed_ms": 159,
+          "hit": true
+        }
+      ],
+      "nav_attempts": [
+        {
+          "source": "fundgz",
+          "elapsed_ms": 40,
+          "hit": true
+        }
+      ],
+      "elapsed_ms": 199,
+      "estimate_time": "2026-06-22 13:48"
+    },
+    {
+      "code": "161005",
+      "name": "富国天惠LOF",
+      "type": "active",
+      "status": "active",
+      "scale_yi": 180.0,
+      "price": 3.206,
+      "iopv": 3.2298,
+      "nav_official": 3.2042,
+      "nav_drift_pct": 0.00799,
+      "premium": -0.007369,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "failure_reason": "",
+      "primary_price_source": "tencent_quote",
+      "primary_nav_source": "fundgz",
+      "backup_price_used": false,
+      "price_attempts": [
+        {
+          "source": "tencent_quote",
+          "elapsed_ms": 37,
+          "hit": true
+        }
+      ],
+      "nav_attempts": [
+        {
+          "source": "fundgz",
+          "elapsed_ms": 16,
+          "hit": true
+        }
+      ],
+      "elapsed_ms": 53,
+      "estimate_time": "2026-06-22 13:46"
+    },
+    {
+      "code": "163406",
+      "name": "兴全合润LOF",
+      "type": "active",
+      "status": "active",
+      "scale_yi": 150.0,
+      "price": 2.718,
+      "iopv": 2.7483,
+      "nav_official": 2.7116,
+      "nav_drift_pct": 0.013534,
+      "premium": -0.011025,
+      "coverage": 0.0,
+      "source_quality": "stale",
+      "failure_reason": "nav_estimate_drift:+0.0135;stale_consecutive_failures:12",
+      "primary_price_source": "tencent_quote",
+      "primary_nav_source": "fundgz",
+      "backup_price_used": false,
+      "price_attempts": [
+        {
+          "source": "tencent_quote",
+          "elapsed_ms": 48,
+          "hit": true
+        }
+      ],
+      "nav_attempts": [
+        {
+          "source": "fundgz",
+          "elapsed_ms": 19,
+          "hit": true
+        }
+      ],
+      "elapsed_ms": 67,
+      "estimate_time": "2026-06-22 13:48"
+    },
+    {
+      "code": "160706",
+      "name": "沪深300LOF",
+      "type": "index",
+      "status": "active",
+      "scale_yi": 80.0,
+      "price": 1.269,
+      "iopv": 1.28,
+      "nav_official": 1.2605,
+      "nav_drift_pct": 0.01547,
+      "premium": -0.008594,
+      "coverage": 0.0,
+      "source_quality": "stale",
+      "failure_reason": "nav_estimate_drift:+0.0155;stale_consecutive_failures:12",
+      "primary_price_source": "tencent_quote",
+      "primary_nav_source": "fundgz",
+      "backup_price_used": false,
+      "price_attempts": [
+        {
+          "source": "tencent_quote",
+          "elapsed_ms": 40,
+          "hit": true
+        }
+      ],
+      "nav_attempts": [
+        {
+          "source": "fundgz",
+          "elapsed_ms": 20,
+          "hit": true
+        }
+      ],
+      "elapsed_ms": 60,
+      "estimate_time": "2026-06-22 13:48"
+    },
+    {
+      "code": "501050",
+      "name": "50AHLOF",
+      "type": "index",
+      "status": "active",
+      "scale_yi": 40.0,
+      "price": 1.758,
+      "iopv": 1.7739,
+      "nav_official": 1.746,
+      "nav_drift_pct": 0.015979,
+      "premium": -0.008963,
+      "coverage": 0.0,
+      "source_quality": "stale",
+      "failure_reason": "nav_estimate_drift:+0.0160;stale_consecutive_failures:12",
+      "primary_price_source": "tencent_quote",
+      "primary_nav_source": "fundgz",
+      "backup_price_used": false,
+      "price_attempts": [
+        {
+          "source": "tencent_quote",
+          "elapsed_ms": 41,
+          "hit": true
+        }
+      ],
+      "nav_attempts": [
+        {
+          "source": "fundgz",
+          "elapsed_ms": 18,
+          "hit": true
+        }
+      ],
+      "elapsed_ms": 59,
+      "estimate_time": "2026-06-22 13:48"
+    },
+    {
+      "code": "160505",
+      "name": "博时主题LOF",
+      "type": "active",
+      "status": "active",
+      "scale_yi": 30.0,
+      "price": 1.155,
+      "iopv": 1.1682,
+      "nav_official": 1.146,
+      "nav_drift_pct": 0.019372,
+      "premium": -0.011299,
+      "coverage": 0.0,
+      "source_quality": "stale",
+      "failure_reason": "nav_estimate_drift:+0.0194;stale_consecutive_failures:12",
+      "primary_price_source": "tencent_quote",
+      "primary_nav_source": "fundgz",
+      "backup_price_used": false,
+      "price_attempts": [
+        {
+          "source": "tencent_quote",
+          "elapsed_ms": 40,
+          "hit": true
+        }
+      ],
+      "nav_attempts": [
+        {
+          "source": "fundgz",
+          "elapsed_ms": 71,
+          "hit": true
+        }
+      ],
+      "elapsed_ms": 111,
+      "estimate_time": "2026-06-22 13:48"
+    },
+    {
+      "code": "162605",
+      "name": "景顺鼎益LOF",
+      "type": "active",
+      "status": "active",
+      "scale_yi": 30.0,
+      "price": 1.905,
+      "iopv": 1.9292,
+      "nav_official": 1.921,
+      "nav_drift_pct": 0.004269,
+      "premium": -0.012544,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "failure_reason": "",
+      "primary_price_source": "tencent_quote",
+      "primary_nav_source": "fundgz",
+      "backup_price_used": false,
+      "price_attempts": [
+        {
+          "source": "tencent_quote",
+          "elapsed_ms": 41,
+          "hit": true
+        }
+      ],
+      "nav_attempts": [
+        {
+          "source": "fundgz",
+          "elapsed_ms": 9,
+          "hit": true
+        }
+      ],
+      "elapsed_ms": 50,
+      "estimate_time": "2026-06-22 13:48"
+    },
+    {
+      "code": "161024",
+      "name": "军工LOF",
+      "type": "index",
+      "status": "active",
+      "scale_yi": 18.0,
+      "price": 1.237,
+      "iopv": 1.2459,
+      "nav_official": 1.251,
+      "nav_drift_pct": -0.004077,
+      "premium": -0.007143,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "failure_reason": "",
+      "primary_price_source": "tencent_quote",
+      "primary_nav_source": "fundgz",
+      "backup_price_used": false,
+      "price_attempts": [
+        {
+          "source": "tencent_quote",
+          "elapsed_ms": 43,
+          "hit": true
+        }
+      ],
+      "nav_attempts": [
+        {
+          "source": "fundgz",
+          "elapsed_ms": 17,
+          "hit": true
+        }
+      ],
+      "elapsed_ms": 60,
+      "estimate_time": "2026-06-22 13:48"
+    },
+    {
+      "code": "160119",
+      "name": "500ETF联接LOF",
+      "type": "index",
+      "status": "active",
+      "scale_yi": 15.0,
+      "price": 2.44,
+      "iopv": 2.4587,
+      "nav_official": 2.4363,
+      "nav_drift_pct": 0.009194,
+      "premium": -0.007606,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "failure_reason": "",
+      "primary_price_source": "tencent_quote",
+      "primary_nav_source": "fundgz",
+      "backup_price_used": false,
+      "price_attempts": [
+        {
+          "source": "tencent_quote",
+          "elapsed_ms": 41,
+          "hit": true
+        }
+      ],
+      "nav_attempts": [
+        {
+          "source": "fundgz",
+          "elapsed_ms": 19,
+          "hit": true
+        }
+      ],
+      "elapsed_ms": 60,
+      "estimate_time": "2026-06-22 13:48"
+    },
+    {
+      "code": "160632",
+      "name": "酒LOF",
+      "type": "industry",
+      "status": "active",
+      "scale_yi": 12.0,
+      "price": 0.255,
+      "iopv": 0.2549,
+      "nav_official": 0.2538,
+      "nav_drift_pct": 0.004334,
+      "premium": 0.000392,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "failure_reason": "",
+      "primary_price_source": "tencent_quote",
+      "primary_nav_source": "fundgz",
+      "backup_price_used": false,
+      "price_attempts": [
+        {
+          "source": "tencent_quote",
+          "elapsed_ms": 91,
+          "hit": true
+        }
+      ],
+      "nav_attempts": [
+        {
+          "source": "fundgz",
+          "elapsed_ms": 41,
+          "hit": true
+        }
+      ],
+      "elapsed_ms": 132,
+      "estimate_time": "2026-06-22 13:48"
+    },
+    {
+      "code": "160220",
+      "name": "国泰民益LOF",
+      "type": "active",
+      "status": "active",
+      "scale_yi": 3.0,
+      "price": 5.85,
+      "iopv": 5.8204,
+      "nav_official": 5.8094,
+      "nav_drift_pct": 0.001893,
+      "premium": 0.005086,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "failure_reason": "",
+      "primary_price_source": "tencent_quote",
+      "primary_nav_source": "fundgz",
+      "backup_price_used": false,
+      "price_attempts": [
+        {
+          "source": "tencent_quote",
+          "elapsed_ms": 37,
+          "hit": true
+        }
+      ],
+      "nav_attempts": [
+        {
+          "source": "fundgz",
+          "elapsed_ms": 41,
+          "hit": true
+        }
+      ],
+      "elapsed_ms": 78,
+      "estimate_time": "2026-06-22 13:46"
+    },
+    {
+      "code": "161903",
+      "name": "万家行业优选LOF",
+      "type": "active",
+      "status": "active",
+      "scale_yi": 8.0,
+      "price": 1.687,
+      "iopv": 1.7053,
+      "nav_official": 1.7136,
+      "nav_drift_pct": -0.004844,
+      "premium": -0.010731,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "failure_reason": "",
+      "primary_price_source": "tencent_quote",
+      "primary_nav_source": "fundgz",
+      "backup_price_used": false,
+      "price_attempts": [
+        {
+          "source": "tencent_quote",
+          "elapsed_ms": 49,
+          "hit": true
+        }
+      ],
+      "nav_attempts": [
+        {
+          "source": "fundgz",
+          "elapsed_ms": 45,
+          "hit": true
+        }
+      ],
+      "elapsed_ms": 94,
+      "estimate_time": "2026-06-22 13:48"
+    },
+    {
+      "code": "501227",
+      "name": "泓德红利优选LOF",
+      "type": "active",
+      "status": "active",
+      "scale_yi": 12.0,
+      "price": 1.012,
+      "iopv": 1.019,
+      "nav_official": 1.01,
+      "nav_drift_pct": 0.008911,
+      "premium": -0.006869,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "failure_reason": "",
+      "primary_price_source": "tencent_quote",
+      "primary_nav_source": "fundgz",
+      "backup_price_used": false,
+      "price_attempts": [
+        {
+          "source": "tencent_quote",
+          "elapsed_ms": 44,
+          "hit": true
+        }
+      ],
+      "nav_attempts": [
+        {
+          "source": "fundgz",
+          "elapsed_ms": 42,
+          "hit": true
+        }
+      ],
+      "elapsed_ms": 86,
+      "estimate_time": "2026-06-22 13:48"
+    },
+    {
+      "code": "501205",
+      "name": "鹏华创新未来LOF",
+      "type": "active",
+      "status": "active",
+      "scale_yi": 12.0,
+      "price": 1.234,
+      "iopv": 1.2385,
+      "nav_official": 1.2293,
+      "nav_drift_pct": 0.007484,
+      "premium": -0.003633,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "failure_reason": "",
+      "primary_price_source": "tencent_quote",
+      "primary_nav_source": "fundgz",
+      "backup_price_used": false,
+      "price_attempts": [
+        {
+          "source": "tencent_quote",
+          "elapsed_ms": 50,
+          "hit": true
+        }
+      ],
+      "nav_attempts": [
+        {
+          "source": "fundgz",
+          "elapsed_ms": 20,
+          "hit": true
+        }
+      ],
+      "elapsed_ms": 70,
+      "estimate_time": "2026-06-22 13:46"
+    },
+    {
+      "code": "501096",
+      "name": "国联安科创LOF",
+      "type": "active",
+      "status": "active",
+      "scale_yi": 6.0,
+      "price": 2.362,
+      "iopv": 2.1278,
+      "nav_official": 2.0816,
+      "nav_drift_pct": 0.022194,
+      "premium": 0.110067,
+      "coverage": 0.0,
+      "source_quality": "stale",
+      "failure_reason": "nav_estimate_drift:+0.0222;stale_consecutive_failures:12",
+      "primary_price_source": "tencent_quote",
+      "primary_nav_source": "fundgz",
+      "backup_price_used": false,
+      "price_attempts": [
+        {
+          "source": "tencent_quote",
+          "elapsed_ms": 41,
+          "hit": true
+        }
+      ],
+      "nav_attempts": [
+        {
+          "source": "fundgz",
+          "elapsed_ms": 39,
+          "hit": true
+        }
+      ],
+      "elapsed_ms": 80,
+      "estimate_time": "2026-06-22 13:46"
+    },
+    {
+      "code": "501099",
+      "name": "平安新兴产业LOF",
+      "type": "active",
+      "status": "active",
+      "scale_yi": 6.0,
+      "price": 4.323,
+      "iopv": 4.3783,
+      "nav_official": 4.3025,
+      "nav_drift_pct": 0.017618,
+      "premium": -0.01263,
+      "coverage": 0.0,
+      "source_quality": "stale",
+      "failure_reason": "nav_estimate_drift:+0.0176;stale_consecutive_failures:12",
+      "primary_price_source": "tencent_quote",
+      "primary_nav_source": "fundgz",
+      "backup_price_used": false,
+      "price_attempts": [
+        {
+          "source": "tencent_quote",
+          "elapsed_ms": 39,
+          "hit": true
+        }
+      ],
+      "nav_attempts": [
+        {
+          "source": "fundgz",
+          "elapsed_ms": 81,
+          "hit": true
+        }
+      ],
+      "elapsed_ms": 120,
+      "estimate_time": "2026-06-22 13:48"
+    },
+    {
+      "code": "501201",
+      "name": "科创红土LOF",
+      "type": "active",
+      "status": "active",
+      "scale_yi": 6.0,
+      "price": 3.444,
+      "iopv": 3.3687,
+      "nav_official": 3.3292,
+      "nav_drift_pct": 0.011865,
+      "premium": 0.022353,
+      "coverage": 0.0,
+      "source_quality": "degraded",
+      "failure_reason": "nav_estimate_drift:+0.0119",
+      "primary_price_source": "tencent_quote",
+      "primary_nav_source": "fundgz",
+      "backup_price_used": false,
+      "price_attempts": [
+        {
+          "source": "tencent_quote",
+          "elapsed_ms": 39,
+          "hit": true
+        }
+      ],
+      "nav_attempts": [
+        {
+          "source": "fundgz",
+          "elapsed_ms": 39,
+          "hit": true
+        }
+      ],
+      "elapsed_ms": 78,
+      "estimate_time": "2026-06-22 13:48"
+    },
+    {
+      "code": "501203",
+      "name": "易基创新未来LOF",
+      "type": "active",
+      "status": "active_low_liquidity",
+      "scale_yi": 5.0,
+      "price": 1.81,
+      "iopv": 1.8283,
+      "nav_official": 1.8231,
+      "nav_drift_pct": 0.002852,
+      "premium": -0.010009,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "failure_reason": "",
+      "primary_price_source": "tencent_quote",
+      "primary_nav_source": "fundgz",
+      "backup_price_used": false,
+      "price_attempts": [
+        {
+          "source": "tencent_quote",
+          "elapsed_ms": 43,
+          "hit": true
+        }
+      ],
+      "nav_attempts": [
+        {
+          "source": "fundgz",
+          "elapsed_ms": 9,
+          "hit": true
+        }
+      ],
+      "elapsed_ms": 52,
+      "estimate_time": "2026-06-22 13:46"
+    },
+    {
+      "code": "501208",
+      "name": "中欧创新未来LOF",
+      "type": "active",
+      "status": "active_low_liquidity",
+      "scale_yi": 5.0,
+      "price": 1.48,
+      "iopv": 1.4941,
+      "nav_official": 1.4984,
+      "nav_drift_pct": -0.00287,
+      "premium": -0.009437,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "failure_reason": "",
+      "primary_price_source": "tencent_quote",
+      "primary_nav_source": "fundgz",
+      "backup_price_used": false,
+      "price_attempts": [
+        {
+          "source": "tencent_quote",
+          "elapsed_ms": 39,
+          "hit": true
+        }
+      ],
+      "nav_attempts": [
+        {
+          "source": "fundgz",
+          "elapsed_ms": 10,
+          "hit": true
+        }
+      ],
+      "elapsed_ms": 49,
+      "estimate_time": "2026-06-22 13:46"
+    },
+    {
+      "code": "501085",
+      "name": "财通科创LOF",
+      "type": "active",
+      "status": "active_low_liquidity",
+      "scale_yi": 4.0,
+      "price": 4.231,
+      "iopv": 4.0792,
+      "nav_official": 4.0847,
+      "nav_drift_pct": -0.001346,
+      "premium": 0.037213,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "failure_reason": "",
+      "primary_price_source": "tencent_quote",
+      "primary_nav_source": "fundgz",
+      "backup_price_used": false,
+      "price_attempts": [
+        {
+          "source": "tencent_quote",
+          "elapsed_ms": 49,
+          "hit": true
+        }
+      ],
+      "nav_attempts": [
+        {
+          "source": "fundgz",
+          "elapsed_ms": 39,
+          "hit": true
+        }
+      ],
+      "elapsed_ms": 88,
+      "estimate_time": "2026-06-22 13:46"
+    },
+    {
+      "code": "501219",
+      "name": "智胜先锋LOF",
+      "type": "active",
+      "status": "active_low_liquidity",
+      "scale_yi": 4.0,
+      "price": 1.82,
+      "iopv": 1.8359,
+      "nav_official": 1.8223,
+      "nav_drift_pct": 0.007463,
+      "premium": -0.008661,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "failure_reason": "",
+      "primary_price_source": "tencent_quote",
+      "primary_nav_source": "fundgz",
+      "backup_price_used": false,
+      "price_attempts": [
+        {
+          "source": "tencent_quote",
+          "elapsed_ms": 40,
+          "hit": true
+        }
+      ],
+      "nav_attempts": [
+        {
+          "source": "fundgz",
+          "elapsed_ms": 20,
+          "hit": true
+        }
+      ],
+      "elapsed_ms": 60,
+      "estimate_time": "2026-06-22 13:46"
+    },
+    {
+      "code": "501095",
+      "name": "中银证券科技创新LOF",
+      "type": "active",
+      "status": "active_low_liquidity",
+      "scale_yi": 4.0,
+      "price": 1.214,
+      "iopv": 1.2369,
+      "nav_official": 1.2259,
+      "nav_drift_pct": 0.008973,
+      "premium": -0.018514,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "failure_reason": "",
+      "primary_price_source": "tencent_quote",
+      "primary_nav_source": "fundgz",
+      "backup_price_used": false,
+      "price_attempts": [
+        {
+          "source": "tencent_quote",
+          "elapsed_ms": 39,
+          "hit": true
+        }
+      ],
+      "nav_attempts": [
+        {
+          "source": "fundgz",
+          "elapsed_ms": 43,
+          "hit": true
+        }
+      ],
+      "elapsed_ms": 82,
+      "estimate_time": "2026-06-22 13:48"
+    },
+    {
+      "code": "501077",
+      "name": "富国创新企业LOF",
+      "type": "active",
+      "status": "active_low_liquidity",
+      "scale_yi": 4.0,
+      "price": 3.52,
+      "iopv": 3.5551,
+      "nav_official": 3.5537,
+      "nav_drift_pct": 0.000394,
+      "premium": -0.009873,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "failure_reason": "",
+      "primary_price_source": "tencent_quote",
+      "primary_nav_source": "fundgz",
+      "backup_price_used": false,
+      "price_attempts": [
+        {
+          "source": "tencent_quote",
+          "elapsed_ms": 32,
+          "hit": true
+        }
+      ],
+      "nav_attempts": [
+        {
+          "source": "fundgz",
+          "elapsed_ms": 35,
+          "hit": true
+        }
+      ],
+      "elapsed_ms": 67,
+      "estimate_time": "2026-06-22 13:48"
+    },
+    {
+      "code": "501057",
+      "name": "新能源车LOF",
+      "type": "index",
+      "status": "active_low_liquidity",
+      "scale_yi": 4.0,
+      "price": 2.555,
+      "iopv": 2.5858,
+      "nav_official": 2.5592,
+      "nav_drift_pct": 0.010394,
+      "premium": -0.011911,
+      "coverage": 0.0,
+      "source_quality": "degraded",
+      "failure_reason": "nav_estimate_drift:+0.0104",
+      "primary_price_source": "tencent_quote",
+      "primary_nav_source": "fundgz",
+      "backup_price_used": false,
+      "price_attempts": [
+        {
+          "source": "tencent_quote",
+          "elapsed_ms": 33,
+          "hit": true
+        }
+      ],
+      "nav_attempts": [
+        {
+          "source": "fundgz",
+          "elapsed_ms": 35,
+          "hit": true
+        }
+      ],
+      "elapsed_ms": 68,
+      "estimate_time": "2026-06-22 13:48"
+    },
+    {
+      "code": "501206",
+      "name": "添富创新未来LOF",
+      "type": "active",
+      "status": "active_low_liquidity",
+      "scale_yi": 4.0,
+      "price": 1.085,
+      "iopv": 1.0986,
+      "nav_official": 1.0969,
+      "nav_drift_pct": 0.00155,
+      "premium": -0.012379,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "failure_reason": "",
+      "primary_price_source": "tencent_quote",
+      "primary_nav_source": "fundgz",
+      "backup_price_used": false,
+      "price_attempts": [
+        {
+          "source": "tencent_quote",
+          "elapsed_ms": 32,
+          "hit": true
+        }
+      ],
+      "nav_attempts": [
+        {
+          "source": "fundgz",
+          "elapsed_ms": 11,
+          "hit": true
+        }
+      ],
+      "elapsed_ms": 43,
+      "estimate_time": "2026-06-22 13:48"
+    },
+    {
+      "code": "501078",
+      "name": "科创配置LOF",
+      "type": "active",
+      "status": "active_low_liquidity",
+      "scale_yi": 4.0,
+      "price": 3.223,
+      "iopv": 3.2753,
+      "nav_official": 3.2771,
+      "nav_drift_pct": -0.000549,
+      "premium": -0.015968,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "failure_reason": "",
+      "primary_price_source": "tencent_quote",
+      "primary_nav_source": "fundgz",
+      "backup_price_used": false,
+      "price_attempts": [
+        {
+          "source": "tencent_quote",
+          "elapsed_ms": 35,
+          "hit": true
+        }
+      ],
+      "nav_attempts": [
+        {
+          "source": "fundgz",
+          "elapsed_ms": 31,
+          "hit": true
+        }
+      ],
+      "elapsed_ms": 66,
+      "estimate_time": "2026-06-22 13:48"
+    },
+    {
+      "code": "501097",
+      "name": "科创国寿LOF",
+      "type": "active",
+      "status": "active_low_liquidity",
+      "scale_yi": 4.0,
+      "price": 3.002,
+      "iopv": 2.937,
+      "nav_official": 2.8957,
+      "nav_drift_pct": 0.014263,
+      "premium": 0.022131,
+      "coverage": 0.0,
+      "source_quality": "stale",
+      "failure_reason": "nav_estimate_drift:+0.0143;stale_consecutive_failures:12",
+      "primary_price_source": "tencent_quote",
+      "primary_nav_source": "fundgz",
+      "backup_price_used": false,
+      "price_attempts": [
+        {
+          "source": "tencent_quote",
+          "elapsed_ms": 31,
+          "hit": true
+        }
+      ],
+      "nav_attempts": [
+        {
+          "source": "fundgz",
+          "elapsed_ms": 35,
+          "hit": true
+        }
+      ],
+      "elapsed_ms": 66,
+      "estimate_time": "2026-06-22 13:48"
+    },
+    {
+      "code": "501090",
+      "name": "消费龙头LOF",
+      "type": "index",
+      "status": "active_low_liquidity",
+      "scale_yi": 4.0,
+      "price": 1.028,
+      "iopv": 1.0253,
+      "nav_official": 1.0229,
+      "nav_drift_pct": 0.002346,
+      "premium": 0.002633,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "failure_reason": "",
+      "primary_price_source": "tencent_quote",
+      "primary_nav_source": "fundgz",
+      "backup_price_used": false,
+      "price_attempts": [
+        {
+          "source": "tencent_quote",
+          "elapsed_ms": 33,
+          "hit": true
+        }
+      ],
+      "nav_attempts": [
+        {
+          "source": "fundgz",
+          "elapsed_ms": 31,
+          "hit": true
+        }
+      ],
+      "elapsed_ms": 64,
+      "estimate_time": "2026-06-22 13:48"
+    },
+    {
+      "code": "501081",
+      "name": "科创中欧LOF",
+      "type": "active",
+      "status": "active_low_liquidity",
+      "scale_yi": 4.0,
+      "price": 3.379,
+      "iopv": 3.4308,
+      "nav_official": 3.4411,
+      "nav_drift_pct": -0.002993,
+      "premium": -0.015099,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "failure_reason": "",
+      "primary_price_source": "tencent_quote",
+      "primary_nav_source": "fundgz",
+      "backup_price_used": false,
+      "price_attempts": [
+        {
+          "source": "tencent_quote",
+          "elapsed_ms": 37,
+          "hit": true
+        }
+      ],
+      "nav_attempts": [
+        {
+          "source": "fundgz",
+          "elapsed_ms": 75,
+          "hit": true
+        }
+      ],
+      "elapsed_ms": 112,
+      "estimate_time": "2026-06-22 13:48"
+    },
+    {
+      "code": "501311",
+      "name": "港股通新经济LOF",
+      "type": "index",
+      "status": "active_low_liquidity",
+      "scale_yi": 4.0,
+      "price": 0.877,
+      "iopv": 0.8729,
+      "nav_official": 0.892,
+      "nav_drift_pct": -0.021413,
+      "premium": 0.004697,
+      "coverage": 0.0,
+      "source_quality": "stale",
+      "failure_reason": "nav_estimate_drift:-0.0214;stale_consecutive_failures:12",
+      "primary_price_source": "tencent_quote",
+      "primary_nav_source": "fundgz",
+      "backup_price_used": false,
+      "price_attempts": [
+        {
+          "source": "tencent_quote",
+          "elapsed_ms": 32,
+          "hit": true
+        }
+      ],
+      "nav_attempts": [
+        {
+          "source": "fundgz",
+          "elapsed_ms": 12,
+          "hit": true
+        }
+      ],
+      "elapsed_ms": 44,
+      "estimate_time": "2026-06-22 13:48"
+    }
+  ]
+}
