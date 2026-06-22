@@ -1,8 +1,8 @@
-"""PRD §6 static API contract definitions.
+"""PRD §6 static API contract definitions (PRD 1.2 alignment).
 
-These contracts do not call a live backend. They encode the field structure
-stated in PRD §6 so dev-003/dev-004 can align implementation before integration
-endpoints are available.
+These contracts encode the field structure declared in PRD §6 (1.2).
+They run without a live backend and are reused by tests/contract and
+tests/e2e/test_real_api_acceptance.py.
 """
 from __future__ import annotations
 
@@ -17,6 +17,7 @@ class FieldSpec:
     type: JsonType
     required: bool = True
     enum: tuple[Any, ...] | None = None
+    nullable: bool = False
 
 
 COMMON_RESPONSE = {
@@ -28,17 +29,36 @@ COMMON_RESPONSE = {
 COMMON_ERROR_CODES = {0, 4001, 4010, 4040, 4290, 5000}
 SOURCE_QUALITY = {"ok", "degraded", "stale"}
 LOF_TYPES = {"index", "industry", "active"}
+LOF_STATUS = {"active", "active_low_liquidity"}
+SUBSCRIBE_STATUS = {"open", "suspended", "limited", "unknown"}
+REDEEM_STATUS = {"open", "suspended", "limited", "unknown"}
+
 
 API_LOF_LIST_ITEM = {
     "code": FieldSpec("string"),
     "name": FieldSpec("string"),
     "type": FieldSpec("string", enum=tuple(sorted(LOF_TYPES))),
-    "price": FieldSpec("number"),
-    "iopv": FieldSpec("number"),
-    "premium": FieldSpec("number"),
-    "coverage": FieldSpec("number"),
-    "pctile_30d": FieldSpec("number"),
+    "status": FieldSpec("string", enum=tuple(sorted(LOF_STATUS))),
+    "price": FieldSpec("number", nullable=True),
+    "price_change_pct": FieldSpec("number", nullable=True),
+    "volume_amount": FieldSpec("number", nullable=True),
+    "iopv": FieldSpec("number", nullable=True),
+    "premium": FieldSpec("number", nullable=True),
+    "nav_official": FieldSpec("number", nullable=True),
+    "nav_official_date": FieldSpec("string", nullable=True),
+    "premium_nav": FieldSpec("number", nullable=True),
+    "premium_error": FieldSpec("number", nullable=True),
+    "coverage": FieldSpec("number", nullable=True),
+    "pctile_30d": FieldSpec("number", nullable=True),
     "source_quality": FieldSpec("string", enum=tuple(sorted(SOURCE_QUALITY))),
+    "subscribe_status": FieldSpec("string", required=False, enum=tuple(sorted(SUBSCRIBE_STATUS)), nullable=True),
+    "redeem_status": FieldSpec("string", required=False, enum=tuple(sorted(REDEEM_STATUS)), nullable=True),
+    "fund_scale": FieldSpec("number", required=False, nullable=True),
+    "circulating_shares": FieldSpec("number", required=False, nullable=True),
+}
+API_LOF_LIST_ITEM_LEGACY_REQUIRED = {
+    "code", "name", "type", "price", "iopv", "premium",
+    "coverage", "pctile_30d", "source_quality",
 }
 API_LOF_LIST_DATA = {
     "ts": FieldSpec("string"),
@@ -58,28 +78,50 @@ BENCHMARK_COMPONENT = {
 HOLDING_TOP10_ITEM = {
     "stock_code": FieldSpec("string"),
     "stock_name": FieldSpec("string"),
-    "weight": FieldSpec("number"),
+    "weight": FieldSpec("number", nullable=True),
+    "price_change_pct": FieldSpec("number", required=False, nullable=True),
+    "contribution_pct": FieldSpec("number", nullable=True),
 }
 REALTIME_BLOCK = {
     "ts": FieldSpec("string"),
-    "price": FieldSpec("number"),
-    "iopv": FieldSpec("number"),
-    "premium": FieldSpec("number"),
-    "coverage": FieldSpec("number"),
+    "price": FieldSpec("number", nullable=True),
+    "iopv": FieldSpec("number", nullable=True),
+    "premium": FieldSpec("number", nullable=True),
+    "coverage": FieldSpec("number", nullable=True),
     "source_quality": FieldSpec("string", enum=tuple(sorted(SOURCE_QUALITY))),
 }
+
+
 API_LOF_DETAIL_DATA = {
+    # PRD 1.2: list 全部字段 + 详情专属字段
     "code": FieldSpec("string"),
     "name": FieldSpec("string"),
     "type": FieldSpec("string", enum=tuple(sorted(LOF_TYPES))),
-    "scale_yi": FieldSpec("number"),
-    "coverage_top10": FieldSpec("number"),
+    "status": FieldSpec("string", enum=tuple(sorted(LOF_STATUS))),
+    "scale_yi": FieldSpec("number", nullable=True),
+    "fund_scale": FieldSpec("number", required=False, nullable=True),
+    "circulating_shares": FieldSpec("number", required=False, nullable=True),
+    "price": FieldSpec("number", nullable=True),
+    "price_change_pct": FieldSpec("number", nullable=True),
+    "volume_amount": FieldSpec("number", nullable=True),
+    "iopv": FieldSpec("number", nullable=True),
+    "premium": FieldSpec("number", nullable=True),
+    "nav_official": FieldSpec("number", nullable=True),
+    "nav_official_date": FieldSpec("string", nullable=True),
+    "premium_nav": FieldSpec("number", nullable=True),
+    "premium_error": FieldSpec("number", nullable=True),
+    "nav_estimate_error_pct": FieldSpec("number", nullable=True),
+    "coverage": FieldSpec("number", nullable=True),
+    "pctile_30d": FieldSpec("number", nullable=True),
+    "source_quality": FieldSpec("string", enum=tuple(sorted(SOURCE_QUALITY))),
+    "subscribe_status": FieldSpec("string", required=False, enum=tuple(sorted(SUBSCRIBE_STATUS)), nullable=True),
+    "redeem_status": FieldSpec("string", required=False, enum=tuple(sorted(REDEEM_STATUS)), nullable=True),
+    "coverage_top10": FieldSpec("number", nullable=True),
     "coverage_breakdown": FieldSpec("object"),
-    "benchmark_raw": FieldSpec("string"),
+    "benchmark_raw": FieldSpec("string", nullable=True),
     "benchmark_components": FieldSpec("array"),
     "holdings_top10": FieldSpec("array"),
-    "realtime": FieldSpec("object"),
-    "pctile_30d": FieldSpec("number"),
+    "realtime": FieldSpec("object", nullable=True),
 }
 API_LOF_DETAIL_REQUIRED_BLOCKS = {
     "coverage_top10",
@@ -89,6 +131,31 @@ API_LOF_DETAIL_REQUIRED_BLOCKS = {
     "realtime",
     "pctile_30d",
 }
+API_LOF_DETAIL_NEW_FIELDS_PRD_1_2 = {
+    "status", "price_change_pct", "volume_amount", "nav_official",
+    "nav_official_date", "premium_nav", "premium_error",
+    "nav_estimate_error_pct", "fund_scale", "circulating_shares",
+    "subscribe_status", "redeem_status",
+}
+
+
+def pick(spec, keys):
+    """Return a sub-spec containing only ``keys`` (used for 1.1 legacy smoke)."""
+    missing = sorted(keys - set(spec))
+    assert not missing, f"pick() got keys not in spec: {missing}"
+    return {key: field for key, field in spec.items() if key in keys}
+
+
+# PRD 1.1 legacy subset: the local Python fetcher sample-output still emits only
+# 1.1 fields, so offline smoke (AC-I1/AC-I2) validates against the legacy subset.
+# Full 1.2 validation is covered by the real local API e2e suite.
+API_LOF_LIST_ITEM_LEGACY = pick(API_LOF_LIST_ITEM, API_LOF_LIST_ITEM_LEGACY_REQUIRED)
+API_LOF_DETAIL_DATA_LEGACY_KEYS = {
+    "code", "name", "type", "scale_yi", "pctile_30d",
+    "coverage_top10", "coverage_breakdown", "benchmark_raw",
+    "benchmark_components", "holdings_top10", "realtime",
+}
+API_LOF_DETAIL_DATA_LEGACY = pick(API_LOF_DETAIL_DATA, API_LOF_DETAIL_DATA_LEGACY_KEYS)
 
 HISTORY_ITEM = {
     "date": FieldSpec("string"),
@@ -138,6 +205,9 @@ def assert_field_types(name: str, payload: dict[str, Any], spec: dict[str, Field
         if key not in payload:
             continue
         value = payload[key]
+        if value is None:
+            assert field.nullable or not field.required, f"{name}.{key} should not be null"
+            continue
         if field.type == "string":
             assert isinstance(value, str), f"{name}.{key} should be string"
         elif field.type == "number":
@@ -169,12 +239,23 @@ API_LOF_LIST_SAMPLE = {
                 "code": "161725",
                 "name": "招商中证白酒(LOF)A",
                 "type": "index",
+                "status": "active",
                 "price": 0.823,
+                "price_change_pct": 0.0123,
+                "volume_amount": 18650.42,
                 "iopv": 0.805,
                 "premium": 0.0224,
+                "nav_official": 0.802,
+                "nav_official_date": "2026-06-17",
+                "premium_nav": 0.0262,
+                "premium_error": 0.003,
                 "coverage": 1.00,
                 "pctile_30d": 0.82,
                 "source_quality": "ok",
+                "subscribe_status": "open",
+                "redeem_status": "open",
+                "fund_scale": 300.0,
+                "circulating_shares": 12.5,
             }
         ],
     },
@@ -187,7 +268,25 @@ API_LOF_DETAIL_SAMPLE = {
         "code": "161725",
         "name": "招商中证白酒(LOF)A",
         "type": "index",
+        "status": "active",
         "scale_yi": 300,
+        "fund_scale": 300.0,
+        "circulating_shares": 12.5,
+        "price": 0.823,
+        "price_change_pct": 0.0123,
+        "volume_amount": 18650.42,
+        "iopv": 0.805,
+        "premium": 0.0224,
+        "nav_official": 0.802,
+        "nav_official_date": "2026-06-17",
+        "premium_nav": 0.0262,
+        "premium_error": 0.003,
+        "nav_estimate_error_pct": 0.00374,
+        "coverage": 1.00,
+        "pctile_30d": 0.82,
+        "source_quality": "ok",
+        "subscribe_status": "open",
+        "redeem_status": "open",
         "coverage_top10": 0.93,
         "coverage_breakdown": {
             "top10_weight": 0.93,
@@ -200,7 +299,13 @@ API_LOF_DETAIL_SAMPLE = {
             {"index_code": "CASH", "name": "银行活期", "weight": 0.05},
         ],
         "holdings_top10": [
-            {"stock_code": "600519.SH", "stock_name": "贵州茅台", "weight": 0.15}
+            {
+                "stock_code": "600519.SH",
+                "stock_name": "贵州茅台",
+                "weight": 0.15,
+                "price_change_pct": 0.0152,
+                "contribution_pct": 0.00228,
+            }
         ],
         "realtime": {
             "ts": "2026-06-18T10:31:00+08:00",
@@ -210,7 +315,6 @@ API_LOF_DETAIL_SAMPLE = {
             "coverage": 1.00,
             "source_quality": "ok",
         },
-        "pctile_30d": 0.82,
     },
 }
 

@@ -1,4 +1,4 @@
-"""tests/_lib/ac_meta.py — AC 元信息常量与小工具。"""
+﻿"""tests/_lib/ac_meta.py — AC 元信息常量与小工具。"""
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -23,6 +23,9 @@ class _ACDef:
 class AC:
     P1 = _ACDef("AC-P1", "5 只指数 LOF 实时溢价 vs 反推 ≤ 0.5%", "dev-004")
     P2 = _ACDef("AC-P2", "30 只整体覆盖率均值 ≥ 90%；个体 <70% ≤ 3", "dev-004")
+    P3 = _ACDef("AC-P3", "估算误差 ≥1% 标 degraded；连续两分钟超阈升 stale", "dev-004")
+    P4 = _ACDef("AC-P4", "premium_nav=(price-nav_official)/nav_official 误差 ≤ 1e-4", "dev-004")
+    P5 = _ACDef("AC-P5", "选填字段 null/unknown 时兜底渲染，旧字段照常", "both")
     C1 = _ACDef("AC-C1", "盘中每分钟 30 行；缺失 ≤ 3 次/日", "dev-004")
     C2 = _ACDef("AC-C2", "单次失败 30 秒内重试 3 次；3 次仍失败写日志并跳过", "dev-004")
     H1 = _ACDef("AC-H1", "详情页 30 天溢价折线无断点（节假日除外）", "both")

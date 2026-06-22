@@ -1,4 +1,4 @@
-"""PRD §6.1 api-lof-list static contract."""
+﻿"""PRD 6.1 api-lof-list static contract (PRD 1.2)."""
 from __future__ import annotations
 
 import pytest
@@ -6,6 +6,7 @@ import pytest
 from contract.prd6_contracts import (
     API_LOF_LIST_DATA,
     API_LOF_LIST_ITEM,
+    API_LOF_LIST_ITEM_LEGACY_REQUIRED,
     API_LOF_LIST_SAMPLE,
     COMMON_RESPONSE,
     assert_contract,
@@ -23,15 +24,36 @@ def test_api_lof_list_response_matches_prd6_sample_contract():
 
 
 @pytest.mark.contract
-def test_api_lof_list_item_contract_has_nine_prd6_fields():
+def test_api_lof_list_item_contract_has_prd_1_2_fields():
+    # PRD 1.2: list items[] expose 20 fields; 9 legacy fields stay required.
     assert set(API_LOF_LIST_ITEM) == {
         "code",
         "name",
         "type",
+        "status",
         "price",
+        "price_change_pct",
+        "volume_amount",
         "iopv",
         "premium",
+        "nav_official",
+        "nav_official_date",
+        "premium_nav",
+        "premium_error",
         "coverage",
         "pctile_30d",
         "source_quality",
+        "subscribe_status",
+        "redeem_status",
+        "fund_scale",
+        "circulating_shares",
     }
+    assert len(API_LOF_LIST_ITEM) == 20
+
+
+@pytest.mark.contract
+def test_api_lof_list_item_keeps_legacy_required_fields():
+    # Legacy 1.1 fields must remain present and required (no rename/removal).
+    for key in API_LOF_LIST_ITEM_LEGACY_REQUIRED:
+        assert key in API_LOF_LIST_ITEM, f"legacy field {key} missing"
+        assert API_LOF_LIST_ITEM[key].required, f"legacy field {key} must stay required"
