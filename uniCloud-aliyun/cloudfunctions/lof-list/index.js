@@ -65,7 +65,9 @@ function buildListItem(meta, rt, hist) {
   const price = numberOrNull(rt.price);
   const iopv = numberOrNull(rt.iopv);
   const premiumNav = computePremiumNav(price, navOfficial);
-  const premiumError = computePremiumError(iopv, navOfficial);
+  // PRD 1.2.1: premium_error is a POST-CLOSE estimate-accuracy metric pre-computed
+  // upstream. Prefer the stored value; fall back to live calc only if absent.
+  const premiumError = resolvePremiumError(rt.premium_error, iopv, navOfficial);
   return {
     code: meta.code,
     name: meta.name,
@@ -101,7 +103,7 @@ function fillListItemDefaults(item) {
     nav_official: navOfficial,
     nav_official_date: null,
     premium_nav: computePremiumNav(price, navOfficial),
-    premium_error: computePremiumError(iopv, navOfficial),
+    premium_error: resolvePremiumError(item.premium_error, iopv, navOfficial),
     subscribe_status: SUBSCRIBE_DEFAULT,
     redeem_status: REDEEM_DEFAULT,
     fund_scale: null,
@@ -121,6 +123,12 @@ function computePremiumNav(price, navOfficial) {
 function computePremiumError(iopv, navOfficial) {
   if (iopv == null || navOfficial == null) return null;
   return round6(iopv - navOfficial);
+}
+
+function resolvePremiumError(stored, iopv, navOfficial) {
+  const s = numberOrNull(stored);
+  if (s != null) return s;
+  return computePremiumError(iopv, navOfficial);
 }
 
 function round6(value) {

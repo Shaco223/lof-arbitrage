@@ -40,14 +40,26 @@ def build_realtime_snapshot(
         )
         iopv = _synthetic_iopv(index)
         price = round(iopv * (1 + _synthetic_premium_seed(index)), 4)
+        nav_official = _synthetic_nav_official(iopv, index)
+        nav_official_date = _previous_trading_day(ts)
+        premium_nav = _compute_premium_nav(price, nav_official)
+        # PRD 1.2.1: premium_error / nav_estimate_error_pct are POST-CLOSE accuracy
+        # metrics (prior trading day reference), not live IOPV-vs-T-1 drift.
+        premium_error = _synthetic_premium_error(index)
         items.append(
             {
                 "code": meta.code,
                 "name": meta.name,
                 "type": meta.type,
                 "price": price,
+                "price_change_pct": _synthetic_price_change(index),
+                "volume_amount": _synthetic_volume_amount(index),
                 "iopv": iopv,
                 "premium": calculate_premium(price, iopv),
+                "nav_official": nav_official,
+                "nav_official_date": nav_official_date,
+                "premium_nav": premium_nav,
+                "premium_error": premium_error,
                 "coverage": coverage_result.coverage,
                 "coverage_breakdown": {
                     "top10_weight": coverage_result.breakdown.top10_weight,
@@ -73,17 +85,7 @@ def build_sample_api_outputs(
     meta_by_code = {meta.code: meta for meta in watchlist}
     realtime_by_code = {item["code"]: item for item in snapshot["items"]}
     list_items = [
-        {
-            "code": item["code"],
-            "name": item["name"],
-            "type": item["type"],
-            "price": item["price"],
-            "iopv": item["iopv"],
-            "premium": item["premium"],
-            "coverage": item["coverage"],
-            "pctile_30d": item["pctile_30d"],
-            "source_quality": item["source_quality"],
-        }
+        _build_list_item(meta_by_code[item["code"]], item)
         for item in snapshot["items"]
     ]
     list_items.sort(key=lambda item: item["premium"], reverse=True)
@@ -128,12 +130,59 @@ def write_sample_outputs(output_dir: str | Path, ts: str = DEFAULT_TS) -> dict[s
     return files
 
 
-def _build_detail(meta: Any, realtime: dict[str, Any], components: list[BenchmarkComponent], ts: str) -> dict[str, Any]:
+def _build_list_item(meta: Any, realtime: dict[str, Any]) -> dict[str, Any]:
+    """PRD 1.2 §6.1 list item: full field set (legacy + 1.2 new fields)."""
+    nav_official = realtime.get("nav_official")
     return {
+        "code": realtime["code"],
+        "name": realtime["name"],
+        "type": realtime["type"],
+        "status": meta.status if meta.status in ("active", "active_low_liquidity") else "active",
+        "price": realtime["price"],
+        "price_change_pct": realtime.get("price_change_pct"),
+        "volume_amount": realtime.get("volume_amount"),
+        "iopv": realtime["iopv"],
+        "premium": realtime["premium"],
+        "nav_official": nav_official,
+        "nav_official_date": realtime.get("nav_official_date"),
+        "premium_nav": realtime.get("premium_nav"),
+        "premium_error": realtime.get("premium_error"),
+        "coverage": realtime["coverage"],
+        "pctile_30d": realtime["pctile_30d"],
+        "source_quality": realtime["source_quality"],
+        "subscribe_status": "unknown",
+        "redeem_status": "unknown",
+        "fund_scale": float(meta.scale_yi),
+        "circulating_shares": None,
+    }
+
+
+def _build_detail(meta: Any, realtime: dict[str, Any], components: list[BenchmarkComponent], ts: str) -> dict[str, Any]:
+    nav_official = realtime.get("nav_official")
+    premium_error = realtime.get("premium_error")
+    detail = {
         "code": meta.code,
         "name": meta.name,
         "type": meta.type,
+        "status": meta.status if meta.status in ("active", "active_low_liquidity") else "active",
         "scale_yi": meta.scale_yi,
+        "fund_scale": float(meta.scale_yi),
+        "circulating_shares": None,
+        "price": realtime["price"],
+        "price_change_pct": realtime.get("price_change_pct"),
+        "volume_amount": realtime.get("volume_amount"),
+        "iopv": realtime["iopv"],
+        "premium": realtime["premium"],
+        "nav_official": nav_official,
+        "nav_official_date": realtime.get("nav_official_date"),
+        "premium_nav": realtime.get("premium_nav"),
+        "premium_error": premium_error,
+        "nav_estimate_error_pct": _compute_nav_estimate_error_pct(premium_error, nav_official),
+        "coverage": realtime["coverage"],
+        "pctile_30d": realtime["pctile_30d"],
+        "source_quality": realtime["source_quality"],
+        "subscribe_status": "unknown",
+        "redeem_status": "unknown",
         "coverage_top10": realtime["coverage_breakdown"]["top10_weight"],
         "coverage_breakdown": realtime["coverage_breakdown"],
         "benchmark_raw": meta.benchmark_raw,
@@ -150,8 +199,8 @@ def _build_detail(meta: Any, realtime: dict[str, Any], components: list[Benchmar
             "coverage": realtime["coverage"],
             "source_quality": realtime["source_quality"],
         },
-        "pctile_30d": realtime["pctile_30d"],
     }
+    return detail
 
 
 def _build_history(code: str, ts: str) -> list[dict[str, Any]]:
@@ -207,3 +256,43 @@ def _synthetic_premium_seed(index: int) -> float:
 
 def _synthetic_pctile(index: int) -> float:
     return round(0.05 + (index % 20) * 0.045, 6)
+
+
+def _synthetic_nav_official(iopv: float, index: int) -> float:
+    # Prior trading day official NAV: close to iopv with a small deterministic offset.
+    return round(iopv * (1 - (-0.004 + (index % 7) * 0.0015)), 4)
+
+
+def _synthetic_price_change(index: int) -> float:
+    return round(-0.0125 + (index % 11) * 0.0028, 6)
+
+
+def _synthetic_volume_amount(index: int) -> float:
+    # In 10k CNY (万元).
+    return round(820.0 + (index % 17) * 365.4, 2)
+
+
+def _synthetic_premium_error(index: int) -> float:
+    # PRD 1.2.1 post-close estimate accuracy reference (prior trading day):
+    # |close estimate nav - official nav|, deterministic small value.
+    return round(0.001 + (index % 9) * 0.0004, 6)
+
+
+def _compute_premium_nav(price: float | None, nav_official: float | None) -> float | None:
+    if price is None or nav_official is None or nav_official <= 0:
+        return None
+    return round((price - nav_official) / nav_official, 6)
+
+
+def _compute_nav_estimate_error_pct(premium_error: float | None, nav_official: float | None) -> float | None:
+    if premium_error is None or nav_official is None or nav_official <= 0:
+        return None
+    return round(premium_error / nav_official, 6)
+
+
+def _previous_trading_day(ts: str) -> str:
+    base = datetime.fromisoformat(ts).date() if "T" in ts else date.fromisoformat(ts)
+    day = base - timedelta(days=1)
+    while day.weekday() >= 5:
+        day -= timedelta(days=1)
+    return day.isoformat()

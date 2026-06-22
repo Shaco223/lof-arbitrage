@@ -93,7 +93,10 @@ def test_realtime_source_parsers_support_public_payloads():
 
 
 
-def test_parse_realtime_source_marks_degraded_when_iopv_drifts_more_than_1pct():
+def test_parse_realtime_source_nav_drift_does_not_trigger_degraded():
+    # PRD 1.2.1: intraday IOPV-vs-(T-1) official NAV drift is an INFORMATIONAL
+    # metric only. Large single-day market moves must NOT degrade source_quality;
+    # estimate accuracy is judged post-close (AC-P3), not intraday.
     payloads = {
         "161725": {
             "price": {"price": 1.234, "name": "TEST", "elapsed_ms": 10, "source": "tencent_quote"},
@@ -108,12 +111,15 @@ def test_parse_realtime_source_marks_degraded_when_iopv_drifts_more_than_1pct():
     result = parse_realtime_source_payload(["161725", "161005"], payloads, ts="2026-06-19T10:35:00+08:00", stale_threshold_seconds=300)
 
     drift_item = result["items"][0]
+    # nav_drift_pct still computed and surfaced as an informational field
     assert drift_item["nav_drift_pct"] is not None
     assert abs(drift_item["nav_drift_pct"]) >= 0.01
-    assert drift_item["source_quality"] == "degraded"
-    assert "nav_estimate_drift" in drift_item["failure_reason"]
+    # but it no longer degrades the source nor pollutes failure_reason
+    assert drift_item["source_quality"] == "ok"
+    assert "nav_estimate_drift" not in (drift_item["failure_reason"] or "")
 
     ok_item = result["items"][1]
     assert ok_item["source_quality"] == "ok"
     assert ok_item["nav_drift_pct"] is not None
     assert abs(ok_item["nav_drift_pct"]) < 0.01
+    assert result["summary"]["degraded_count"] == 0

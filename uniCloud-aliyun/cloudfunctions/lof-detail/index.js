@@ -28,8 +28,13 @@ exports.main = async (event) => {
     const price = numberOrNull(realtime.price);
     const iopv = numberOrNull(realtime.iopv);
     const premiumNav = computePremiumNav(price, navOfficial);
-    const premiumError = computePremiumError(iopv, navOfficial);
-    const navEstimateErrorPct = computeNavEstimateErrorPct(premiumError, navOfficial);
+    // PRD 1.2.1: premium_error / nav_estimate_error_pct are POST-CLOSE estimate-
+    // accuracy metrics pre-computed upstream. Prefer stored value; fall back to
+    // live calc only if absent.
+    const premiumError = resolvePremiumError(realtime.premium_error, iopv, navOfficial);
+    const navEstimateErrorPct = (numberOrNull(realtime.nav_estimate_error_pct) != null)
+      ? numberOrNull(realtime.nav_estimate_error_pct)
+      : computeNavEstimateErrorPct(premiumError, navOfficial);
 
     const fundScale = numberOrNull(meta.fund_scale != null ? meta.fund_scale : meta.scale_yi);
     const status = meta.status || 'active';
@@ -101,6 +106,12 @@ function computePremiumNav(price, navOfficial) {
 function computePremiumError(iopv, navOfficial) {
   if (iopv == null || navOfficial == null) return null;
   return round6(iopv - navOfficial);
+}
+
+function resolvePremiumError(stored, iopv, navOfficial) {
+  const s = numberOrNull(stored);
+  if (s != null) return s;
+  return computePremiumError(iopv, navOfficial);
 }
 
 function computeNavEstimateErrorPct(premiumError, navOfficial) {

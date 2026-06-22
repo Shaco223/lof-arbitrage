@@ -18,7 +18,9 @@ DEFAULT_LONG_RUN_NAME = "backend-real-watchlist-long-run-v2.json"
 DEFAULT_STABILITY_NAME = "backend-real-watchlist-stability-v2.md"
 DEFAULT_STABILITY_JSON = "backend-real-watchlist-stability-v2.json"
 SECTION6_SNAPSHOT_KEYS = ("code", "price", "iopv", "premium", "coverage", "source_quality")
-# PRD 1.2 AC-P3: abs(iopv - nav_official) / nav_official >= 1% -> degraded
+# DEPRECATED (PRD 1.2.1): intraday IOPV-vs-(T-1) NAV drift no longer triggers
+# source_quality degradation. Kept only as a reference constant for callers/
+# tests that still import it; NOT used in degradation logic anymore.
 NAV_DRIFT_DEGRADED_THRESHOLD = 0.01
 
 
@@ -68,12 +70,15 @@ def build_watchlist_report(
             else None
         )
         failure_reason = _failure_reason(price_payload, nav_payload, price, iopv)
+        # PRD 1.2.1: nav_drift_pct is an INFORMATIONAL field only (intraday IOPV vs
+        # T-1 official NAV). It is normal intraday market movement, NOT a data error,
+        # so it MUST NOT trigger source_quality degradation. Estimate accuracy is
+        # measured post-close via AC-P3 (premium_error / nav_estimate_error_pct).
         nav_drift_pct = None
         if iopv is not None and nav_official is not None and nav_official > 0:
             nav_drift_pct = round((iopv - nav_official) / nav_official, 6)
-            if abs(nav_drift_pct) >= NAV_DRIFT_DEGRADED_THRESHOLD:
-                drift_tag = f"nav_estimate_drift:{nav_drift_pct:+.4f}"
-                failure_reason = ";".join(filter(None, [failure_reason, drift_tag]))
+        # Degradation depends ONLY on data availability (premium computable + no
+        # source failure). Source failures are surfaced via failure_reason.
         if premium is not None and not failure_reason:
             source_quality = "ok"
             ok_count += 1

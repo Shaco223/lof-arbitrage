@@ -13,7 +13,9 @@ from fetcher.sources.realtime_poc import POC_CODES, RealTimePocClient
 DEFAULT_SNAPSHOT_PATH = Path(__file__).resolve().parents[3] / "outputs" / "local-minute-snapshots-v2.jsonl"
 DEFAULT_REPORT_NAME = "backend-real-poc-report-v2.json"
 DEFAULT_STALE_THRESHOLD_SECONDS = 86400
-# PRD 1.2 AC-P3: abs(iopv - nav_official) / nav_official >= 1% -> degraded
+# DEPRECATED (PRD 1.2.1): intraday IOPV-vs-(T-1) NAV drift no longer triggers
+# source_quality degradation. Kept only as a reference constant for callers/
+# tests that still import it; NOT used in degradation logic anymore.
 NAV_DRIFT_DEGRADED_THRESHOLD = 0.01
 
 
@@ -67,20 +69,18 @@ def parse_realtime_source_payload(
         if stale_reason:
             failure_reason = ";".join(filter(None, [failure_reason, stale_reason]))
 
+        # PRD 1.2.1: nav_drift_pct (intraday IOPV vs T-1 official NAV) is an
+        # INFORMATIONAL field only. It reflects normal intraday market movement,
+        # NOT a data error, and MUST NOT trigger source_quality degradation.
+        # Estimate accuracy is measured post-close (AC-P3), not intraday.
         nav_drift_pct = None
-        nav_drift_reason = ""
         if iopv is not None and nav_official is not None and nav_official > 0:
             nav_drift_pct = round((iopv - nav_official) / nav_official, 6)
-            if abs(nav_drift_pct) >= NAV_DRIFT_DEGRADED_THRESHOLD:
-                nav_drift_reason = f"nav_estimate_drift:{nav_drift_pct:+.4f}"
-                failure_reason = ";".join(filter(None, [failure_reason, nav_drift_reason]))
 
+        # Degradation depends ONLY on data availability.
         if stale_reason:
             source_quality = "stale"
             stale_count += 1
-        elif nav_drift_reason:
-            source_quality = "degraded"
-            degraded_count += 1
         elif premium is not None and not failure_reason:
             source_quality = "ok"
             ok_count += 1
