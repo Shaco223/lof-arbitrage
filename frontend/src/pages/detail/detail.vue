@@ -23,7 +23,7 @@ const detail = ref<LofDetailData | null>(null)
 const history = ref<LofHistoryData | null>(null)
 const loading = ref(false)
 const error = ref('')
-const showBreakdown = ref(true)
+const showBreakdown = ref(false)
 const code = ref('161725')
 
 const coverage = computed(() => detail.value?.realtime.coverage ?? 0)
@@ -282,7 +282,7 @@ onLoad((q: Record<string, string> | undefined) => {
             <text class="value">{{ fmtNum(detail.realtime.iopv, 4) }}</text>
           </view>
           <view v-if="shouldRender(detail.premium_error)" class="dual-row">
-            <text class="label">估算误差</text>
+            <text class="label">估算误差（盘后）</text>
             <text class="value" :class="(detail.premium_error ?? 0) >= 0 ? 'text-up' : 'text-down'">
               {{ fmtNum(detail.premium_error, 4) }}
               <text v-if="shouldRender(detail.nav_estimate_error_pct)" class="sub">{{ fmtPctSigned(detail.nav_estimate_error_pct, 2) }}</text>
@@ -397,16 +397,16 @@ onLoad((q: Record<string, string> | undefined) => {
 .page { padding: 24rpx; padding-bottom: 48rpx; }
 .card { margin-bottom: 20rpx; }
 .error-card { color: #f56c6c; }
-.title-row { display: flex; align-items: center; gap: 20rpx; }
+.title-row { display: flex; align-items: center; gap: 16rpx; justify-content: space-between; }
 .fund-name { font-size: 36rpx; font-weight: 700; color: #1f2d3d; }
 .fund-meta { color: #909399; font-size: 24rpx; margin-top: 8rpx; }
-.coverage-tag { width: 190rpx; min-height: 110rpx; border-radius: 16rpx; padding: 12rpx; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; margin-left: auto; }
-.coverage-num { font-size: 38rpx; font-weight: 700; line-height: 44rpx; }
+.coverage-tag { min-width: 160rpx; padding: 12rpx 16rpx; border-radius: 14rpx; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+.coverage-num { font-size: 34rpx; font-weight: 700; line-height: 40rpx; }
 .coverage-label { font-size: 20rpx; margin-top: 4rpx; }
 .coverage-green { background: #f0f9eb; color: #67c23a; }
 .coverage-yellow { background: #fdf6ec; color: #e6a23c; }
 .coverage-red { background: #fef0f0; color: #f56c6c; }
-.breakdown { margin-top: 22rpx; padding: 20rpx; background: #f8fafc; border-radius: 12rpx; }
+.breakdown { margin-top: 18rpx; padding: 16rpx; background: #f8fafc; border-radius: 12rpx; }
 .breakdown-title { color: #606266; font-size: 24rpx; margin-bottom: 16rpx; }
 .breakdown-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12rpx; }
 .breakdown-item { display: flex; flex-direction: column; gap: 6rpx; }
@@ -415,9 +415,9 @@ onLoad((q: Record<string, string> | undefined) => {
 .value .sub { color: #909399; font-size: 22rpx; font-weight: 400; margin-left: 8rpx; }
 
 /* PRD §4.4 双列布局 */
-.dual-card { padding: 24rpx; }
-.dual-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24rpx; }
-.dual-col { display: flex; flex-direction: column; gap: 16rpx; padding: 16rpx 18rpx; background: #f8fafc; border-radius: 14rpx; }
+.dual-card { padding: 20rpx; }
+.dual-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16rpx; }
+.dual-col { display: flex; flex-direction: column; gap: 12rpx; padding: 14rpx 16rpx; background: #f8fafc; border-radius: 12rpx; }
 .dual-title { color: #909399; font-size: 24rpx; padding-bottom: 8rpx; border-bottom: 1rpx dashed #ebeef5; margin-bottom: 4rpx; }
 .dual-row { display: flex; align-items: baseline; justify-content: space-between; gap: 12rpx; }
 .dual-row .label { color: #909399; font-size: 24rpx; }
