@@ -163,3 +163,46 @@ def test_daemon_iteration_exception_is_caught_and_loop_continues(tmp_path):
     )
     assert summary["error_iterations"] == 1
     assert summary["collect_iterations"] == 1  # second tick recovered
+
+
+
+def test_daemon_sediments_close_estimate_on_trading_to_idle_transition(tmp_path):
+    # PRD 1.2.3: on the trading -> non-trading transition (market close), the
+    # daemon appends the day's premium (close-time price/IOPV-1) as
+    # premium_estimate_close into the history JSONL exactly once.
+    metas = [_meta("161725")]
+    snap = tmp_path / "snap.jsonl"
+    hist = tmp_path / "hist.jsonl"
+    states = iter([True, True, False])  # 2 trading ticks, then close transition
+
+    def provider(_metas):
+        # price=1.05, iopv=1.0 -> premium = 0.05 (the close-time estimate)
+        return {m.code: _payload(price=1.05, iopv=1.0, nav=1.0) for m in _metas}
+
+    dmod.run_daemon(
+        metas=metas,
+        output_dir=tmp_path,
+        snapshot_file=snap,
+        history_file=hist,
+        with_holdings=False,
+        max_iterations=3,
+        trading_interval_seconds=0,
+        idle_interval_seconds=0,
+        sleeper=lambda _s: None,
+        now=lambda: datetime(2026, 6, 22, 15, 0, 0, tzinfo=CN),
+        trading_check=lambda _m: next(states),
+        payload_provider=provider,
+        pid_file=None,
+        stop_file=None,
+        log_file=None,
+        enforce_singleton=False,
+    )
+    rows = [json.loads(l) for l in hist.read_text(encoding="utf-8").strip().splitlines()]
+    assert len(rows) == 1
+    row = rows[0]
+    assert row["code"] == "161725"
+    assert row["date"] == "2026-06-22"
+    assert row["premium_estimate_close"] == 0.05
+    # official_nav not backfilled yet -> premium_close + deviation null (T+1 pending)
+    assert row["premium_close"] is None
+    assert row["premium_deviation"] is None

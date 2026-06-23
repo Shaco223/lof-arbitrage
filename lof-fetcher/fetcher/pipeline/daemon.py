@@ -45,6 +45,10 @@ from fetcher.pipeline.real_watchlist import (
     update_sample_dataset_realtime,
     write_watchlist_outputs,
 )
+from fetcher.pipeline.history_backfill import (
+    DEFAULT_HISTORY_FILE,
+    append_close_estimates,
+)
 from fetcher.pipeline import process_control as pc
 from fetcher.scheduler import CN_TZ, is_trading_time
 from fetcher.sources.csv_assets import LofMeta
@@ -124,6 +128,8 @@ def run_daemon(
     idle_interval_seconds: float = DEFAULT_IDLE_INTERVAL_SECONDS,
     holdings_refresh_seconds: float = DEFAULT_HOLDINGS_REFRESH_SECONDS,
     with_holdings: bool = True,
+    history_file: str | Path | None = None,
+    sediment_close_history: bool = True,
     max_iterations: int | None = None,
     pid_file: Path | None = pc.DEFAULT_PID_FILE,
     stop_file: Path | None = pc.DEFAULT_STOP_FILE,
@@ -174,6 +180,13 @@ def run_daemon(
     cached_holdings: list[dict[str, Any]] | None = None
     cached_per_lof: list[dict[str, Any]] | None = None
     last_holdings_at: datetime | None = None
+    history_path = Path(history_file) if history_file else output_root / DEFAULT_HISTORY_FILE
+    # PRD 1.2.3: sediment the day's close-time premium_estimate_close exactly once,
+    # on the trading -> non-trading transition (i.e. just after 15:00 close).
+    last_report: dict[str, Any] | None = None
+    last_report_date: str | None = None
+    was_trading = False
+    close_sediment_date: str | None = None
 
     collect_iterations = 0
     idle_iterations = 0
@@ -214,6 +227,31 @@ def run_daemon(
         moment = now_fn()
         trading = trading_fn(moment)
         if not trading:
+            # Trading -> non-trading transition == market close: sediment the day's
+            # close-time premium_estimate_close exactly once (PRD 1.2.3, append-only,
+            # no backfill). premium_deviation stays null until T+1 official nav.
+            if (
+                sediment_close_history
+                and was_trading
+                and last_report is not None
+                and last_report_date is not None
+                and close_sediment_date != last_report_date
+            ):
+                try:
+                    estimates = {
+                        it["code"]: it.get("premium")
+                        for it in last_report.get("items", [])
+                    }
+                    result = append_close_estimates(history_path, last_report_date, estimates)
+                    close_sediment_date = last_report_date
+                    logger.info(
+                        "[{}] close sediment: appended {} premium_estimate_close for {} -> {}",
+                        moment.isoformat(timespec="seconds"), result["appended"],
+                        last_report_date, result["history_file"],
+                    )
+                except Exception as exc:  # noqa: BLE001 - close sediment must not crash daemon
+                    logger.exception("close history sediment failed: {}", exc)
+            was_trading = False
             idle_iterations += 1
             logger.info(
                 "[{}] non-trading hours -> sleep {}s (no collection)",
@@ -233,6 +271,12 @@ def run_daemon(
             report = build_watchlist_report(metas, payloads, ts=loop_ts)
             report = _escalate_consecutive_failures(report, failure_streak)
             write_watchlist_outputs(report, output_root, snapshot_path)
+            # Remember the freshest trading-day report so the close transition can
+            # sediment its per-code premium (close-time price/IOPV-1) as the day's
+            # premium_estimate_close (PRD 1.2.3).
+            last_report = report
+            last_report_date = moment.date().isoformat()
+            was_trading = True
             # Push fresh nav_official/nav_official_date (+price/iopv/premium) back into
             # sample-dataset so the local API computes premium_nav with a NAV in the
             # same time-frame as the live price (fixes premium_nav decoupling).

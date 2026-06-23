@@ -34,8 +34,24 @@ def compute_premium_pctile(values: list[float | None], index: int, window: int =
     return _round6(less_or_equal / len(sample))
 
 
-def build_history_records(code: str, closes: dict[str, float], navs: dict[str, float]) -> list[dict[str, Any]]:
+def _premium_deviation(estimate_close: float | None, premium_close: float | None) -> float | None:
+    # PRD 1.2.3 / AC-H7: only computed when BOTH non-null; otherwise null (never 0).
+    if estimate_close is None or premium_close is None:
+        return None
+    return _round6(estimate_close - premium_close)
+
+
+def build_history_records(
+    code: str,
+    closes: dict[str, float],
+    navs: dict[str, float],
+    estimates: dict[str, float] | None = None,
+) -> list[dict[str, Any]]:
     # Trading dates are driven by close_price availability (kline = trading days).
+    # `estimates` carries per-date premium_estimate_close (close-time price/IOPV-1)
+    # sedimented day-by-day from the daemon close snapshot. PRD 1.2.3 / AC-H6:
+    # this field is NEVER synthesized for backfilled history; absent date -> None.
+    estimates = estimates or {}
     dates = sorted(closes.keys())
     premiums: list[float | None] = []
     base_rows: list[dict[str, Any]] = []
@@ -46,12 +62,17 @@ def build_history_records(code: str, closes: dict[str, float], navs: dict[str, f
         if close_price is not None and official_nav is not None and official_nav > 0:
             premium_close = _round6(close_price / official_nav - 1)
         premiums.append(premium_close)
+        estimate_close = estimates.get(date)
+        if estimate_close is not None:
+            estimate_close = _round6(estimate_close)
         base_rows.append({
             "code": code,
             "date": date,
             "close_price": close_price,
             "official_nav": official_nav,
             "premium_close": premium_close,
+            "premium_estimate_close": estimate_close,
+            "premium_deviation": _premium_deviation(estimate_close, premium_close),
         })
     for idx, row in enumerate(base_rows):
         row["premium_pctile_30d"] = compute_premium_pctile(premiums, idx)
@@ -117,6 +138,11 @@ def merge_records(existing: list[dict[str, Any]], incoming: list[dict[str, Any]]
         # Only fill official_nav if newly available; keep confirmed value otherwise.
         if row.get("official_nav") is not None:
             new_row["official_nav"] = row["official_nav"]
+        # premium_estimate_close is sedimented day-by-day (PRD 1.2.3, no backfill):
+        # fill it only when newly available; never overwrite a confirmed estimate
+        # with a null/missing one.
+        if row.get("premium_estimate_close") is not None:
+            new_row["premium_estimate_close"] = row["premium_estimate_close"]
         merged[key] = new_row
     return list(merged.values())
 
@@ -139,6 +165,15 @@ def recompute_series(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
                 premium_close = _round6(close_price / official_nav - 1)
             row["premium_close"] = premium_close
             premiums.append(premium_close)
+            # PRD 1.2.3 / AC-H7: premium_deviation is (re)computed in the SAME step
+            # as premium_close, so the T+1 official-nav backfill that fills
+            # premium_close also fills deviation. estimate_close is sedimented and
+            # never synthesized; deviation stays null until both sides are present.
+            estimate_close = row.get("premium_estimate_close")
+            if estimate_close is not None:
+                estimate_close = _round6(estimate_close)
+                row["premium_estimate_close"] = estimate_close
+            row["premium_deviation"] = _premium_deviation(estimate_close, premium_close)
         for idx, row in enumerate(code_rows):
             row["premium_pctile_30d"] = compute_premium_pctile(premiums, idx)
         out.extend(code_rows)
@@ -158,7 +193,48 @@ def save_history_file(path: str | Path, rows: list[dict[str, Any]]) -> None:
                 "official_nav": row.get("official_nav"),
                 "premium_close": row.get("premium_close"),
                 "premium_pctile_30d": row.get("premium_pctile_30d"),
+                # PRD 1.2.3 ?6.3 new optional fields (day-by-day sedimented, no backfill).
+                "premium_estimate_close": row.get("premium_estimate_close"),
+                "premium_deviation": row.get("premium_deviation"),
             }, ensure_ascii=False) + "\n")
+
+
+def append_close_estimates(
+    history_file: str | Path,
+    date: str,
+    estimates: dict[str, float | None],
+) -> dict[str, Any]:
+    """Sediment the close-time premium_estimate_close for `date` (PRD 1.2.3).
+
+    `estimates` maps code -> close-time `price / IOPV - 1` (the watchlist report's
+    `premium` field). Day-by-day, append-only: this fills/updates the day's
+    premium_estimate_close on existing (code, date) rows (or creates the row if
+    the trading-day close_price has not been backfilled yet), then recomputes
+    premium_deviation in the same recompute step (deviation stays null until the
+    T+1 official_nav fills premium_close). Never synthesizes history (AC-H6).
+    """
+    existing = load_history_file(history_file)
+    incoming: list[dict[str, Any]] = []
+    appended = 0
+    for code, estimate in estimates.items():
+        if estimate is None:
+            # No close-time estimate (IOPV missing) -> leave field null, skip.
+            continue
+        incoming.append({
+            "code": str(code),
+            "date": date,
+            "premium_estimate_close": _round6(float(estimate)),
+        })
+        appended += 1
+    merged = merge_records(existing, incoming)
+    merged = recompute_series(merged)
+    save_history_file(history_file, merged)
+    return {
+        "history_file": str(history_file),
+        "date": date,
+        "appended": appended,
+        "total_records": len(merged),
+    }
 
 
 def run_history_backfill(

@@ -47,7 +47,11 @@ exports.main = async (event) => {
         close_price: item.close_price,
         official_nav: item.official_nav,
         premium_close: item.premium_close,
-        premium_pctile_30d: item.premium_pctile_30d
+        premium_pctile_30d: item.premium_pctile_30d,
+        // PRD 1.2.3 ?6.3: pass-through, null-safe. Day-by-day sedimented; absent
+        // for backfilled rows (no synthesis, AC-H6).
+        premium_estimate_close: item.premium_estimate_close != null ? item.premium_estimate_close : null,
+        premium_deviation: item.premium_deviation != null ? item.premium_deviation : null
       }))
     });
   } catch (error) {
@@ -73,7 +77,10 @@ function buildFallbackHistory(code, days, existingRows) {
         close_price: round6(0.9262 + offset * 0.0047),
         official_nav: round6(0.95 + offset * 0.003),
         premium_close: round6(-0.025 + offset * 0.0018),
-        premium_pctile_30d: round6((offset + 1) / days)
+        premium_pctile_30d: round6((offset + 1) / days),
+        // PRD 1.2.3 / AC-H6: these two are NEVER synthesized -> always null on fallback.
+        premium_estimate_close: null,
+        premium_deviation: null
       });
     }
     cursor.setDate(cursor.getDate() - 1);
