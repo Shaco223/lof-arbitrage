@@ -89,3 +89,7 @@ data/snapshots/
 !outputs/backend-real-watchlist-stability-v2.md
 !outputs/backend-real-watchlist-stability-v2-conclusion.md
 !outputs/local-minute-snapshots-watchlist-v2.jsonl
+
+# ===== IOPV 数据源探测 POC（dev-004）=====
+!outputs/backend-iopv-source-probe-v2.json
+!outputs/backend-iopv-source-probe-v2.md

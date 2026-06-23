@@ -1,0 +1,286 @@
+{
+  "ts": "2026-06-23T14:04:08+08:00",
+  "codes": [
+    "161725",
+    "161005",
+    "160706",
+    "160632",
+    "501203"
+  ],
+  "real_iopv_sources": [],
+  "note": "is_real_iopv=True means a live exchange-grade IOPV was actually returned this run.",
+  "per_code": [
+    {
+      "code": "161725",
+      "ts": "2026-06-23T14:04:08+08:00",
+      "sources": [
+        {
+          "source": "eastmoney_fundmob",
+          "ok": false,
+          "elapsed_ms": 117,
+          "is_real_iopv": false,
+          "iopv": null,
+          "value_kind": "estimated_nav(GSZ)",
+          "value_time": "",
+          "nav_official": 0.5289,
+          "nav_date": "2026-06-22"
+        },
+        {
+          "source": "eastmoney_push2",
+          "ok": true,
+          "elapsed_ms": 165,
+          "is_real_iopv": false,
+          "price": 0.519,
+          "f92_net_asset_per_share": 0.0,
+          "value_kind": "f92_net_asset(usually 0 for LOF)"
+        },
+        {
+          "source": "fundgz",
+          "ok": true,
+          "elapsed_ms": 83,
+          "is_real_iopv": false,
+          "iopv": 0.5181,
+          "value_kind": "estimated_nav(gsz)",
+          "value_time": "2026-06-23 14:00",
+          "nav_official": 0.5289,
+          "nav_date": "2026-06-22",
+          "lag_seconds": 248
+        },
+        {
+          "source": "jisilu",
+          "ok": false,
+          "elapsed_ms": 0,
+          "error": "code_not_in_free_list"
+        },
+        {
+          "source": "tencent_quote",
+          "ok": true,
+          "elapsed_ms": 154,
+          "is_real_iopv": false,
+          "price": 0.519,
+          "f81_prior_nav": 0.5289,
+          "value_kind": "no live IOPV field (f81=prior official NAV)"
+        }
+      ]
+    },
+    {
+      "code": "161005",
+      "ts": "2026-06-23T14:04:08+08:00",
+      "sources": [
+        {
+          "source": "eastmoney_fundmob",
+          "ok": false,
+          "elapsed_ms": 31,
+          "is_real_iopv": false,
+          "iopv": null,
+          "value_kind": "estimated_nav(GSZ)",
+          "value_time": "",
+          "nav_official": 3.2697,
+          "nav_date": "2026-06-22"
+        },
+        {
+          "source": "eastmoney_push2",
+          "ok": true,
+          "elapsed_ms": 32,
+          "is_real_iopv": false,
+          "price": 3.182,
+          "f92_net_asset_per_share": 0.0,
+          "value_kind": "f92_net_asset(usually 0 for LOF)"
+        },
+        {
+          "source": "fundgz",
+          "ok": true,
+          "elapsed_ms": 18,
+          "is_real_iopv": false,
+          "iopv": 3.2217,
+          "value_kind": "estimated_nav(gsz)",
+          "value_time": "2026-06-23 13:59",
+          "nav_official": 3.2697,
+          "nav_date": "2026-06-22",
+          "lag_seconds": 308
+        },
+        {
+          "source": "jisilu",
+          "ok": false,
+          "elapsed_ms": 0,
+          "error": "code_not_in_free_list"
+        },
+        {
+          "source": "tencent_quote",
+          "ok": true,
+          "elapsed_ms": 39,
+          "is_real_iopv": false,
+          "price": 3.184,
+          "f81_prior_nav": 3.2697,
+          "value_kind": "no live IOPV field (f81=prior official NAV)"
+        }
+      ]
+    },
+    {
+      "code": "160706",
+      "ts": "2026-06-23T14:04:08+08:00",
+      "sources": [
+        {
+          "source": "eastmoney_fundmob",
+          "ok": false,
+          "elapsed_ms": 25,
+          "is_real_iopv": false,
+          "iopv": null,
+          "value_kind": "estimated_nav(GSZ)",
+          "value_time": "",
+          "nav_official": 1.289,
+          "nav_date": "2026-06-22"
+        },
+        {
+          "source": "eastmoney_push2",
+          "ok": true,
+          "elapsed_ms": 29,
+          "is_real_iopv": false,
+          "price": 1.25,
+          "f92_net_asset_per_share": 0.0,
+          "value_kind": "f92_net_asset(usually 0 for LOF)"
+        },
+        {
+          "source": "fundgz",
+          "ok": true,
+          "elapsed_ms": 16,
+          "is_real_iopv": false,
+          "iopv": 1.2577,
+          "value_kind": "estimated_nav(gsz)",
+          "value_time": "2026-06-23 14:00",
+          "nav_official": 1.289,
+          "nav_date": "2026-06-22",
+          "lag_seconds": 248
+        },
+        {
+          "source": "jisilu",
+          "ok": false,
+          "elapsed_ms": 0,
+          "error": "code_not_in_free_list"
+        },
+        {
+          "source": "tencent_quote",
+          "ok": true,
+          "elapsed_ms": 37,
+          "is_real_iopv": false,
+          "price": 1.25,
+          "f81_prior_nav": 1.289,
+          "value_kind": "no live IOPV field (f81=prior official NAV)"
+        }
+      ]
+    },
+    {
+      "code": "160632",
+      "ts": "2026-06-23T14:04:08+08:00",
+      "sources": [
+        {
+          "source": "eastmoney_fundmob",
+          "ok": false,
+          "elapsed_ms": 24,
+          "is_real_iopv": false,
+          "iopv": null,
+          "value_kind": "estimated_nav(GSZ)",
+          "value_time": "",
+          "nav_official": 0.2558,
+          "nav_date": "2026-06-22"
+        },
+        {
+          "source": "eastmoney_push2",
+          "ok": true,
+          "elapsed_ms": 44,
+          "is_real_iopv": false,
+          "price": 0.251,
+          "f92_net_asset_per_share": 0.0,
+          "value_kind": "f92_net_asset(usually 0 for LOF)"
+        },
+        {
+          "source": "fundgz",
+          "ok": true,
+          "elapsed_ms": 25,
+          "is_real_iopv": false,
+          "iopv": 0.2511,
+          "value_kind": "estimated_nav(gsz)",
+          "value_time": "2026-06-23 13:59",
+          "nav_official": 0.2558,
+          "nav_date": "2026-06-22",
+          "lag_seconds": 308
+        },
+        {
+          "source": "jisilu",
+          "ok": true,
+          "elapsed_ms": 0,
+          "is_real_iopv": false,
+          "iopv": null,
+          "value_kind": "estimate_value(member-gated; '-' when not logged in)",
+          "value_time": "-",
+          "fund_nav": 0.2558,
+          "nav_date": "2026-06-22",
+          "discount_rt": "-",
+          "index_increase_rt": "-1.87"
+        },
+        {
+          "source": "tencent_quote",
+          "ok": true,
+          "elapsed_ms": 44,
+          "is_real_iopv": false,
+          "price": 0.251,
+          "f81_prior_nav": 0.2558,
+          "value_kind": "no live IOPV field (f81=prior official NAV)"
+        }
+      ]
+    },
+    {
+      "code": "501203",
+      "ts": "2026-06-23T14:04:08+08:00",
+      "sources": [
+        {
+          "source": "eastmoney_fundmob",
+          "ok": false,
+          "elapsed_ms": 37,
+          "is_real_iopv": false,
+          "iopv": null,
+          "value_kind": "estimated_nav(GSZ)",
+          "value_time": "",
+          "nav_official": 1.8239,
+          "nav_date": "2026-06-22"
+        },
+        {
+          "source": "eastmoney_push2",
+          "ok": true,
+          "elapsed_ms": 38,
+          "is_real_iopv": false,
+          "price": 1.76,
+          "f92_net_asset_per_share": 0.0,
+          "value_kind": "f92_net_asset(usually 0 for LOF)"
+        },
+        {
+          "source": "fundgz",
+          "ok": true,
+          "elapsed_ms": 19,
+          "is_real_iopv": false,
+          "iopv": 1.7819,
+          "value_kind": "estimated_nav(gsz)",
+          "value_time": "2026-06-23 14:00",
+          "nav_official": 1.8239,
+          "nav_date": "2026-06-22",
+          "lag_seconds": 248
+        },
+        {
+          "source": "jisilu",
+          "ok": false,
+          "elapsed_ms": 0,
+          "error": "code_not_in_free_list"
+        },
+        {
+          "source": "tencent_quote",
+          "ok": true,
+          "elapsed_ms": 37,
+          "is_real_iopv": false,
+          "price": 1.76,
+          "f81_prior_nav": 1.8239,
+          "value_kind": "no live IOPV field (f81=prior official NAV)"
+        }
+      ]
+    }
+  ]
+}

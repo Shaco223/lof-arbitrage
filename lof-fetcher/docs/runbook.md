@@ -337,3 +337,27 @@ pwsh lof-fetcher/scripts/daemon-restart.ps1 -Foreground # ?????Ctrl+C ??
 
 ### ??????
 - OS ??????????/????????????????????????? Windows ?????
+
+## IOPV 数据源探测 POC（不改主链路）
+
+目标：盘中并行对比多个免费源是否能拿到交易所级别的真 IOPV，为“是否换源”提供证据。纯探测脚本，不动 real_watchlist 主链路、不动 §6 字段。
+
+### 运行（必须盘中 09:30-11:30 / 13:00-15:00）
+```powershell
+cd lof-fetcher
+python scripts/probe_iopv_sources.py                              # 默认 5 只 POC 标的，单次
+python scripts/probe_iopv_sources.py --repeat 3 --interval-seconds 60   # 连跑 3 轮验证稳定性
+python scripts/probe_iopv_sources.py --codes 161725 161005             # 指定标的
+```
+输出：`outputs/backend-iopv-source-probe-v2.json` + `.md`（含每源 ok / 是否真IOPV / 值 / 值时间 / 滞后秒 / 耗时）。
+
+### 探测结论（2026-06-23 盘中）
+- **无任何免费源返回真交易所 IOPV**（real_iopv_sources=[]）。
+- `fundgz`：唯一稳定可用，gsz=估算净值（非真 IOPV），gztime 滞后约 3-5 分钟，继续作为基准。
+- `tencent_quote`：有场内价，但 field[81] 是昨日官方净值（非 live IOPV）。
+- `eastmoney_push2`：f43 为场内交易价，f92 净资产对 LOF 返回 0.0，无真 IOPV；偏偏出现 RemoteProtocolError。
+- `eastmoney_fundmob`：部分基金 GSZ=null，不稳定。
+- `jisilu`：未登录 estimate_value=“-”（会员墙），多数 POC code 不在免费列表。
+
+### 换源建议：不换源
+免费源均无真交易所 IOPV，维持 fundgz gsz 作估算净值；premium（估算溢价）受滞后影响但无更优免费替代。如需真 IOPV，须走 CCR 评估付费源。
