@@ -122,6 +122,10 @@ export interface LofHistoryItem {
   official_nav: number
   premium_close: number
   premium_pctile_30d: number
+  /** PRD 1.2.3：当日收盘预估溢价（逐日累积不回填，前期为 null） */
+  premium_estimate_close?: number | null
+  /** PRD 1.2.3：溢价偏差 = 预估溢价 - 收盘溢价 */
+  premium_deviation?: number | null
 }
 
 export interface LofHistoryData {

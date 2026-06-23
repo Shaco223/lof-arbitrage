@@ -271,9 +271,11 @@ onLoad((q: Record<string, string> | undefined) => {
       <view class="hist-head">
         <text class="hist-date">日期</text>
         <text class="hist-num">收盘价</text>
-        <text class="hist-num">披露净值</text>
+        <text class="hist-num">净值</text>
         <text class="hist-num">收盘溢价</text>
-        <text class="hist-num">历史分位</text>
+        <text class="hist-num">预估溢价</text>
+        <text class="hist-num">偏差</text>
+        <text class="hist-num">分位</text>
       </view>
       <view class="hist-row" v-for="row in historyRows" :key="row.date">
         <text class="hist-date">{{ row.date }}</text>
@@ -283,6 +285,14 @@ onLoad((q: Record<string, string> | undefined) => {
           class="hist-num"
           :class="shouldRender(row.premium_close) ? ((row.premium_close ?? 0) >= 0 ? 'text-up' : 'text-down') : ''"
         >{{ shouldRender(row.premium_close) ? fmtPctSigned(row.premium_close, 2) : '--' }}</text>
+        <text
+          class="hist-num"
+          :class="shouldRender(row.premium_estimate_close) ? ((row.premium_estimate_close ?? 0) >= 0 ? 'text-up' : 'text-down') : ''"
+        >{{ shouldRender(row.premium_estimate_close) ? fmtPctSigned(row.premium_estimate_close, 2) : '--' }}</text>
+        <text
+          class="hist-num"
+          :class="shouldRender(row.premium_deviation) ? ((row.premium_deviation ?? 0) >= 0 ? 'text-up' : 'text-down') : ''"
+        >{{ shouldRender(row.premium_deviation) ? fmtPctSigned(row.premium_deviation, 2) : '--' }}</text>
         <text class="hist-num">{{ shouldRender(row.premium_pctile_30d) ? fmtPct(row.premium_pctile_30d, 0) : '--' }}</text>
       </view>
     </view>
@@ -367,7 +377,7 @@ onLoad((q: Record<string, string> | undefined) => {
 .pctile-box { background: #edf2fc; color: #409eff; padding: 8rpx 16rpx; border-radius: 999rpx; font-size: 24rpx; }
 .history-summary { margin: 4rpx 0 12rpx; color: #606266; font-size: 24rpx; }
 /* 历史逐日列表（代替原折线图 + 溢价柱） */
-.hist-head, .hist-row { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr 1fr; gap: 8rpx; padding: 12rpx 0; align-items: center; font-size: 24rpx; }
+.hist-head, .hist-row { display: grid; grid-template-columns: 1.15fr 0.9fr 0.9fr 1fr 1fr 0.9fr 0.75fr; gap: 6rpx; padding: 12rpx 0; align-items: center; font-size: 22rpx; }
 .hist-head { color: #909399; border-bottom: 1rpx solid #ebeef5; }
 .hist-row { border-top: 1rpx solid #f0f2f5; color: #606266; }
 .hist-row:first-of-type { border-top: 0; }
