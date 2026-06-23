@@ -116,34 +116,52 @@ function drawChart() {
       ctx.lineTo(width, barTop + barHeight)
       ctx.stroke()
 
+      // AC-P5: T+1 dang-ri (last trading day) official_nav/premium_close may be null.
+      // Skip null when computing axis range and when drawing, otherwise null is coerced to 0,
+      // which flattens the price line and drops the nav line tail to the bottom (abnormal point).
+      const isNum = (v: unknown): v is number => typeof v === 'number' && !Number.isNaN(v)
       const prices = items.map((item) => item.close_price)
       const iopvs = items.map((item) => item.official_nav)
-      const all = prices.concat(iopvs)
-      const min = Math.min(...all)
-      const max = Math.max(...all)
+      const all = prices.concat(iopvs).filter(isNum)
+      const min = all.length ? Math.min(...all) : 0
+      const max = all.length ? Math.max(...all) : 1
       const span = Math.max(max - min, 0.001)
       const step = items.length > 1 ? width / (items.length - 1) : width
       const toY = (v: number) => lineTop + (1 - (v - min) / span) * lineHeight
 
-      function drawLine(values: number[], color: string) {
-        ctx.beginPath()
+      function drawLine(values: Array<number | null | undefined>, color: string) {
         ctx.setStrokeStyle(color)
         ctx.setLineWidth(2)
+        let started = false
         values.forEach((value, index) => {
+          // Break the stroke on null points (AC-P5): do not connect through 0.
+          if (!isNum(value)) {
+            if (started) ctx.stroke()
+            started = false
+            return
+          }
           const x = index * step
           const y = toY(value)
-          if (index === 0) ctx.moveTo(x, y)
-          else ctx.lineTo(x, y)
+          if (!started) {
+            ctx.beginPath()
+            ctx.moveTo(x, y)
+            started = true
+          } else {
+            ctx.lineTo(x, y)
+          }
         })
-        ctx.stroke()
+        if (started) ctx.stroke()
       }
 
       drawLine(prices, '#f56c6c')
       drawLine(iopvs, '#409eff')
 
-      const maxAbsPremium = Math.max(...items.map((item) => Math.abs(item.premium_close)), 0.001)
+      const premiums = items.map((item) => item.premium_close).filter(isNum)
+      const maxAbsPremium = Math.max(...premiums.map((v) => Math.abs(v)), 0.001)
       const barStep = width / items.length
       items.forEach((item, index) => {
+        // Skip bars whose premium_close is null (AC-P5): do not draw a fake bar.
+        if (!isNum(item.premium_close)) return
         const h = Math.max(2, Math.abs(item.premium_close) / maxAbsPremium * barHeight)
         const up = item.premium_close >= 0
         ctx.setFillStyle(up ? '#f56c6c' : '#67c23a')
@@ -158,8 +176,11 @@ function drawChart() {
 const chartFallbackBars = computed(() => {
   const items = history.value?.items || []
   if (!items.length) return []
-  const maxAbsPremium = Math.max(...items.map((item) => Math.abs(item.premium_close)), 0.001)
-  return items.map((item) => {
+  const isNum = (v: unknown): v is number => typeof v === 'number' && !Number.isNaN(v)
+  const valid = items.filter((item) => isNum(item.premium_close))
+  const maxAbsPremium = Math.max(...valid.map((item) => Math.abs(item.premium_close)), 0.001)
+  // AC-P5: only render bars for trading days that have premium_close; skip null (e.g. T+1 dang-ri).
+  return valid.map((item) => {
     const h = Math.max(6, Math.round(Math.abs(item.premium_close) / maxAbsPremium * 100))
     return { h, up: item.premium_close >= 0 }
   })
@@ -167,6 +188,11 @@ const chartFallbackBars = computed(() => {
 
 const latestHistory = computed(() => {
   const items = history.value?.items || []
+  // AC-P5: skip trailing null days (T+1 dang-ri has no official_nav/premium_close yet).
+  for (let i = items.length - 1; i >= 0; i--) {
+    const it = items[i]
+    if (typeof it.premium_close === 'number' && !Number.isNaN(it.premium_close)) return it
+  }
   return items.length ? items[items.length - 1] : null
 })
 
