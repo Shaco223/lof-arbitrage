@@ -119,6 +119,59 @@ def build_holdings_payload(
     return {"summary": summary, "per_lof": per_lof, "holdings": holdings_rows}
 
 
+def overlay_realtime_on_holdings(
+    holdings_rows: list[dict[str, Any]],
+    per_lof: list[dict[str, Any]],
+    *,
+    ts: str,
+    with_realtime: bool = True,
+) -> dict[str, Any]:
+    """Re-apply live stock change pct onto already-fetched quarterly holdings.
+
+    Used by the resident daemon: quarterly holdings (stock_code/weight/report_date)
+    are fetched once and reused; only price_change_pct / contribution_pct are
+    refreshed each minute, so we never re-hit the F10 holdings pages at 60s cadence.
+
+    Degrade gracefully: live change pct unavailable -> price_change_pct /
+    contribution_pct = null (front-end keeps the table, AC-P5).
+    """
+    stock_codes = sorted({row["stock_code"] for row in holdings_rows if row.get("stock_code")})
+    change_pct_map: dict[str, float | None] = {}
+    if with_realtime and stock_codes:
+        quote_client = StockQuoteClient()
+        try:
+            change_pct_map = quote_client.fetch_change_pct(stock_codes)
+        finally:
+            quote_client.close()
+
+    refreshed: list[dict[str, Any]] = []
+    for row in holdings_rows:
+        change_pct = change_pct_map.get(row.get("stock_code"))
+        weight = row.get("weight")
+        contribution = (
+            round6(weight * change_pct)
+            if change_pct is not None and weight is not None
+            else None
+        )
+        refreshed.append(
+            {
+                **row,
+                "price_change_pct": round6(change_pct),
+                "contribution_pct": contribution,
+            }
+        )
+
+    summary = {
+        "ts": ts,
+        "target_count": len(per_lof),
+        "fetched_count": sum(1 for entry in per_lof if entry.get("holdings_count")),
+        "missing_count": sum(1 for entry in per_lof if not entry.get("holdings_count")),
+        "stock_universe": len(stock_codes),
+        "realtime_applied": bool(with_realtime and stock_codes),
+    }
+    return {"summary": summary, "per_lof": per_lof, "holdings": refreshed}
+
+
 def update_sample_dataset_holdings(
     payload: dict[str, Any],
     dataset_path: Path = DEFAULT_SAMPLE_DATASET,
