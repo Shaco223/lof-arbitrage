@@ -8,6 +8,9 @@ const { createMockUniCloud } = require('./tests/mock-unicloud');
 const { loadLatestMinuteSnapshot } = require('./local-minute-snapshots');
 
 const SAMPLE_DATASET_PATH = path.join(__dirname, 'tests', 'sample-dataset.json');
+// Unified default: daemon/real-watchlist writes this file; local-api reads it
+// without requiring LOCAL_MINUTE_SNAPSHOT_FILE so `daemon + local-api` works out of the box.
+const DEFAULT_MINUTE_SNAPSHOT_FILE = path.join(__dirname, '..', 'outputs', 'local-minute-snapshots-watchlist-v2.jsonl');
 
 function readSampleDatasetSync() {
   const text = fs.readFileSync(SAMPLE_DATASET_PATH, 'utf8');
@@ -54,7 +57,7 @@ function createLocalApiServer(options = {}) {
   let cache = { datasetMtimeMs: -1, snapshotMtimeMs: -1, snapshotFile: null, t: 0, state: null };
 
   function getFreshState() {
-    const snapshotFile = explicitSnapshotFile || process.env.LOCAL_MINUTE_SNAPSHOT_FILE || null;
+    const snapshotFile = explicitSnapshotFile || process.env.LOCAL_MINUTE_SNAPSHOT_FILE || DEFAULT_MINUTE_SNAPSHOT_FILE;
     let snapshotMtimeMs = 0;
     if (snapshotFile) {
       try { snapshotMtimeMs = fs.statSync(snapshotFile).mtimeMs; } catch (_) { snapshotMtimeMs = 0; }
@@ -117,7 +120,7 @@ function createLocalApiServer(options = {}) {
 }
 
 function applyMinuteSnapshot(state, explicitSnapshotFile) {
-  const snapshotFile = explicitSnapshotFile || process.env.LOCAL_MINUTE_SNAPSHOT_FILE;
+  const snapshotFile = explicitSnapshotFile || process.env.LOCAL_MINUTE_SNAPSHOT_FILE || DEFAULT_MINUTE_SNAPSHOT_FILE;
   if (!snapshotFile) return state;
   let snapshot = null;
   try {

@@ -11,6 +11,7 @@ from fetcher.pipeline.real_watchlist import (
     build_watchlist_report,
     load_default_watchlist,
     run_watchlist_long_run,
+    update_sample_dataset_realtime,
     write_watchlist_outputs,
 )
 from fetcher.sources.csv_assets import LofMeta
@@ -38,7 +39,7 @@ def _payload(price: float | None = 1.0, iopv: float | None = 0.99, primary: str 
             price_attempts.append({"source": source, "elapsed_ms": 5, "error": "ConnectError"})
         price_block = {"name": "TEST", "price": price, "previous_close": price, "elapsed_ms": sum(a["elapsed_ms"] for a in price_attempts), "source": primary, "attempts": price_attempts}
     if nav_ok and iopv is not None:
-        nav_block: dict = {"name": "TEST", "iopv": iopv, "nav": iopv, "elapsed_ms": 10, "source": "fundgz", "estimate_time": "2026-06-19 10:34", "attempts": [{"source": "fundgz", "elapsed_ms": 10, "hit": True}]}
+        nav_block: dict = {"name": "TEST", "iopv": iopv, "nav": iopv, "nav_date": "2026-06-19", "elapsed_ms": 10, "source": "fundgz", "estimate_time": "2026-06-19 10:34", "attempts": [{"source": "fundgz", "elapsed_ms": 10, "hit": True}]}
     else:
         nav_block = {"source": "fundgz", "elapsed_ms": 10, "error": "nav_BlockedByEnv", "attempts": [{"source": "fundgz", "elapsed_ms": 10, "error": "BlockedByEnv"}]}
     return {"price": price_block, "nav": nav_block}
@@ -128,3 +129,71 @@ def test_run_watchlist_long_run_aggregates_stability(tmp_path, monkeypatch):
     assert summary["iterations"] == 3
     assert summary["stability_md"].endswith("backend-real-watchlist-stability-v2.md")
     assert summary["last_summary"]["target_count"] == 3
+
+
+def test_report_item_carries_nav_official_date():
+    metas = [_meta("161725")]
+    payloads = {"161725": _payload(primary="tencent_quote")}
+    report = build_watchlist_report(metas, payloads, ts="2026-06-19T10:31:00+08:00")
+    item = report["items"][0]
+    assert item["nav_official_date"] == "2026-06-19"
+    assert item["nav_official"] == item["iopv"]
+
+
+def test_update_sample_dataset_realtime_refreshes_nav_in_dataset(tmp_path):
+    # Simulate the BUG: dataset has a stale 6/18 nav_official, live price moved.
+    dataset_path = tmp_path / "sample-dataset.json"
+    dataset_path.write_text(
+        json.dumps(
+            {
+                "ts": "2026-06-18T10:31:00+08:00",
+                "lof_realtime": [
+                    {
+                        "code": "161725",
+                        "ts": "2026-06-18T10:31:00+08:00",
+                        "price": 0.8347,
+                        "iopv": 0.85,
+                        "premium": -0.018,
+                        "coverage": 1,
+                        "source_quality": "ok",
+                        "nav_official": 0.8487,
+                        "nav_official_date": "2026-06-17",
+                    }
+                ],
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+    metas = [_meta("161725")]
+    payloads = {"161725": _payload(price=0.527, iopv=0.5295, primary="tencent_quote")}
+    report = build_watchlist_report(metas, payloads, ts="2026-06-23T10:31:00+08:00")
+
+    updated = update_sample_dataset_realtime(report, dataset_path)
+    assert updated == 1
+
+    refreshed = json.loads(dataset_path.read_text(encoding="utf-8"))
+    row = refreshed["lof_realtime"][0]
+    # nav_official now follows the live fundgz NAV (dwjz), not the 6/17 placeholder
+    assert row["nav_official"] == 0.5295
+    assert row["nav_official_date"] == "2026-06-19"
+    assert row["price"] == 0.527
+    assert row["ts"] == "2026-06-23T10:31:00+08:00"
+    # premium_nav (computed downstream) would now be in-frame: (0.527-0.5295)/0.5295
+    premium_nav = round((row["price"] - row["nav_official"]) / row["nav_official"], 6)
+    assert abs(premium_nav) < 0.05
+
+
+def test_update_sample_dataset_realtime_skips_unknown_codes(tmp_path):
+    dataset_path = tmp_path / "sample-dataset.json"
+    dataset_path.write_text(
+        json.dumps({"lof_realtime": [{"code": "999999", "price": 1.0, "nav_official": 1.0}]}, ensure_ascii=False),
+        encoding="utf-8",
+    )
+    metas = [_meta("161725")]
+    payloads = {"161725": _payload(primary="tencent_quote")}
+    report = build_watchlist_report(metas, payloads, ts="2026-06-23T10:31:00+08:00")
+    updated = update_sample_dataset_realtime(report, dataset_path)
+    assert updated == 0
+    kept = json.loads(dataset_path.read_text(encoding="utf-8"))
+    assert kept["lof_realtime"][0]["nav_official"] == 1.0

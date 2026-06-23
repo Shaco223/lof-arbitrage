@@ -16,6 +16,7 @@ from fetcher.pipeline.real_watchlist import (
     fetch_watchlist_payloads,
     load_watchlist,
     run_watchlist_long_run,
+    update_sample_dataset_realtime,
     write_watchlist_outputs,
 )
 from fetcher.pipeline.holdings_refresh import (
@@ -73,6 +74,7 @@ def main(argv: Sequence[str] | None = None) -> None:
         payloads = fetch_watchlist_payloads(metas)
         report = build_watchlist_report(metas, payloads, ts=ts)
         files = write_watchlist_outputs(report, args.output_dir, args.snapshot_file)
+        update_sample_dataset_realtime(report)
         logger.info("real watchlist summary: {}", report["summary"])
         for name, path in files.items():
             logger.info("wrote real watchlist {} to {}", name, path)

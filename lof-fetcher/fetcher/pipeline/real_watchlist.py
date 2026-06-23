@@ -17,6 +17,13 @@ DEFAULT_REPORT_NAME = "backend-real-watchlist-report-v2.json"
 DEFAULT_LONG_RUN_NAME = "backend-real-watchlist-long-run-v2.json"
 DEFAULT_STABILITY_NAME = "backend-real-watchlist-stability-v2.md"
 DEFAULT_STABILITY_JSON = "backend-real-watchlist-stability-v2.json"
+DEFAULT_SAMPLE_DATASET = (
+    Path(__file__).resolve().parents[3] / "uniCloud-aliyun" / "tests" / "sample-dataset.json"
+)
+# Fields refreshed back into sample-dataset.lof_realtime so the local API computes
+# premium_nav with a NAV in the same time-frame as the live price (BUG fix:
+# previously nav_official stayed at the 6/18 static placeholder).
+REALTIME_REFRESH_KEYS = ("price", "iopv", "premium", "coverage", "source_quality", "nav_official", "nav_official_date")
 SECTION6_SNAPSHOT_KEYS = ("code", "price", "iopv", "premium", "coverage", "source_quality")
 # DEPRECATED (PRD 1.2.1): intraday IOPV-vs-(T-1) NAV drift no longer triggers
 # source_quality degradation. Kept only as a reference constant for callers/
@@ -98,6 +105,7 @@ def build_watchlist_report(
                 "price": price,
                 "iopv": iopv,
                 "nav_official": nav_official,
+                "nav_official_date": nav_payload.get("nav_date") or "",
                 "nav_drift_pct": nav_drift_pct,
                 "premium": premium,
                 "coverage": 1.0 if source_quality == "ok" else 0.0,
@@ -145,6 +153,43 @@ def write_watchlist_outputs(
     with jsonl_path.open("a", encoding="utf-8") as file:
         file.write(json.dumps(snapshot, ensure_ascii=False) + "\n")
     return {"report": report_path, "snapshot": jsonl_path}
+
+
+def update_sample_dataset_realtime(
+    report: dict[str, Any],
+    dataset_path: Path = DEFAULT_SAMPLE_DATASET,
+) -> int:
+    """Write fresh realtime values back into sample-dataset.lof_realtime.
+
+    The local API computes premium_nav = (price - nav_official) / nav_official.
+    Live price/iopv come from the JSONL snapshot, but nav_official used to stay
+    at the static 6/18 placeholder, making premium_nav wildly off. Here we push
+    the fundgz-derived nav_official (dwjz) + nav_official_date (jzrq) alongside
+    price/iopv/premium so premium_nav stays in the same time-frame as price.
+
+    Only codes present in both the report and the dataset get updated; others
+    keep their previous values. ?6 field names are unchanged (no CCR).
+    """
+    if not dataset_path.exists():
+        return 0
+    dataset = json.loads(dataset_path.read_text(encoding="utf-8"))
+    by_code = {item["code"]: item for item in report.get("items", [])}
+    ts = report.get("ts")
+    updated = 0
+    for row in dataset.get("lof_realtime", []):
+        item = by_code.get(row.get("code"))
+        if not item:
+            continue
+        if ts:
+            row["ts"] = ts
+        for key in REALTIME_REFRESH_KEYS:
+            if key in item and item[key] is not None:
+                row[key] = item[key]
+        updated += 1
+    dataset_path.write_text(
+        json.dumps(dataset, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+    )
+    return updated
 
 
 def run_watchlist_long_run(

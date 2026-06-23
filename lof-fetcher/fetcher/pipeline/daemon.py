@@ -39,6 +39,7 @@ from fetcher.pipeline.real_watchlist import (
     build_watchlist_report,
     fetch_watchlist_payloads,
     load_default_watchlist,
+    update_sample_dataset_realtime,
     write_watchlist_outputs,
 )
 from fetcher.scheduler import CN_TZ, is_trading_time
@@ -149,6 +150,10 @@ def run_daemon(
             report = build_watchlist_report(metas, payloads, ts=loop_ts)
             report = _escalate_consecutive_failures(report, failure_streak)
             write_watchlist_outputs(report, output_root, snapshot_path)
+            # Push fresh nav_official/nav_official_date (+price/iopv/premium) back into
+            # sample-dataset so the local API computes premium_nav with a NAV in the
+            # same time-frame as the live price (fixes premium_nav decoupling).
+            update_sample_dataset_realtime(report, dataset_path)
 
             if with_holdings:
                 need_full = (
