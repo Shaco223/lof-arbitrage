@@ -1,11 +1,14 @@
 ﻿from fetcher.pipeline.real_poc import build_poc_report, parse_realtime_source_payload
 from fetcher.sources.realtime_poc import (
+    _pick_fresher_nav,
     market_symbol,
     parse_eastmoney_kline_payload,
     parse_eastmoney_push2_payload,
     parse_fundgz_payload,
+    parse_sina_fund_nav_payload,
     parse_sina_payload,
     parse_tencent_quote_payload,
+    sina_fund_symbol,
 )
 
 
@@ -123,3 +126,31 @@ def test_parse_realtime_source_nav_drift_does_not_trigger_degraded():
     assert ok_item["nav_drift_pct"] is not None
     assert abs(ok_item["nav_drift_pct"]) < 0.01
     assert result["summary"]["degraded_count"] == 0
+
+
+def test_parse_sina_fund_nav_payload():
+    text = (
+        'var hq_str_fu_161725="招商中证白酒指数A,'
+        '14:15:00,0.5185,0.5289,2.2450,-0.0578,-1.9663,2026-06-23,0.5173,-2.1932";'
+    )
+    nav = parse_sina_fund_nav_payload(text)
+    assert nav["iopv"] == 0.5185
+    assert nav["nav"] == 0.5289
+    assert nav["nav_date"] == "2026-06-23"
+    assert nav["estimate_time"] == "2026-06-23 14:15:00"
+    assert sina_fund_symbol("161725") == "fu_161725"
+
+
+def test_pick_fresher_nav_prefers_newer_estimate_time():
+    sina = {"source": "sina_fund", "iopv": 0.5181, "nav": 0.5289, "estimate_time": "2026-06-23 14:28:00"}
+    fundgz = {"source": "fundgz", "iopv": 0.5173, "nav": 0.5289, "estimate_time": "2026-06-23 14:25"}
+    # sina newer -> sina wins
+    assert _pick_fresher_nav(sina, fundgz)["source"] == "sina_fund"
+    # fundgz newer -> fundgz wins
+    older_sina = dict(sina, estimate_time="2026-06-23 14:20:00")
+    assert _pick_fresher_nav(older_sina, fundgz)["source"] == "fundgz"
+    # single source available -> that source
+    assert _pick_fresher_nav(sina, None)["source"] == "sina_fund"
+    assert _pick_fresher_nav(None, fundgz)["source"] == "fundgz"
+    # both failed -> explicit error payload
+    assert _pick_fresher_nav(None, None)["error"] == "nav_all_sources_failed"

@@ -102,7 +102,7 @@ def test_block_nav_env_makes_source_degraded(monkeypatch):
         client.close()
     assert result["error"].startswith("nav_BlockedByEnv")
     assert "url" not in captured
-    assert result["source"] == "fundgz"
+    assert result["source"] == "sina_fund,fundgz"
 
 
 def test_block_price_env_makes_market_price_degraded(monkeypatch):

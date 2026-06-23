@@ -4,6 +4,7 @@ import json
 import os
 import re
 import time
+from datetime import datetime
 from dataclasses import dataclass
 from typing import Any
 
@@ -135,9 +136,37 @@ class RealTimePocClient:
     def _attempt_estimated_nav(self, code: str) -> tuple[dict[str, Any], list[dict[str, Any]]]:
         attempts: list[dict[str, Any]] = []
         if _is_blocked("LOF_POC_BLOCK_NAV"):
-            attempts.append({"source": "fundgz", "elapsed_ms": 0, "error": "BlockedByEnv"})
-            return ({"source": "fundgz", "elapsed_ms": 0, "error": "nav_BlockedByEnv"}, attempts)
+            for src in ("sina_fund", "fundgz"):
+                attempts.append({"source": src, "elapsed_ms": 0, "error": "BlockedByEnv"})
+            return ({"source": "sina_fund,fundgz", "elapsed_ms": 0, "error": "nav_BlockedByEnv"}, attempts)
 
+        # Probe both estimated-NAV sources, then pick the one with the FRESHER
+        # estimate_time. Both return the same metric (estimated NAV, NOT a real
+        # exchange IOPV); sina fu_ typically updates 2-4 min ahead of fundgz, so
+        # it usually wins, with fundgz as backup/fallback when either fails.
+        sina_payload = self._fetch_sina_fund_nav(code, attempts)
+        fundgz_payload = self._fetch_fundgz_nav(code, attempts)
+        return _pick_fresher_nav(sina_payload, fundgz_payload), attempts
+
+    def _fetch_sina_fund_nav(self, code: str, attempts: list[dict[str, Any]]) -> dict[str, Any] | None:
+        start = time.perf_counter()
+        try:
+            response = self._client.get(
+                f"https://hq.sinajs.cn/list={sina_fund_symbol(code)}",
+                headers={"Referer": "https://finance.sina.com.cn"},
+            )
+            elapsed_ms = elapsed_since_ms(start)
+            response.raise_for_status()
+            payload = parse_sina_fund_nav_payload(response.text)
+            payload.update({"source": "sina_fund", "elapsed_ms": elapsed_ms})
+            attempts.append({"source": "sina_fund", "elapsed_ms": elapsed_ms, "hit": True})
+            return payload
+        except (httpx.HTTPError, ValueError, json.JSONDecodeError) as exc:
+            elapsed_ms = elapsed_since_ms(start)
+            attempts.append({"source": "sina_fund", "elapsed_ms": elapsed_ms, "error": type(exc).__name__})
+            return None
+
+    def _fetch_fundgz_nav(self, code: str, attempts: list[dict[str, Any]]) -> dict[str, Any] | None:
         start = time.perf_counter()
         try:
             response = self._client.get(f"https://fundgz.1234567.com.cn/js/{code}.js?rt={int(time.time() * 1000)}")
@@ -146,12 +175,11 @@ class RealTimePocClient:
             payload = parse_fundgz_payload(response.text)
             payload.update({"source": "fundgz", "elapsed_ms": elapsed_ms})
             attempts.append({"source": "fundgz", "elapsed_ms": elapsed_ms, "hit": True})
-            return payload, attempts
+            return payload
         except (httpx.HTTPError, ValueError, json.JSONDecodeError) as exc:
             elapsed_ms = elapsed_since_ms(start)
-            err_label = type(exc).__name__
-            attempts.append({"source": "fundgz", "elapsed_ms": elapsed_ms, "error": err_label})
-            return ({"source": "fundgz", "elapsed_ms": elapsed_ms, "error": f"nav_{err_label}"}, attempts)
+            attempts.append({"source": "fundgz", "elapsed_ms": elapsed_ms, "error": type(exc).__name__})
+            return None
 
 
 def market_symbol(code: str) -> str:
@@ -219,6 +247,34 @@ def parse_eastmoney_kline_payload(text: str) -> dict[str, Any]:
     return {"symbol": symbol, "name": symbol, "price": price, "previous_close": None}
 
 
+def sina_fund_symbol(code: str) -> str:
+    return f"fu_{code}"
+
+
+def parse_sina_fund_nav_payload(text: str) -> dict[str, Any]:
+    # var hq_str_fu_161725="name,HH:MM:SS,est_nav,prev_nav,...,est_pct,date,...";
+    if '=\"' not in text:
+        raise ValueError("missing_sina_fund_payload")
+    payload = text.split('="', 1)[1].rsplit('"', 1)[0]
+    fields = payload.split(",")
+    if len(fields) < 8 or not fields[0]:
+        raise ValueError("missing_sina_fund_fields")
+    iopv = to_float(fields[2])
+    nav = to_float(fields[3])
+    if iopv is None or iopv <= 0:
+        raise ValueError("missing_estimated_nav")
+    nav_date = fields[7].strip() if len(fields) > 7 else ""
+    est_clock = fields[1].strip()
+    estimate_time = f"{nav_date} {est_clock}" if nav_date and est_clock else ""
+    return {
+        "name": fields[0],
+        "iopv": iopv,
+        "nav": nav,
+        "nav_date": nav_date,
+        "estimate_time": estimate_time,
+    }
+
+
 def parse_fundgz_payload(text: str) -> dict[str, Any]:
     match = re.search(r"jsonpgz\((.*)\);?", text.strip())
     if not match:
@@ -235,6 +291,41 @@ def parse_fundgz_payload(text: str) -> dict[str, Any]:
         "nav_date": raw.get("jzrq") or "",
         "estimate_time": raw.get("gztime") or "",
     }
+
+
+def _parse_nav_estimate_dt(value: str) -> datetime | None:
+    value = (value or "").strip()
+    if not value:
+        return None
+    for fmt in ("%Y-%m-%d %H:%M:%S", "%Y-%m-%d %H:%M"):
+        try:
+            return datetime.strptime(value, fmt)
+        except ValueError:
+            continue
+    return None
+
+
+def _pick_fresher_nav(
+    sina_payload: dict[str, Any] | None,
+    fundgz_payload: dict[str, Any] | None,
+) -> dict[str, Any]:
+    # Choose the estimated-NAV payload with the most recent estimate_time.
+    # If only one source succeeded, use it. If neither did, surface a combined
+    # error payload so the upstream failure_reason stays explicit.
+    candidates = [p for p in (sina_payload, fundgz_payload) if p is not None]
+    if not candidates:
+        return {"source": "sina_fund,fundgz", "elapsed_ms": 0, "error": "nav_all_sources_failed"}
+    if len(candidates) == 1:
+        return candidates[0]
+    sina_dt = _parse_nav_estimate_dt(str(sina_payload.get("estimate_time", "")))
+    fundgz_dt = _parse_nav_estimate_dt(str(fundgz_payload.get("estimate_time", "")))
+    if sina_dt is not None and fundgz_dt is not None:
+        return sina_payload if sina_dt >= fundgz_dt else fundgz_payload
+    if sina_dt is not None:
+        return sina_payload
+    if fundgz_dt is not None:
+        return fundgz_payload
+    return sina_payload
 
 
 def eastmoney_price(value: Any) -> float | None:
