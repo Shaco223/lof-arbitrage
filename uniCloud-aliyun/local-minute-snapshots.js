@@ -45,6 +45,11 @@ function normalizeSnapshotItem(item) {
   return {
     code: String(item.code),
     price: nullableNumber(item.price),
+    // Live market fields carried so the pure-JSONL read path (daemon not running)
+    // reflects the real source instead of stale sample placeholders. No-source
+    // values stay null (AC-P5) so the front-end hides them.
+    price_change_pct: nullableNumber(item.price_change_pct),
+    volume_amount: nullableNumber(item.volume_amount),
     iopv: nullableNumber(item.iopv),
     premium: nullableNumber(item.premium),
     coverage: nullableNumber(item.coverage),

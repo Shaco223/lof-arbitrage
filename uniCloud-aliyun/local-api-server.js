@@ -181,6 +181,12 @@ function applyMinuteSnapshot(state, explicitSnapshotFile) {
       coverage: item.coverage,
       source_quality: item.source_quality || 'degraded'
     };
+    // Live market fields (price_change_pct / volume_amount): overlay whenever the
+    // snapshot carries the key, including explicit null (AC-P5 no-source). This
+    // stops the pure-JSONL read path (daemon stopped) from leaking stale sample
+    // placeholders, mirroring the daemon REALTIME_OVERWRITE_NULL_KEYS behaviour.
+    if ('price_change_pct' in item) merged.price_change_pct = item.price_change_pct;
+    if ('volume_amount' in item) merged.volume_amount = item.volume_amount;
     // Overlay nav_official/nav_official_date IN THE SAME TIME-FRAME as price so
     // premium_nav = (price - nav_official)/nav_official is not computed from a
     // live price divided by a stale 6/17 sample NAV. Only overwrite when the

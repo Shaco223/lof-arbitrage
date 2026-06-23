@@ -82,7 +82,8 @@ def test_write_watchlist_outputs_writes_section6_only_jsonl(tmp_path):
     # premium_nav = (price - nav_official)/nav_official in the same time-frame
     # as price even on the pure-JSONL read path (daemon not running).
     assert set(snapshot["items"][0].keys()) == {
-        "code", "price", "iopv", "premium", "coverage", "source_quality",
+        "code", "price", "price_change_pct", "volume_amount",
+        "iopv", "premium", "coverage", "source_quality",
         "nav_official", "nav_official_date",
     }
     report_payload = json.loads(files["report"].read_text(encoding="utf-8"))
