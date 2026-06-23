@@ -48,7 +48,11 @@ function normalizeSnapshotItem(item) {
     iopv: nullableNumber(item.iopv),
     premium: nullableNumber(item.premium),
     coverage: nullableNumber(item.coverage),
-    source_quality: item.source_quality || 'ok'
+    source_quality: item.source_quality || 'ok',
+    // Carry nav_official/nav_official_date so premium_nav uses the SAME time-frame
+    // as price on the pure-JSONL read path (daemon not running).
+    nav_official: nullableNumber(item.nav_official),
+    nav_official_date: item.nav_official_date != null ? String(item.nav_official_date) : null
   };
 }
 

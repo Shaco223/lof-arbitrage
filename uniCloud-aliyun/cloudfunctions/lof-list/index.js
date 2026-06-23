@@ -115,9 +115,16 @@ function fillListItemDefaults(item) {
   return item;
 }
 
+// Sanity guard: when |premium_nav| exceeds this, price and nav_official are
+// almost certainly out of sync (live price vs stale NAV) rather than a real
+// arbitrage gap, so we degrade to null instead of showing e.g. +156% to users.
+const PREMIUM_NAV_SANITY_LIMIT = 0.5;
+
 function computePremiumNav(price, navOfficial) {
   if (price == null || navOfficial == null || navOfficial <= 0) return null;
-  return round6((price - navOfficial) / navOfficial);
+  const value = round6((price - navOfficial) / navOfficial);
+  if (Math.abs(value) > PREMIUM_NAV_SANITY_LIMIT) return null;
+  return value;
 }
 
 function computePremiumError(iopv, navOfficial) {

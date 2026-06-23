@@ -28,7 +28,12 @@ REALTIME_REFRESH_KEYS = ("price", "price_change_pct", "volume_amount", "iopv", "
 # source has no value we write explicit null (no stale placeholder), so the
 # front-end can hide them per AC-P5 instead of showing a frozen sample value.
 REALTIME_OVERWRITE_NULL_KEYS = ("price_change_pct", "volume_amount")
-SECTION6_SNAPSHOT_KEYS = ("code", "price", "iopv", "premium", "coverage", "source_quality")
+# Snapshot JSONL must carry nav_official/nav_official_date alongside price so the
+# local API computes premium_nav = (price - nav_official)/nav_official in the SAME
+# time-frame even on the pure-JSONL read path (daemon not running). Without these
+# the front-end divided a live price by the stale 6/17 sample nav -> +156% errors.
+SECTION6_SNAPSHOT_KEYS = ("code", "price", "iopv", "premium", "coverage", "source_quality",
+                          "nav_official", "nav_official_date")
 # DEPRECATED (PRD 1.2.1): intraday IOPV-vs-(T-1) NAV drift no longer triggers
 # source_quality degradation. Kept only as a reference constant for callers/
 # tests that still import it; NOT used in degradation logic anymore.

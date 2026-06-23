@@ -78,7 +78,13 @@ def test_write_watchlist_outputs_writes_section6_only_jsonl(tmp_path):
     files = write_watchlist_outputs(report, tmp_path, tmp_path / "snap.jsonl")
     snapshot = json.loads((tmp_path / "snap.jsonl").read_text(encoding="utf-8").strip())
     assert set(snapshot.keys()) == {"ts", "items"}
-    assert set(snapshot["items"][0].keys()) == {"code", "price", "iopv", "premium", "coverage", "source_quality"}
+    # nav_official/nav_official_date are carried so the local API computes
+    # premium_nav = (price - nav_official)/nav_official in the same time-frame
+    # as price even on the pure-JSONL read path (daemon not running).
+    assert set(snapshot["items"][0].keys()) == {
+        "code", "price", "iopv", "premium", "coverage", "source_quality",
+        "nav_official", "nav_official_date",
+    }
     report_payload = json.loads(files["report"].read_text(encoding="utf-8"))
     assert report_payload["summary"]["target_count"] == 1
 

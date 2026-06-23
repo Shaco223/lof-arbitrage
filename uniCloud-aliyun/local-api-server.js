@@ -172,7 +172,7 @@ function applyMinuteSnapshot(state, explicitSnapshotFile) {
   state.lof_realtime = (state.lof_realtime || []).map((row) => {
     const item = byCode.get(String(row.code));
     if (!item) return row;
-    return {
+    const merged = {
       ...row,
       ts: snapshot.ts,
       price: item.price,
@@ -181,6 +181,18 @@ function applyMinuteSnapshot(state, explicitSnapshotFile) {
       coverage: item.coverage,
       source_quality: item.source_quality || 'degraded'
     };
+    // Overlay nav_official/nav_official_date IN THE SAME TIME-FRAME as price so
+    // premium_nav = (price - nav_official)/nav_official is not computed from a
+    // live price divided by a stale 6/17 sample NAV. Only overwrite when the
+    // snapshot actually carries a value (older snapshots without these keys keep
+    // the dataset value rather than wiping it).
+    if (item.nav_official !== undefined && item.nav_official !== null) {
+      merged.nav_official = item.nav_official;
+    }
+    if (item.nav_official_date !== undefined && item.nav_official_date !== null) {
+      merged.nav_official_date = item.nav_official_date;
+    }
+    return merged;
   });
   return state;
 }

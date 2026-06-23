@@ -56,8 +56,10 @@ def test_daemon_collects_every_tick_during_trading_hours(tmp_path):
     assert summary["error_iterations"] == 0
     rows = [json.loads(l) for l in snap.read_text(encoding="utf-8").strip().splitlines()]
     assert len(rows) == 3
-    assert all(set(r["items"][0].keys()) == {"code", "price", "iopv", "premium", "coverage", "source_quality"}
-               for r in rows)
+    assert all(set(r["items"][0].keys()) == {
+        "code", "price", "iopv", "premium", "coverage", "source_quality",
+        "nav_official", "nav_official_date",
+    } for r in rows)
 
 
 def test_daemon_sleeps_and_does_not_collect_outside_trading_hours(tmp_path):
