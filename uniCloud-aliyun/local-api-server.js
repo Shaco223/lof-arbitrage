@@ -11,10 +11,37 @@ const SAMPLE_DATASET_PATH = path.join(__dirname, 'tests', 'sample-dataset.json')
 // Unified default: daemon/real-watchlist writes this file; local-api reads it
 // without requiring LOCAL_MINUTE_SNAPSHOT_FILE so `daemon + local-api` works out of the box.
 const DEFAULT_MINUTE_SNAPSHOT_FILE = path.join(__dirname, '..', 'outputs', 'local-minute-snapshots-watchlist-v2.jsonl');
+// Real daily history sedimentation (PRD M3.9). When present, lof-history
+// reads these real rows from the mock DB instead of buildFallbackHistory.
+const DEFAULT_HISTORY_FILE = path.join(__dirname, '..', 'outputs', 'local-history-daily-v2.jsonl');
 
 function readSampleDatasetSync() {
   const text = fs.readFileSync(SAMPLE_DATASET_PATH, 'utf8');
   return JSON.parse(text);
+}
+
+function loadRealHistoryRows(historyFile) {
+  // Read the real daily-history JSONL sedimentation (PRD M3.9). Returns [] when
+  // the file is missing/empty/corrupt so callers fall back to sample history.
+  if (!historyFile) return [];
+  let text;
+  try {
+    text = fs.readFileSync(historyFile, 'utf8');
+  } catch (_) {
+    return [];
+  }
+  const rows = [];
+  for (const line of text.split(/\r?\n/)) {
+    const trimmed = line.trim();
+    if (!trimmed) continue;
+    try {
+      const row = JSON.parse(trimmed);
+      if (row && row.code && row.date) rows.push(row);
+    } catch (_) {
+      // skip malformed line
+    }
+  }
+  return rows;
 }
 
 const DEFAULT_PORT = 8787;
@@ -54,13 +81,19 @@ function createLocalApiServer(options = {}) {
   process.env.UNICLOUD_INGEST_TOKEN = token;
   process.env.MAX_INGEST_BATCH_SIZE = maxBatchSize;
 
-  let cache = { datasetMtimeMs: -1, snapshotMtimeMs: -1, snapshotFile: null, t: 0, state: null };
+  const explicitHistoryFile = options.historyFile;
+  let cache = { datasetMtimeMs: -1, snapshotMtimeMs: -1, snapshotFile: null, historyMtimeMs: -1, historyFile: null, t: 0, state: null };
 
   function getFreshState() {
     const snapshotFile = explicitSnapshotFile || process.env.LOCAL_MINUTE_SNAPSHOT_FILE || DEFAULT_MINUTE_SNAPSHOT_FILE;
     let snapshotMtimeMs = 0;
     if (snapshotFile) {
       try { snapshotMtimeMs = fs.statSync(snapshotFile).mtimeMs; } catch (_) { snapshotMtimeMs = 0; }
+    }
+    const historyFile = explicitHistoryFile || process.env.LOCAL_HISTORY_FILE || DEFAULT_HISTORY_FILE;
+    let historyMtimeMs = 0;
+    if (historyFile) {
+      try { historyMtimeMs = fs.statSync(historyFile).mtimeMs; } catch (_) { historyMtimeMs = 0; }
     }
     let datasetMtimeMs = 0;
     if (!explicitDataset) {
@@ -72,13 +105,17 @@ function createLocalApiServer(options = {}) {
       cache.snapshotFile === snapshotFile &&
       cache.snapshotMtimeMs === snapshotMtimeMs &&
       cache.datasetMtimeMs === datasetMtimeMs &&
+      cache.historyFile === historyFile &&
+      cache.historyMtimeMs === historyMtimeMs &&
       (now - cache.t) < STATE_CACHE_TTL_MS
     ) {
       return { state: cache.state, fresh: false };
     }
     const baseDataset = explicitDataset || readSampleDatasetSync();
     const state = applyMinuteSnapshot(clone(baseDataset), snapshotFile);
-    cache = { datasetMtimeMs, snapshotMtimeMs, snapshotFile, t: now, state };
+    const realHistory = loadRealHistoryRows(historyFile);
+    if (realHistory.length) state.lof_history = realHistory;
+    cache = { datasetMtimeMs, snapshotMtimeMs, snapshotFile, historyMtimeMs, historyFile, t: now, state };
     return { state, fresh: true };
   }
 

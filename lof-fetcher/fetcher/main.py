@@ -22,6 +22,7 @@ from fetcher.pipeline.real_watchlist import (
 from fetcher.pipeline.holdings_refresh import (
     run_holdings_refresh,
 )
+from fetcher.pipeline.history_backfill import DEFAULT_HISTORY_FILE, run_history_backfill
 from fetcher.pipeline.daemon import run_daemon
 from fetcher.pipeline import process_control as pc
 from fetcher.pipeline.retry_trace import build_retry_trace_samples
@@ -114,6 +115,24 @@ def main(argv: Sequence[str] | None = None) -> None:
         logger.info("daemon stopped summary: {}", summary)
         return
 
+    if args.command == "history-backfill":
+        metas = load_watchlist(args.watchlist)
+        codes = [m.code for m in metas]
+        history_path = args.history_file or (args.output_dir / DEFAULT_HISTORY_FILE)
+        summary = run_history_backfill(codes, history_path, limit=args.limit)
+        logger.info(
+            "history backfill: {} records across {} codes ({} with 30d pctile) -> {}",
+            summary["total_records"], summary["target_count"], summary["codes_with_pctile"], summary["history_file"],
+        )
+        for entry in summary["per_code"]:
+            logger.info(
+                "  {} close={} nav={} trading_days={} valid_premium={} {}",
+                entry["code"], entry["close_source"] or "MISS", entry["nav_source"] or "MISS",
+                entry["trading_days"], entry["valid_premium_days"],
+                (entry["close_error"] or entry["nav_error"] or ""),
+            )
+        return
+
     if args.command == "ac-evidence":
         files = build_retry_trace_samples(args.output_dir)
         quota_path = write_quota_report(args.output_dir / "backend-ac-s1-quota-estimate-v2.json")
@@ -198,6 +217,17 @@ def _build_parser() -> argparse.ArgumentParser:
                         help="gracefully stop a running daemon and exit")
     daemon.add_argument("--stop-timeout", type=float, default=30.0,
                         help="seconds to wait for graceful stop before force terminate")
+
+    history = subparsers.add_parser(
+        "history-backfill",
+        help="backfill real daily history (eastmoney/tencent kline + ttjj LSJZ) with 30d percentile",
+    )
+    history.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT_DIR)
+    history.add_argument("--watchlist", type=Path, default=DEFAULT_WATCHLIST_PATH)
+    history.add_argument("--history-file", type=Path, default=None,
+                         help="JSONL sedimentation file; default outputs/local-history-daily-v2.jsonl")
+    history.add_argument("--limit", type=int, default=60,
+                         help="max trading days fetched per source (>=30 recommended)")
 
     evidence = subparsers.add_parser("ac-evidence", help="write AC-C2 retry trace and AC-S1 quota estimate")
     evidence.add_argument("--output-dir", type=Path, default=Path("../outputs"))
