@@ -175,7 +175,9 @@ def parse_tencent_quote_payload(text: str) -> dict[str, Any]:
     previous_close = to_float(fields[4])
     if price is None or price <= 0:
         raise ValueError("missing_market_price")
-    return {"symbol": fields[2], "name": fields[1], "price": price, "previous_close": previous_close}
+    # field[37] is turnover amount (in 10k CNY); absent on some quotes -> null.
+    volume_amount = to_float(fields[37]) if len(fields) > 37 else None
+    return {"symbol": fields[2], "name": fields[1], "price": price, "previous_close": previous_close, "volume_amount": volume_amount}
 
 def parse_sina_payload(symbol: str, text: str) -> dict[str, Any]:
     if '=\"' not in text:

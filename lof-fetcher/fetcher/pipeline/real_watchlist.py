@@ -23,7 +23,11 @@ DEFAULT_SAMPLE_DATASET = (
 # Fields refreshed back into sample-dataset.lof_realtime so the local API computes
 # premium_nav with a NAV in the same time-frame as the live price (BUG fix:
 # previously nav_official stayed at the 6/18 static placeholder).
-REALTIME_REFRESH_KEYS = ("price", "iopv", "premium", "coverage", "source_quality", "nav_official", "nav_official_date")
+REALTIME_REFRESH_KEYS = ("price", "price_change_pct", "volume_amount", "iopv", "premium", "coverage", "source_quality", "nav_official", "nav_official_date")
+# Live market fields that MUST reflect the real source on every refresh: when the
+# source has no value we write explicit null (no stale placeholder), so the
+# front-end can hide them per AC-P5 instead of showing a frozen sample value.
+REALTIME_OVERWRITE_NULL_KEYS = ("price_change_pct", "volume_amount")
 SECTION6_SNAPSHOT_KEYS = ("code", "price", "iopv", "premium", "coverage", "source_quality")
 # DEPRECATED (PRD 1.2.1): intraday IOPV-vs-(T-1) NAV drift no longer triggers
 # source_quality degradation. Kept only as a reference constant for callers/
@@ -69,6 +73,14 @@ def build_watchlist_report(
         item_elapsed = int(price_payload.get("elapsed_ms") or 0) + int(nav_payload.get("elapsed_ms") or 0)
         elapsed_total_ms += item_elapsed
         price = _number_or_none(price_payload.get("price"))
+        previous_close = _number_or_none(price_payload.get("previous_close"))
+        # price_change_pct uses the already-parsed previous_close (no extra request).
+        price_change_pct = (
+            round(price / previous_close - 1, 6)
+            if price is not None and previous_close is not None and previous_close > 0
+            else None
+        )
+        volume_amount = _number_or_none(price_payload.get("volume_amount"))
         iopv = _number_or_none(nav_payload.get("iopv"))
         nav_official = _number_or_none(nav_payload.get("nav"))
         premium = (
@@ -103,6 +115,8 @@ def build_watchlist_report(
                 "status": meta.status,
                 "scale_yi": meta.scale_yi,
                 "price": price,
+                "price_change_pct": price_change_pct,
+                "volume_amount": volume_amount,
                 "iopv": iopv,
                 "nav_official": nav_official,
                 "nav_official_date": nav_payload.get("nav_date") or "",
@@ -183,7 +197,12 @@ def update_sample_dataset_realtime(
         if ts:
             row["ts"] = ts
         for key in REALTIME_REFRESH_KEYS:
-            if key in item and item[key] is not None:
+            if key not in item:
+                continue
+            # Live fields always reflect the real source (null if unavailable);
+            # other fields keep their previous value on a transient null so we
+            # never wipe good data (e.g. nav_official on a one-off fundgz miss).
+            if item[key] is not None or key in REALTIME_OVERWRITE_NULL_KEYS:
                 row[key] = item[key]
         updated += 1
     dataset_path.write_text(

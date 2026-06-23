@@ -37,7 +37,7 @@ def _payload(price: float | None = 1.0, iopv: float | None = 0.99, primary: str 
                 price_attempts.append({"source": source, "elapsed_ms": 8, "hit": True})
                 break
             price_attempts.append({"source": source, "elapsed_ms": 5, "error": "ConnectError"})
-        price_block = {"name": "TEST", "price": price, "previous_close": price, "elapsed_ms": sum(a["elapsed_ms"] for a in price_attempts), "source": primary, "attempts": price_attempts}
+        price_block = {"name": "TEST", "price": price, "previous_close": round(price * 1.01, 6), "volume_amount": 1234.5, "elapsed_ms": sum(a["elapsed_ms"] for a in price_attempts), "source": primary, "attempts": price_attempts}
     if nav_ok and iopv is not None:
         nav_block: dict = {"name": "TEST", "iopv": iopv, "nav": iopv, "nav_date": "2026-06-19", "elapsed_ms": 10, "source": "fundgz", "estimate_time": "2026-06-19 10:34", "attempts": [{"source": "fundgz", "elapsed_ms": 10, "hit": True}]}
     else:
@@ -197,3 +197,59 @@ def test_update_sample_dataset_realtime_skips_unknown_codes(tmp_path):
     assert updated == 0
     kept = json.loads(dataset_path.read_text(encoding="utf-8"))
     assert kept["lof_realtime"][0]["nav_official"] == 1.0
+
+
+def test_report_item_computes_price_change_pct_and_volume_amount():
+    metas = [_meta("161725")]
+    payloads = {"161725": _payload(price=1.0, primary="tencent_quote")}
+    report = build_watchlist_report(metas, payloads, ts="2026-06-23T13:31:00+08:00")
+    item = report["items"][0]
+    # previous_close = 1.0 * 1.01 = 1.01 -> change pct = 1/1.01 - 1
+    assert item["price_change_pct"] == round(1.0 / 1.01 - 1, 6)
+    assert item["volume_amount"] == 1234.5
+
+
+def test_price_change_pct_null_when_previous_close_missing():
+    metas = [_meta("161725")]
+    payloads = {"161725": _payload(price=1.0, primary="tencent_quote")}
+    # drop previous_close from the price block
+    payloads["161725"]["price"].pop("previous_close")
+    payloads["161725"]["price"].pop("volume_amount")
+    report = build_watchlist_report(metas, payloads, ts="2026-06-23T13:31:00+08:00")
+    item = report["items"][0]
+    assert item["price_change_pct"] is None
+    assert item["volume_amount"] is None
+
+
+def test_update_dataset_writes_explicit_null_for_live_fields(tmp_path):
+    dataset_path = tmp_path / "sample-dataset.json"
+    dataset_path.write_text(
+        json.dumps(
+            {
+                "lof_realtime": [
+                    {
+                        "code": "161725",
+                        "price": 0.83,
+                        "price_change_pct": -0.0149,
+                        "volume_amount": 4280.6,
+                        "nav_official": 0.8487,
+                    }
+                ]
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+    metas = [_meta("161725")]
+    payloads = {"161725": _payload(price=1.0, primary="tencent_quote")}
+    # source has no volume_amount / previous_close this tick
+    payloads["161725"]["price"].pop("previous_close")
+    payloads["161725"]["price"].pop("volume_amount")
+    report = build_watchlist_report(metas, payloads, ts="2026-06-23T13:31:00+08:00")
+    update_sample_dataset_realtime(report, dataset_path)
+    row = json.loads(dataset_path.read_text(encoding="utf-8"))["lof_realtime"][0]
+    # live fields explicitly nulled (no stale placeholder)
+    assert row["price_change_pct"] is None
+    assert row["volume_amount"] is None
+    # nav_official kept (transient null must not wipe good data) ? here nav present so updated
+    assert row["price"] == 1.0
