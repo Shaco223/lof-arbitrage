@@ -15,7 +15,10 @@ Robustness (Plan A minimum):
   - whole-iteration exception -> caught, logged, wait for next tick, no crash.
   - console/log shows each iteration time + ok/degraded/stale counts.
 
-Not in scope (added at go-live): PID management, auto-start, log rotation.
+Go-live robustness (this revision): single-instance PID file with command-
+line/create-time verification (Windows PID-reuse safe), graceful --stop via
+a stop-flag file, --status query, and rotating file logging. OS-level
+auto-start on boot is still out of scope (documented in the runbook).
 """
 from __future__ import annotations
 
@@ -42,12 +45,17 @@ from fetcher.pipeline.real_watchlist import (
     update_sample_dataset_realtime,
     write_watchlist_outputs,
 )
+from fetcher.pipeline import process_control as pc
 from fetcher.scheduler import CN_TZ, is_trading_time
 from fetcher.sources.csv_assets import LofMeta
 
 DEFAULT_TRADING_INTERVAL_SECONDS = 60.0
 DEFAULT_IDLE_INTERVAL_SECONDS = 300.0
 DEFAULT_HOLDINGS_REFRESH_SECONDS = 3600.0
+DEFAULT_LOG_FILE = Path("logs/daemon.log")
+DEFAULT_LOG_ROTATION = "10 MB"
+DEFAULT_LOG_RETENTION = 7
+DEFAULT_STOP_POLL_SECONDS = 1.0
 
 
 def _now() -> datetime:
@@ -82,6 +90,30 @@ def _escalate_consecutive_failures(
     return report
 
 
+def _add_file_log_sink(
+    log_file: Path,
+    *,
+    rotation: str = DEFAULT_LOG_ROTATION,
+    retention: int = DEFAULT_LOG_RETENTION,
+) -> int | None:
+    """Add a rotating file sink to loguru (console sink is left intact).
+
+    Returns the sink id so the caller can remove it on exit; None if disabled.
+    """
+    if log_file is None:
+        return None
+    log_path = Path(log_file)
+    log_path.parent.mkdir(parents=True, exist_ok=True)
+    return logger.add(
+        str(log_path),
+        rotation=rotation,
+        retention=retention,
+        enqueue=True,
+        encoding="utf-8",
+        level="INFO",
+    )
+
+
 def run_daemon(
     *,
     metas: list[LofMeta] | None = None,
@@ -93,6 +125,11 @@ def run_daemon(
     holdings_refresh_seconds: float = DEFAULT_HOLDINGS_REFRESH_SECONDS,
     with_holdings: bool = True,
     max_iterations: int | None = None,
+    pid_file: Path | None = pc.DEFAULT_PID_FILE,
+    stop_file: Path | None = pc.DEFAULT_STOP_FILE,
+    log_file: Path | None = DEFAULT_LOG_FILE,
+    enforce_singleton: bool = True,
+    stop_poll_seconds: float = DEFAULT_STOP_POLL_SECONDS,
     sleeper: Callable[[float], None] | None = None,
     now: Callable[[], datetime] | None = None,
     trading_check: Callable[[datetime], bool] | None = None,
@@ -113,6 +150,26 @@ def run_daemon(
     snapshot_path = Path(snapshot_file) if snapshot_file else output_root / DEFAULT_SNAPSHOT_NAME
     snapshot_path.parent.mkdir(parents=True, exist_ok=True)
 
+    # --- Single-instance enforcement (avoids the repeatedly-hit stale-process
+    # bug where an old daemon keeps writing the JSONL the front-end reads). ---
+    if enforce_singleton and pid_file is not None:
+        existing = pc.read_pid_file(pid_file)
+        if pc.is_running(existing):
+            raise RuntimeError(
+                f"daemon already running (pid={existing.pid}, started_at={existing.started_at}); "
+                f"use 'daemon --stop' or 'daemon --status' first"
+            )
+        # Stale pid file from a crashed/killed process: clear it and continue.
+        pc.clear_pid_file(pid_file)
+    # A leftover stop flag from a previous run must not stop us immediately.
+    if stop_file is not None:
+        pc.clear_stop_flag(stop_file)
+
+    log_sink_id = _add_file_log_sink(log_file) if log_file is not None else None
+    if pid_file is not None:
+        pc.write_pid_file(pid_file, snapshot_file=str(snapshot_path))
+
+    stopped_by_flag = False
     failure_streak: dict[str, int] = {}
     cached_holdings: list[dict[str, Any]] | None = None
     cached_per_lof: list[dict[str, Any]] | None = None
@@ -128,8 +185,32 @@ def run_daemon(
         len(metas), trading_interval_seconds, idle_interval_seconds,
     )
 
+    def _sleep_or_stop(seconds: float) -> bool:
+        # Sleep in small slices so a stop flag is honored within ~stop_poll_seconds
+        # instead of waiting the full 60s tick. Returns True if a stop was seen.
+        if stop_file is None:
+            sleeper(seconds)
+            return False
+        remaining = seconds
+        slice_s = max(0.0, min(stop_poll_seconds, seconds)) if seconds > 0 else 0.0
+        if slice_s <= 0:
+            sleeper(seconds)
+            return pc.stop_requested(stop_file)
+        while remaining > 0:
+            step = min(slice_s, remaining)
+            sleeper(step)
+            remaining -= step
+            if pc.stop_requested(stop_file):
+                return True
+        return False
+
     total_iterations = 0
-    while True:
+    try:
+      while True:
+        if stop_file is not None and pc.stop_requested(stop_file):
+            stopped_by_flag = True
+            logger.info("stop flag detected -> graceful shutdown")
+            break
         moment = now_fn()
         trading = trading_fn(moment)
         if not trading:
@@ -141,7 +222,9 @@ def run_daemon(
             total_iterations += 1
             if max_iterations is not None and total_iterations >= max_iterations:
                 break
-            sleeper(max(0.0, idle_interval_seconds))
+            if _sleep_or_stop(max(0.0, idle_interval_seconds)):
+                stopped_by_flag = True
+                break
             continue
 
         try:
@@ -190,7 +273,19 @@ def run_daemon(
         total_iterations += 1
         if max_iterations is not None and total_iterations >= max_iterations:
             break
-        sleeper(max(0.0, trading_interval_seconds))
+        if _sleep_or_stop(max(0.0, trading_interval_seconds)):
+            stopped_by_flag = True
+            break
+    finally:
+        if pid_file is not None:
+            pc.clear_pid_file(pid_file)
+        if stop_file is not None:
+            pc.clear_stop_flag(stop_file)
+        if log_sink_id is not None:
+            try:
+                logger.remove(log_sink_id)
+            except Exception:
+                pass
 
     ended_at = now_fn()
     return {
@@ -202,4 +297,5 @@ def run_daemon(
         "error_iterations": error_iterations,
         "snapshot_file": str(snapshot_path),
         "last_summary": last_summary,
+        "stopped_by_flag": stopped_by_flag,
     }

@@ -1,0 +1,5 @@
+# daemon runtime artifacts (go-live robustness): never commit
+logs/
+*.log
+daemon.pid
+daemon.stop

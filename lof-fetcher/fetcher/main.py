@@ -23,6 +23,7 @@ from fetcher.pipeline.holdings_refresh import (
     run_holdings_refresh,
 )
 from fetcher.pipeline.daemon import run_daemon
+from fetcher.pipeline import process_control as pc
 from fetcher.pipeline.retry_trace import build_retry_trace_samples
 from fetcher.pipeline.snapshot import write_sample_outputs
 from fetcher.sources.csv_assets import load_benchmark_mapping
@@ -91,6 +92,14 @@ def main(argv: Sequence[str] | None = None) -> None:
         return
 
     if args.command == "daemon":
+        if args.status:
+            info = pc.status(args.pid_file)
+            logger.info("daemon status: {}", info)
+            return
+        if args.stop:
+            result = pc.stop_daemon(args.pid_file, args.stop_file, timeout_seconds=args.stop_timeout)
+            logger.info("daemon stop result: {}", result)
+            return
         summary = run_daemon(
             output_dir=args.output_dir,
             snapshot_file=args.snapshot_file,
@@ -98,6 +107,9 @@ def main(argv: Sequence[str] | None = None) -> None:
             idle_interval_seconds=args.idle_interval_seconds,
             with_holdings=not args.no_holdings,
             max_iterations=args.max_iterations if args.max_iterations and args.max_iterations > 0 else None,
+            pid_file=args.pid_file,
+            stop_file=args.stop_file,
+            log_file=args.log_file,
         )
         logger.info("daemon stopped summary: {}", summary)
         return
@@ -174,6 +186,18 @@ def _build_parser() -> argparse.ArgumentParser:
                         help="skip per-minute holdings change-pct overlay")
     daemon.add_argument("--max-iterations", type=int, default=0,
                         help="TEST ONLY: stop after N loop ticks (0=unbounded)")
+    daemon.add_argument("--pid-file", type=Path, default=pc.DEFAULT_PID_FILE,
+                        help="PID file for single-instance enforcement (default outputs/daemon.pid)")
+    daemon.add_argument("--stop-file", type=Path, default=pc.DEFAULT_STOP_FILE,
+                        help="stop-flag file polled by the running daemon (default outputs/daemon.stop)")
+    daemon.add_argument("--log-file", type=Path, default=Path("logs/daemon.log"),
+                        help="rotating file log sink (default logs/daemon.log; console kept)")
+    daemon.add_argument("--status", action="store_true",
+                        help="report whether a daemon is running (PID + start time) and exit")
+    daemon.add_argument("--stop", action="store_true",
+                        help="gracefully stop a running daemon and exit")
+    daemon.add_argument("--stop-timeout", type=float, default=30.0,
+                        help="seconds to wait for graceful stop before force terminate")
 
     evidence = subparsers.add_parser("ac-evidence", help="write AC-C2 retry trace and AC-S1 quota estimate")
     evidence.add_argument("--output-dir", type=Path, default=Path("../outputs"))

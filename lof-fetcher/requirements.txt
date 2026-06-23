@@ -4,3 +4,4 @@ pandas>=2.2,<3
 loguru>=0.7,<1
 pydantic-settings>=2.4,<3
 pytest>=8,<9
+psutil>=5.9,<8  # optional: daemon PID reuse / terminate fallback
