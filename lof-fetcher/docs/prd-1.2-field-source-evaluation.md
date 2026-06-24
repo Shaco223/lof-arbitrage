@@ -26,6 +26,11 @@
 | `subscribe_limit_amount` | `fundmob_basic` 申购额度文案解析 | 限大额带数字时可解析（50万/2万/20万）；开放/无数字/哨兵 1000亿→null | ✅ 部分真实值（无数字时 null，单位元） |
 | `subscribe_limit_period` | 同上文案解析 | 「单日累计」→ day | ✅ 部分真实值（无额度时 null） |
 
+| `shares_onexchange` | 集思录「实时数据-LOF」`amount` | 30/30 可得、日更、不进分钟快照；全量需登录 Cookie（游客仅前 20 条），有反爬限频风险（探测 68fc269 / PRD 1.4） | ✅ 真实值（需 Cookie；单位万份；无源 null） |
+| `shares_incr_daily` | 集思录「实时数据-LOF」`amount_incr` | 同上 | ✅ 真实值（需 Cookie；单位万份；无源 null） |
+| `purchase_confirm_day` | 东财 `jjfl` 场外申购合同买入确认日 | 6/7 可得（160216=T+2、501203 缺）；静态规则、日更或更低频；属确认日参考、非到账可卖日（PRD 1.4） | ✅ 真实值（缺则 null） |
+| `redeem_confirm_day` | 东财 `jjfl` 场外赎回合同卖出确认日 | 同上 | ✅ 真实值（缺则 null） |
+
 ## 二、本期返回 `null` / `unknown` 的字段（免费源不稳定）
 
 | 字段 | 候选源 | 评估结论 | 本期返回 |
