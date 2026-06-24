@@ -31,11 +31,6 @@ const coverage = computed(() => detail.value?.realtime.coverage ?? 0)
 const coverageClass = computed(() => `coverage-${coverageLevel(coverage.value)}`)
 const coverageText = computed(() => coverageLevelLabel(coverageLevel(coverage.value)))
 
-const maxPctileLabel = computed(() => {
-  const pctile = detail.value?.pctile_30d
-  return pctile === undefined ? '--' : `${Math.round(pctile * 100)} 分位`
-})
-
 // 涨跌幅 / 成交额可能在 realtime 子对象，前端做一次兜底
 const priceChangePct = computed(() => {
   const d = detail.value
@@ -280,10 +275,9 @@ onLoad((q: Record<string, string> | undefined) => {
     <view class="card history-card" v-if="history">
       <view class="section-head">
         <view class="section-title">收盘价 / 披露净值 / 溢价历史</view>
-        <view class="pctile-box">溢价分位 {{ maxPctileLabel }}</view>
       </view>
       <view v-if="latestHistory" class="history-summary">
-        最近交易日 {{ latestHistory.date }}：收盘溢价 {{ fmtPct(latestHistory.premium_close, 2) }}，历史分位 {{ fmtPct(latestHistory.premium_pctile_30d, 0) }}
+        最近交易日 {{ latestHistory.date }}：收盘溢价 {{ fmtPct(latestHistory.premium_close, 2) }}
       </view>
       <view class="hist-head">
         <text class="hist-date">日期</text>
@@ -292,7 +286,6 @@ onLoad((q: Record<string, string> | undefined) => {
         <text class="hist-num">收盘溢价</text>
         <text class="hist-num">预估溢价</text>
         <text class="hist-num">偏差</text>
-        <text class="hist-num">分位</text>
       </view>
       <view class="hist-row" v-for="row in historyRows" :key="row.date">
         <text class="hist-date">{{ row.date }}</text>
@@ -310,7 +303,6 @@ onLoad((q: Record<string, string> | undefined) => {
           class="hist-num"
           :class="shouldRender(row.premium_deviation) ? ((row.premium_deviation ?? 0) >= 0 ? 'text-up' : 'text-down') : ''"
         >{{ shouldRender(row.premium_deviation) ? fmtPctSigned(row.premium_deviation, 2) : '--' }}</text>
-        <text class="hist-num">{{ shouldRender(row.premium_pctile_30d) ? fmtPct(row.premium_pctile_30d, 0) : '--' }}</text>
       </view>
     </view>
 
@@ -391,10 +383,9 @@ onLoad((q: Record<string, string> | undefined) => {
 
 .section-head { display: flex; align-items: center; justify-content: space-between; }
 .section-title { font-size: 30rpx; font-weight: 600; color: #1f2d3d; margin-bottom: 8rpx; }
-.pctile-box { background: #edf2fc; color: #409eff; padding: 8rpx 16rpx; border-radius: 999rpx; font-size: 24rpx; }
 .history-summary { margin: 4rpx 0 12rpx; color: #606266; font-size: 24rpx; }
 /* 历史逐日列表（代替原折线图 + 溢价柱） */
-.hist-head, .hist-row { display: grid; grid-template-columns: 1.15fr 0.9fr 0.9fr 1fr 1fr 0.9fr 0.75fr; gap: 6rpx; padding: 12rpx 0; align-items: center; font-size: 22rpx; }
+.hist-head, .hist-row { display: grid; grid-template-columns: 1.2fr 1fr 1fr 1.05fr 1.05fr 0.95fr; gap: 8rpx; padding: 12rpx 0; align-items: center; font-size: 22rpx; }
 .hist-head { color: #909399; border-bottom: 1rpx solid #ebeef5; }
 .hist-row { border-top: 1rpx solid #f0f2f5; color: #606266; }
 .hist-row:first-of-type { border-top: 0; }

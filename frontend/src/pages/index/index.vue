@@ -80,6 +80,16 @@ function showLowLiquidity(item: LofListItem): boolean {
   return isLowLiquidity(item.code)
 }
 
+// PRD 1.3：Dashboard 仅在代码旁显示一个简短申购限制标记（不挤额度数字，详情页看具体额度）
+// limited -> '限购'；suspended -> '暂停'；closed -> '停售'；open/unknown -> 空（AC-P5 不渲染）
+function subscribeBadge(item: LofListItem): string {
+  const st = item.subscribe_status
+  if (st === 'limited') return '限购'
+  if (st === 'suspended') return '暂停'
+  if (st === 'closed') return '停售'
+  return ''
+}
+
 async function loadList(showToast = false) {
   loading.value = true
   error.value = ''
@@ -187,6 +197,7 @@ onUnmounted(() => {
           <view class="row-line1">
             <text class="code">{{ item.code }}</text>
             <text class="type-tag" :class="`type-${item.type}`">{{ typeLabel(item.type) }}</text>
+            <text v-if="subscribeBadge(item)" class="sub-badge">{{ subscribeBadge(item) }}</text>
             <text v-if="showLowLiquidity(item)" class="low-liquidity-dot" title="低流动性"></text>
           </view>
           <view class="row-line2">{{ item.name }}</view>
@@ -195,7 +206,6 @@ onUnmounted(() => {
               {{ fmtPctSigned(item.price_change_pct, 2) }}
             </text>
             <text v-if="shouldRender(item.volume_amount)" class="meta-text">{{ fmtVolumeWan(item.volume_amount) }}</text>
-            <text class="meta-text">分位 {{ fmtPct(item.pctile_30d, 0) }}</text>
             <text v-if="item.source_quality && item.source_quality !== 'ok'" class="meta-text quality-warn">
               {{ item.source_quality === 'stale' ? '滞后' : '降级' }}
             </text>
@@ -262,6 +272,7 @@ onUnmounted(() => {
 .type-index { background: #ecf5ff; color: #409eff; }
 .type-industry { background: #fdf6ec; color: #e6a23c; }
 .type-active { background: #f0f9eb; color: #67c23a; }
+.sub-badge { padding: 2rpx 10rpx; border-radius: 4rpx; font-size: 20rpx; background: #fef0f0; color: #f56c6c; }
 .low-liquidity-dot { width: 12rpx; height: 12rpx; border-radius: 6rpx; background: #1f6feb; display: inline-block; }
 .row-line2 { font-size: 26rpx; color: #303133; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .row-line3 { display: flex; flex-wrap: wrap; gap: 14rpx; color: #909399; font-size: 22rpx; }
