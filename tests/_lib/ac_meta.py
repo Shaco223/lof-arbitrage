@@ -1,4 +1,4 @@
-﻿"""tests/_lib/ac_meta.py — AC 元信息常量与小工具。"""
+"""tests/_lib/ac_meta.py — AC 元信息常量与小工具。"""
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -26,10 +26,17 @@ class AC:
     P3 = _ACDef("AC-P3", "估算误差 ≥1% 标 degraded；连续两分钟超阈升 stale", "dev-004")
     P4 = _ACDef("AC-P4", "premium_nav=(price-nav_official)/nav_official 误差 ≤ 1e-4", "dev-004")
     P5 = _ACDef("AC-P5", "选填字段 null/unknown 时兜底渲染，旧字段照常", "both")
+    P6 = _ACDef("AC-P6", "申购5值/赎回4值枚举受限；主源 fundmob_basic 回退 HTML 兼底 unknown", "dev-004")
+    P7 = _ACDef("AC-P7", "额度独立解析：仅 limited+数字解析金额(元)+period=day，否则 null", "dev-004")
     C1 = _ACDef("AC-C1", "盘中每分钟 30 行；缺失 ≤ 3 次/日", "dev-004")
     C2 = _ACDef("AC-C2", "单次失败 30 秒内重试 3 次；3 次仍失败写日志并跳过", "dev-004")
     H1 = _ACDef("AC-H1", "详情页 30 天溢价折线无断点（节假日除外）", "both")
     H2 = _ACDef("AC-H2", "premium_pctile_30d ∈ [0,1] 且与离线脚本误差 ≤ 0.01", "dev-004")
+    H3 = _ACDef("AC-H3", "history 真实日线 close/nav，不走 buildFallbackHistory 合成", "dev-004")
+    H4 = _ACDef("AC-H4", "premium_close=(close/nav)-1 离线重算误差 <= 1e-4", "dev-004")
+    H5 = _ACDef("AC-H5", "滚动30交易日分位[0,1] 单调性；<30有效日返 null 禁合成", "dev-004")
+    H6 = _ACDef("AC-H6", "premium_estimate_close=收盘实时价/IOPV-1，启用日(2026-06-22)前 null", "dev-004")
+    H7 = _ACDef("AC-H7", "premium_deviation=est-close 误差 <= 1e-4；任一 null 则 null", "dev-004")
     A1 = _ACDef("AC-A1", "溢价 > 5% 持续 1 分钟，2 分钟内告警", "dev-004")
     A2 = _ACDef("AC-A2", "30 分钟冷却；alert_log 含 cooldown_blocked", "dev-004")
     A3 = _ACDef("AC-A3", "非交易时段告警被忽略", "dev-004")

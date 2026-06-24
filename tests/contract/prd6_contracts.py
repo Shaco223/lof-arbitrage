@@ -164,10 +164,15 @@ API_LOF_DETAIL_DATA_LEGACY = pick(API_LOF_DETAIL_DATA, API_LOF_DETAIL_DATA_LEGAC
 
 HISTORY_ITEM = {
     "date": FieldSpec("string"),
-    "close_price": FieldSpec("number"),
-    "official_nav": FieldSpec("number"),
-    "premium_close": FieldSpec("number"),
-    "premium_pctile_30d": FieldSpec("number"),
+    "close_price": FieldSpec("number", nullable=True),
+    # 最新交易日净值 T+1 未披露时合法为 null（AC-H4：缺 official_nav 时 premium_close=null）
+    "official_nav": FieldSpec("number", nullable=True),
+    "premium_close": FieldSpec("number", nullable=True),
+    # AC-H5：不足 30 个有效日时分位返回 null（禁合成凑满）
+    "premium_pctile_30d": FieldSpec("number", nullable=True),
+    # PRD 1.2.3 选填：预估收盘溢价 / 溢价偏差，可为 null
+    "premium_estimate_close": FieldSpec("number", required=False, nullable=True),
+    "premium_deviation": FieldSpec("number", required=False, nullable=True),
 }
 API_LOF_HISTORY_DATA = {
     "code": FieldSpec("string"),
