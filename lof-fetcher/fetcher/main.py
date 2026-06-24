@@ -25,6 +25,7 @@ from fetcher.pipeline.holdings_refresh import (
 from fetcher.pipeline.history_backfill import DEFAULT_HISTORY_FILE, run_history_backfill
 from fetcher.pipeline.daemon import run_daemon
 from fetcher.pipeline.subscribe_refresh import run_subscribe_status_refresh
+from fetcher.pipeline.shares_confirm_refresh import run_shares_confirm_refresh
 from fetcher.pipeline import process_control as pc
 from fetcher.pipeline.retry_trace import build_retry_trace_samples
 from fetcher.pipeline.snapshot import write_sample_outputs
@@ -109,6 +110,7 @@ def main(argv: Sequence[str] | None = None) -> None:
             idle_interval_seconds=args.idle_interval_seconds,
             with_holdings=not args.no_holdings,
             with_subscribe_status=not args.no_subscribe_status,
+            with_shares_confirm=not args.no_shares_confirm,
             max_iterations=args.max_iterations if args.max_iterations and args.max_iterations > 0 else None,
             pid_file=args.pid_file,
             stop_file=args.stop_file,
@@ -125,6 +127,18 @@ def main(argv: Sequence[str] | None = None) -> None:
         logger.info(
             "subscribe-status refresh: updated={} by_source={} limited_with_amount={}",
             result["updated"], result["by_source"], result["limited_with_amount"],
+        )
+        return
+
+    if args.command == "shares-confirm-refresh":
+        result = run_shares_confirm_refresh(
+            write_dataset=not args.no_dataset,
+            codes=args.codes or None,
+        )
+        logger.info(
+            "shares/confirm refresh: updated={} shares_coverage={} confirm_coverage={} cookie_present={}",
+            result["updated"], result["shares_coverage"],
+            result["confirm_coverage"], result["cookie_present"],
         )
         return
 
@@ -218,6 +232,8 @@ def _build_parser() -> argparse.ArgumentParser:
                         help="skip per-minute holdings change-pct overlay")
     daemon.add_argument("--no-subscribe-status", action="store_true",
                         help="skip the once-per-day subscribe/redeem status + limit refresh (PRD 1.3)")
+    daemon.add_argument("--no-shares-confirm", action="store_true",
+                        help="skip the once-per-day on-exchange shares + confirm-day refresh (PRD 1.4)")
     daemon.add_argument("--max-iterations", type=int, default=0,
                         help="TEST ONLY: stop after N loop ticks (0=unbounded)")
     daemon.add_argument("--pid-file", type=Path, default=pc.DEFAULT_PID_FILE,
@@ -250,6 +266,13 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     sub_refresh.add_argument("--no-dataset", action="store_true", help="do not write sample-dataset.json")
     sub_refresh.add_argument("--codes", nargs="*", default=None, help="optional explicit code subset")
+
+    shares_refresh = subparsers.add_parser(
+        "shares-confirm-refresh",
+        help="refresh daily on-exchange shares + open-end confirm days into lof_meta (PRD 1.4)",
+    )
+    shares_refresh.add_argument("--no-dataset", action="store_true", help="do not write sample-dataset.json")
+    shares_refresh.add_argument("--codes", nargs="*", default=None, help="optional explicit code subset")
 
     evidence = subparsers.add_parser("ac-evidence", help="write AC-C2 retry trace and AC-S1 quota estimate")
     evidence.add_argument("--output-dir", type=Path, default=Path("../outputs"))

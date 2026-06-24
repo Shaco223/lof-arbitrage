@@ -90,7 +90,12 @@ function buildListItem(meta, rt, hist) {
     fund_scale: numberOrNull(meta.fund_scale != null ? meta.fund_scale : meta.scale_yi),
     circulating_shares: numberOrNull(meta.circulating_shares),
     subscribe_limit_amount: numberOrNull(meta.subscribe_limit_amount),
-    subscribe_limit_period: meta.subscribe_limit_period || null
+    subscribe_limit_period: meta.subscribe_limit_period || null,
+    // PRD 1.4: daily on-exchange shares (万份) + open-end confirm days (T+N参考)
+    shares_onexchange: numberOrNull(meta.shares_onexchange),
+    shares_incr_daily: numberOrNull(meta.shares_incr_daily),
+    purchase_confirm_day: meta.purchase_confirm_day || null,
+    redeem_confirm_day: meta.redeem_confirm_day || null
   };
 }
 
@@ -111,7 +116,11 @@ function fillListItemDefaults(item) {
     fund_scale: null,
     circulating_shares: null,
     subscribe_limit_amount: null,
-    subscribe_limit_period: null
+    subscribe_limit_period: null,
+    shares_onexchange: null,
+    shares_incr_daily: null,
+    purchase_confirm_day: null,
+    redeem_confirm_day: null
   };
   for (const key of Object.keys(defaults)) {
     if (item[key] === undefined) item[key] = defaults[key];

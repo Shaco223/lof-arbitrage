@@ -50,6 +50,7 @@ from fetcher.pipeline.history_backfill import (
     append_close_estimates,
 )
 from fetcher.pipeline.subscribe_refresh import run_subscribe_status_refresh
+from fetcher.pipeline.shares_confirm_refresh import run_shares_confirm_refresh
 from fetcher.pipeline import process_control as pc
 from fetcher.scheduler import CN_TZ, is_trading_time
 from fetcher.sources.csv_assets import LofMeta
@@ -130,6 +131,7 @@ def run_daemon(
     holdings_refresh_seconds: float = DEFAULT_HOLDINGS_REFRESH_SECONDS,
     with_holdings: bool = True,
     with_subscribe_status: bool = True,
+    with_shares_confirm: bool = True,
     history_file: str | Path | None = None,
     sediment_close_history: bool = True,
     max_iterations: int | None = None,
@@ -185,6 +187,9 @@ def run_daemon(
     # Daily-class subscribe/redeem status + subscribe-limit (PRD 1.3): refresh at
     # most once per calendar day into lof_meta (NOT into the minute snapshot).
     subscribe_refresh_date: str | None = None
+    # Daily-class on-exchange shares + open-end confirm days (PRD 1.4): same
+    # once-per-calendar-day cadence into lof_meta (NOT the minute snapshot).
+    shares_confirm_refresh_date: str | None = None
     history_path = Path(history_file) if history_file else output_root / DEFAULT_HISTORY_FILE
     # PRD 1.2.3: sediment the day's close-time premium_estimate_close exactly once,
     # on the trading -> non-trading transition (i.e. just after 15:00 close).
@@ -302,6 +307,22 @@ def run_daemon(
                     )
                 except Exception as exc:  # noqa: BLE001 - daily refresh must not crash daemon
                     logger.exception("subscribe-status daily refresh failed: {}", exc)
+
+            # PRD 1.4: refresh daily on-exchange shares (jisilu) + open-end
+            # confirm days (eastmoney jjfl) once per calendar day into lof_meta.
+            # Failures (incl. missing JISILU_COOKIE) must never crash the loop.
+            if with_shares_confirm and shares_confirm_refresh_date != today:
+                try:
+                    codes = [m.code for m in metas]
+                    sc = run_shares_confirm_refresh(codes=codes, dataset_path=dataset_path)
+                    shares_confirm_refresh_date = today
+                    logger.info(
+                        "[{}] shares/confirm daily refresh: updated={} shares_coverage={} confirm_coverage={} cookie_present={}",
+                        loop_ts, sc.get("updated"), sc.get("shares_coverage"),
+                        sc.get("confirm_coverage"), sc.get("cookie_present"),
+                    )
+                except Exception as exc:  # noqa: BLE001 - daily refresh must not crash daemon
+                    logger.exception("shares/confirm daily refresh failed: {}", exc)
 
             if with_holdings:
                 need_full = (

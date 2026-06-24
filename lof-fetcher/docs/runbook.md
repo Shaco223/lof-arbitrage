@@ -469,3 +469,47 @@ python scripts/probe_shares_and_settlement.py --codes 161725 161005        # 指
 - 逐日份额/新增份额：**不建议本期接入**。无稳定免费逐日源，维持 §2.2 推迟。若后续找到付费/登录源，再评估是否新增 §6 字段（需走 CCR）。
 - 场内申购 T+N 到账：**可做静态常量表，不建议依赖免费接口自动采**。免费源只有场外确认日、无场内可卖日。若要提供 `purchase_settlement_days`（整数，单位「交易日」，无源→null），建议由 dev-002 维护静态配置表（按交易所规则人工填），而非报错源；该字段为 §6 结构性新增 → **需先走 CCR 升 PRD**。
 - 本 POC 仅探测产报告，不改主链路、不接入。
+
+
+## PRD 1.4 实装：场内份额/每日新增 + 申赎确认日（4 字段）
+
+四个日更类字段，均不进分钟快照（同 fund_scale，走 lof_meta）：
+
+| 字段 | 来源 | 单位/取值 | 缺值 |
+|---|---|---|---|
+| shares_onexchange | 集思录「实时数据-LOF」amount | 场内份额（万份） | null |
+| shares_incr_daily | 集思录「实时数据-LOF」amount_incr | 当日新增（万份） | null |
+| purchase_confirm_day | 东财 jjfl 买入确认日 | T+N（场外申赎确认日参考） | null |
+| redeem_confirm_day | 东财 jjfl 卖出确认日 | T+N（场外申赎确认日参考） | null |
+
+### 数据源与文件
+- 源码：fetcher/sources/shares_confirm.py（集思录 index_lof_list/ + stock_lof_list/ 合并 + 东财 jjfl 解析）。
+- 日更 pipeline：fetcher/pipeline/shares_confirm_refresh.py（写入 sample-dataset.lof_meta，仅 lof_meta，不动 lof_realtime）。
+- daemon 集成：每日历日刷一次（与 PRD 1.3 subscribe-refresh 同节奏）；--no-shares-confirm 可关闭。
+- 透传：cloudfunctions/lof-list、lof-detail 在 meta 分支与 fallback 默认值里输出四字段；local-api 直接透传。
+
+### Cookie 红线（R9）
+- 集思录列表游客仅前 20 条，全量需登录 Cookie。
+- Cookie 只从环境变量 JISILU_COOKIE 读取，绝不写文件 / 不入库 / 不提交 / 不打印日志。
+- 无 Cookie / 断源 / 反爬限频 → shares_onexchange、shares_incr_daily 一律 null，链路不中断（AC-P8）。
+- httpx 在本机代理环境下访问集思录会 TLS 重置（EOF _ssl.c），客户端用 trust_env=False 规避（2026-06-24 实测可用）。
+
+### 确认日语义（R10）
+- purchase_confirm_day / redeem_confirm_day 是「场外申赎合同确认日」，仅作展示参考，非「到账可卖日」。
+- 前端文案须标「申赎确认日（参考）」，禁止标「到账可卖日」（展示口径由 dev-003 负责）。
+
+### 运行命令
+```powershell
+# 单次刷新（需先在当前会话设置 JISILU_COOKIE 环境变量，不入库）
+cd lof-fetcher
+$env:JISILU_COOKIE='<浏览器登录后复制的 Cookie>'
+python -m fetcher.main shares-confirm-refresh
+# daemon 会自动每日刷一次（默认开启）
+```
+
+### 2026-06-24 盘中实测结论
+- 集思录场内份额覆盖：watchlist-v2 29/30（唯一缺失 501311=港股通/QDII，不在 LOF 列表，符合 QDII 二期口径，等于 LOF 范围 30/30）。
+- 抽样新增（万份）：161725 +63、160632 +1、501203 -92，数据合理有正有负。
+- 申赎确认日：6 只 T+1、160216=T+2、501203=null（AC-P9）。
+- 无 Cookie 时除前 20 条外 shares 为 null，链路不崩（AC-P8 已验证）。
+- 写入仅触及 lof_meta，lof_realtime 块 sha256 改动前后一致（无污染）。
