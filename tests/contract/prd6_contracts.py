@@ -164,10 +164,15 @@ API_LOF_DETAIL_DATA_LEGACY = pick(API_LOF_DETAIL_DATA, API_LOF_DETAIL_DATA_LEGAC
 
 HISTORY_ITEM = {
     "date": FieldSpec("string"),
-    "close_price": FieldSpec("number"),
-    "official_nav": FieldSpec("number"),
-    "premium_close": FieldSpec("number"),
-    "premium_pctile_30d": FieldSpec("number"),
+    "close_price": FieldSpec("number", nullable=True),
+    # ????????? T+1 ????? null?AC-H4?? official_nav ? premium_close=null?
+    "official_nav": FieldSpec("number", nullable=True),
+    "premium_close": FieldSpec("number", nullable=True),
+    # AC-H5??? 30 ??????????? null???????
+    "premium_pctile_30d": FieldSpec("number", nullable=True),
+    # PRD 1.2.3 ????????? / ?????????? null?
+    "premium_estimate_close": FieldSpec("number", required=False, nullable=True),
+    "premium_deviation": FieldSpec("number", required=False, nullable=True),
 }
 API_LOF_HISTORY_DATA = {
     "code": FieldSpec("string"),
