@@ -32,6 +32,20 @@ export function fmtVolumeWan(v: number | undefined | null): string {
   return num.toFixed(1) + ' 万'
 }
 
+/** PRD 1.3：申赎限额金额（源单位"元"）转万元口径，如 500000 -> "50万"，2亿 -> "2亿" */
+export function fmtLimitAmount(v: number | undefined | null): string {
+  if (v === undefined || v === null || Number.isNaN(v)) return ''
+  const num = Number(v)
+  if (Math.abs(num) >= 1e8) return trimZero(num / 1e8) + '亿'
+  if (Math.abs(num) >= 1e4) return trimZero(num / 1e4) + '万'
+  return trimZero(num) + '元'
+}
+
+function trimZero(n: number): string {
+  // 去掉多余小数：50.0 -> "50"，1.5 -> "1.5"
+  return Number(n.toFixed(2)).toString()
+}
+
 /** 份额（亿份） */
 export function fmtSharesYi(v: number | undefined | null): string {
   if (v === undefined || v === null || Number.isNaN(v)) return '--'

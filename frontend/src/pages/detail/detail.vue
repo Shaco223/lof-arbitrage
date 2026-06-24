@@ -12,6 +12,7 @@ import {
   fmtNum,
   fmtPct,
   fmtPctSigned,
+  fmtLimitAmount,
   fmtSharesYi,
   fmtVolumeWan,
   freshnessLabel,
@@ -69,23 +70,39 @@ const showHoldingContrib = computed(() =>
   (detail.value?.holdings_top10 || []).some((h) => shouldRender(h.contribution_pct))
 )
 
-function subscribeText(value?: SubscribeRedeemStatus): string {
-  if (value === 'open') return '申购开放'
-  if (value === 'suspended') return '暂停申购'
-  if (value === 'limited') return '申购限额'
+// PRD 1.3 限额周期文案
+function periodText(p?: string | null): string {
+  if (p === 'day') return '单日'
+  if (p === 'week') return '单周'
+  if (p === 'month') return '单月'
+  return '单期'
+}
+
+// PRD 1.3 申购标签：open/unknown/null 返回空（AC-P5 不渲染）
+function subscribeLabel(d: LofDetailData): string {
+  const st = d.subscribe_status
+  if (st === 'suspended') return '暂停申购'
+  if (st === 'closed') return '停止申购'
+  if (st === 'limited') {
+    if (shouldRender(d.subscribe_limit_amount)) {
+      return '限大额 ' + periodText(d.subscribe_limit_period) + ' ≤ ' + fmtLimitAmount(d.subscribe_limit_amount)
+    }
+    return '限大额'
+  }
   return ''
 }
 
-function redeemText(value?: SubscribeRedeemStatus): string {
-  if (value === 'open') return '赎回开放'
-  if (value === 'suspended') return '暂停赎回'
-  if (value === 'limited') return '赎回限额'
+// PRD 1.3 赎回标签：去掉 limited，open/limited/unknown/null 不渲染
+function redeemLabel(d: LofDetailData): string {
+  const st = d.redeem_status
+  if (st === 'suspended') return '暂停赎回'
+  if (st === 'closed') return '停止赎回'
   return ''
 }
 
 function statusPillClass(value?: SubscribeRedeemStatus): string {
   if (value === 'open') return 'status-open'
-  if (value === 'suspended') return 'status-suspended'
+  if (value === 'suspended' || value === 'closed') return 'status-suspended'
   if (value === 'limited') return 'status-limited'
   return ''
 }
@@ -237,15 +254,15 @@ onLoad((q: Record<string, string> | undefined) => {
       <!-- 中部状态标签栏 -->
       <view class="status-bar">
         <text
-          v-if="shouldRender(detail.subscribe_status)"
+          v-if="subscribeLabel(detail)"
           class="status-pill"
           :class="statusPillClass(detail.subscribe_status)"
-        >{{ subscribeText(detail.subscribe_status) }}</text>
+        >{{ subscribeLabel(detail) }}</text>
         <text
-          v-if="shouldRender(detail.redeem_status)"
+          v-if="redeemLabel(detail)"
           class="status-pill"
           :class="statusPillClass(detail.redeem_status)"
-        >{{ redeemText(detail.redeem_status) }}</text>
+        >{{ redeemLabel(detail) }}</text>
         <text v-if="isLowLiquidityFlag" class="status-pill liquidity">{{ LOW_LIQUIDITY_LABEL }}</text>
         <text
           v-if="detail.realtime.source_quality && detail.realtime.source_quality !== 'ok'"

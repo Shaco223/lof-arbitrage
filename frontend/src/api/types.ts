@@ -5,7 +5,7 @@ export type FundType = 'index' | 'industry' | 'active'
 export type SourceQuality = 'ok' | 'degraded' | 'stale'
 export type AlertDirection = 'premium' | 'discount'
 /** PRD 1.2 申赎状态：unknown 视为不渲染 */
-export type SubscribeRedeemStatus = 'open' | 'suspended' | 'limited' | 'unknown'
+export type SubscribeRedeemStatus = 'open' | 'suspended' | 'limited' | 'closed' | 'unknown'
 /** PRD 1.2 LOF 状态：active / 低流动性 active_low_liquidity */
 export type LofStatus = 'active' | 'active_low_liquidity'
 
@@ -37,10 +37,18 @@ export interface LofListItem {
   premium_nav?: number | null
   /** 估算误差 = iopv - nav_official */
   premium_error?: number | null
-  /** 申购状态：open/suspended/limited/unknown */
+  /** 申购状态：open/suspended/limited/closed/unknown */
   subscribe_status?: SubscribeRedeemStatus
-  /** 赎回状态：open/suspended/limited/unknown */
+  /** 赎回状态：open/suspended/limited/closed/unknown */
   redeem_status?: SubscribeRedeemStatus
+  /** PRD 1.3：单期申购限额（元，limited 且非 null 时展示金额） */
+  subscribe_limit_amount?: number | null
+  /** PRD 1.3：申购限额周期，如 day */
+  subscribe_limit_period?: string | null
+  /** PRD 1.3：单期赎回限额（元） */
+  redeem_limit_amount?: number | null
+  /** PRD 1.3：赎回限额周期 */
+  redeem_limit_period?: string | null
   /** 基金规模，单位"亿元" */
   fund_scale?: number | null
   /** 场内流通份额，单位"亿份" */
@@ -113,6 +121,14 @@ export interface LofDetailData {
   circulating_shares?: number | null
   subscribe_status?: SubscribeRedeemStatus
   redeem_status?: SubscribeRedeemStatus
+  /** PRD 1.3：单期申购限额（元，limited 且非 null 时展示金额） */
+  subscribe_limit_amount?: number | null
+  /** PRD 1.3：申购限额周期，如 day */
+  subscribe_limit_period?: string | null
+  /** PRD 1.3：单期赎回限额（元） */
+  redeem_limit_amount?: number | null
+  /** PRD 1.3：赎回限额周期 */
+  redeem_limit_period?: string | null
 }
 
 /** 历史项（api-lof-history） */
