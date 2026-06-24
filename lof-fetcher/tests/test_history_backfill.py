@@ -142,3 +142,40 @@ def test_save_then_load_roundtrip_and_recompute(tmp_path):
     assert {r["date"] for r in loaded} == {"2026-06-22", "2026-06-23"}
     confirmed = next(r for r in loaded if r["date"] == "2026-06-22")
     assert confirmed["premium_close"] == round(0.527 / 0.5289 - 1, 6)
+
+
+def test_shares_incr_daily_sediment_three_timings(tmp_path):
+    # PRD 1.4.1: shares_incr_daily is sedimented day-by-day, append-only, no backfill.
+    path = tmp_path / "hist.jsonl"
+    # Pre-existing backfilled history (before the field was enabled) -> null.
+    base = recompute_series([
+        {"code": "161725", "date": "2026-06-22", "close_price": 0.527, "official_nav": 0.5289},
+    ])
+    save_history_file(path, base)
+    loaded = load_history_file(path)
+    assert loaded[0]["shares_incr_daily"] is None  # pre-enable day stays null
+
+    # Enable day (T): close sediment carries the day's jisilu amount_incr.
+    append_close_estimates(path, "2026-06-23", {"161725": 0.018}, shares_incr={"161725": 63.0})
+    rows = {r["date"]: r for r in load_history_file(path)}
+    assert rows["2026-06-22"]["shares_incr_daily"] is None  # no backfill of past days
+    assert rows["2026-06-23"]["shares_incr_daily"] == 63.0  # from enable day onward
+
+    # No-Cookie / source-down day: amount_incr None -> that day's field stays null.
+    append_close_estimates(path, "2026-06-24", {"161725": 0.02}, shares_incr={"161725": None})
+    rows = {r["date"]: r for r in load_history_file(path)}
+    assert rows["2026-06-24"]["shares_incr_daily"] is None
+    # Confirmed earlier value must NOT be overwritten by a later null tick.
+    append_close_estimates(path, "2026-06-23", {"161725": 0.018}, shares_incr={"161725": None})
+    rows = {r["date"]: r for r in load_history_file(path)}
+    assert rows["2026-06-23"]["shares_incr_daily"] == 63.0
+
+
+def test_build_history_records_includes_shares_incr_daily():
+    closes = {"2026-06-22": 0.527, "2026-06-23": 0.520}
+    navs = {"2026-06-22": 0.5289}
+    rows = build_history_records("161725", closes, navs, shares_incr={"2026-06-22": 63.0})
+    by_date = {r["date"]: r for r in rows}
+    assert by_date["2026-06-22"]["shares_incr_daily"] == 63.0
+    # absent date -> null (no synthesis)
+    assert by_date["2026-06-23"]["shares_incr_daily"] is None

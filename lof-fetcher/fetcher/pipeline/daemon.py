@@ -197,6 +197,9 @@ def run_daemon(
     last_report_date: str | None = None
     was_trading = False
     close_sediment_date: str | None = None
+    # PRD 1.4.1: the day's jisilu amount_incr (shares_incr_daily), captured from the
+    # daily shares refresh, sedimented into §6.3 history at the close transition.
+    last_shares_incr: dict[str, float | None] = {}
 
     collect_iterations = 0
     idle_iterations = 0
@@ -252,7 +255,10 @@ def run_daemon(
                         it["code"]: it.get("premium")
                         for it in last_report.get("items", [])
                     }
-                    result = append_close_estimates(history_path, last_report_date, estimates)
+                    result = append_close_estimates(
+                        history_path, last_report_date, estimates,
+                        shares_incr=last_shares_incr,
+                    )
                     close_sediment_date = last_report_date
                     logger.info(
                         "[{}] close sediment: appended {} premium_estimate_close for {} -> {}",
@@ -316,6 +322,10 @@ def run_daemon(
                     codes = [m.code for m in metas]
                     sc = run_shares_confirm_refresh(codes=codes, dataset_path=dataset_path)
                     shares_confirm_refresh_date = today
+                    last_shares_incr = {
+                        c: (v or {}).get("shares_incr_daily")
+                        for c, v in (sc.get("shares_map") or {}).items()
+                    }
                     logger.info(
                         "[{}] shares/confirm daily refresh: updated={} shares_coverage={} confirm_coverage={} cookie_present={}",
                         loop_ts, sc.get("updated"), sc.get("shares_coverage"),

@@ -51,7 +51,10 @@ exports.main = async (event) => {
         // PRD 1.2.3 ?6.3: pass-through, null-safe. Day-by-day sedimented; absent
         // for backfilled rows (no synthesis, AC-H6).
         premium_estimate_close: item.premium_estimate_close != null ? item.premium_estimate_close : null,
-        premium_deviation: item.premium_deviation != null ? item.premium_deviation : null
+        premium_deviation: item.premium_deviation != null ? item.premium_deviation : null,
+        // PRD 1.4.1 §6.3: per-day on-exchange share increment (jisilu amount_incr),
+        // day-by-day sedimented; null-safe; never synthesized for fallback rows.
+        shares_incr_daily: item.shares_incr_daily != null ? item.shares_incr_daily : null
       }))
     });
   } catch (error) {
@@ -80,7 +83,9 @@ function buildFallbackHistory(code, days, existingRows) {
         premium_pctile_30d: round6((offset + 1) / days),
         // PRD 1.2.3 / AC-H6: these two are NEVER synthesized -> always null on fallback.
         premium_estimate_close: null,
-        premium_deviation: null
+        premium_deviation: null,
+        // PRD 1.4.1 / AC: NEVER synthesized on fallback -> always null.
+        shares_incr_daily: null
       });
     }
     cursor.setDate(cursor.getDate() - 1);

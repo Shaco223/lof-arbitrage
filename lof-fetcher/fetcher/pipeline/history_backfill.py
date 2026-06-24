@@ -46,12 +46,14 @@ def build_history_records(
     closes: dict[str, float],
     navs: dict[str, float],
     estimates: dict[str, float] | None = None,
+    shares_incr: dict[str, float] | None = None,
 ) -> list[dict[str, Any]]:
     # Trading dates are driven by close_price availability (kline = trading days).
     # `estimates` carries per-date premium_estimate_close (close-time price/IOPV-1)
     # sedimented day-by-day from the daemon close snapshot. PRD 1.2.3 / AC-H6:
     # this field is NEVER synthesized for backfilled history; absent date -> None.
     estimates = estimates or {}
+    shares_incr = shares_incr or {}
     dates = sorted(closes.keys())
     premiums: list[float | None] = []
     base_rows: list[dict[str, Any]] = []
@@ -73,6 +75,7 @@ def build_history_records(
             "premium_close": premium_close,
             "premium_estimate_close": estimate_close,
             "premium_deviation": _premium_deviation(estimate_close, premium_close),
+            "shares_incr_daily": shares_incr.get(date),
         })
     for idx, row in enumerate(base_rows):
         row["premium_pctile_30d"] = compute_premium_pctile(premiums, idx)
@@ -143,6 +146,10 @@ def merge_records(existing: list[dict[str, Any]], incoming: list[dict[str, Any]]
         # with a null/missing one.
         if row.get("premium_estimate_close") is not None:
             new_row["premium_estimate_close"] = row["premium_estimate_close"]
+        # shares_incr_daily (PRD 1.4.1) is sedimented day-by-day, append-only:
+        # fill only when newly available; never overwrite a confirmed value with null.
+        if row.get("shares_incr_daily") is not None:
+            new_row["shares_incr_daily"] = row["shares_incr_daily"]
         merged[key] = new_row
     return list(merged.values())
 
@@ -196,6 +203,9 @@ def save_history_file(path: str | Path, rows: list[dict[str, Any]]) -> None:
                 # PRD 1.2.3 ?6.3 new optional fields (day-by-day sedimented, no backfill).
                 "premium_estimate_close": row.get("premium_estimate_close"),
                 "premium_deviation": row.get("premium_deviation"),
+                # PRD 1.4.1 section 6.3: per-day on-exchange share increment (jisilu amount_incr),
+                # day-by-day sedimented (no backfill); absent date -> null.
+                "shares_incr_daily": row.get("shares_incr_daily"),
             }, ensure_ascii=False) + "\n")
 
 
@@ -203,29 +213,43 @@ def append_close_estimates(
     history_file: str | Path,
     date: str,
     estimates: dict[str, float | None],
+    shares_incr: dict[str, float | None] | None = None,
 ) -> dict[str, Any]:
-    """Sediment the close-time premium_estimate_close for `date` (PRD 1.2.3).
+    """Sediment the close-time premium_estimate_close for `date` (PRD 1.2.3) and
+    the day's on-exchange share increment (PRD 1.4.1).
 
     `estimates` maps code -> close-time `price / IOPV - 1` (the watchlist report's
-    `premium` field). Day-by-day, append-only: this fills/updates the day's
-    premium_estimate_close on existing (code, date) rows (or creates the row if
-    the trading-day close_price has not been backfilled yet), then recomputes
-    premium_deviation in the same recompute step (deviation stays null until the
-    T+1 official_nav fills premium_close). Never synthesizes history (AC-H6).
+    `premium` field). `shares_incr` maps code -> jisilu `amount_incr` (10k shares,
+    PRD 1.4.1). Day-by-day, append-only: this fills/updates the day's
+    premium_estimate_close + shares_incr_daily on existing (code, date) rows (or
+    creates the row if the trading-day close_price has not been backfilled yet),
+    then recomputes premium_deviation in the same recompute step (deviation stays
+    null until the T+1 official_nav fills premium_close). Never synthesizes
+    history (AC-H6); absent / null source -> the field stays null for that day.
     """
+    shares_incr = shares_incr or {}
     existing = load_history_file(history_file)
-    incoming: list[dict[str, Any]] = []
+    incoming_by_code: dict[str, dict[str, Any]] = {}
     appended = 0
     for code, estimate in estimates.items():
         if estimate is None:
             # No close-time estimate (IOPV missing) -> leave field null, skip.
             continue
-        incoming.append({
+        incoming_by_code[str(code)] = {
             "code": str(code),
             "date": date,
             "premium_estimate_close": _round6(float(estimate)),
-        })
+        }
         appended += 1
+    shares_appended = 0
+    for code, incr in shares_incr.items():
+        if incr is None:
+            # No jisilu amount_incr (no Cookie / source down) -> leave null, skip.
+            continue
+        row = incoming_by_code.setdefault(str(code), {"code": str(code), "date": date})
+        row["shares_incr_daily"] = float(incr)
+        shares_appended += 1
+    incoming = list(incoming_by_code.values())
     merged = merge_records(existing, incoming)
     merged = recompute_series(merged)
     save_history_file(history_file, merged)
@@ -233,6 +257,7 @@ def append_close_estimates(
         "history_file": str(history_file),
         "date": date,
         "appended": appended,
+        "shares_appended": shares_appended,
         "total_records": len(merged),
     }
 
