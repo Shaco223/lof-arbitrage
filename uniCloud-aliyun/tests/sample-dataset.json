@@ -27,9 +27,11 @@
         }
       ],
       "fund_scale": 300,
-      "subscribe_status": "unknown",
-      "redeem_status": "unknown",
-      "circulating_shares": 180
+      "subscribe_status": "limited",
+      "redeem_status": "open",
+      "circulating_shares": 180,
+      "subscribe_limit_amount": 500000.0,
+      "subscribe_limit_period": "day"
     },
     {
       "code": "161005",
@@ -57,9 +59,11 @@
         }
       ],
       "fund_scale": 180,
-      "subscribe_status": "unknown",
-      "redeem_status": "unknown",
-      "circulating_shares": 108
+      "subscribe_status": "limited",
+      "redeem_status": "open",
+      "circulating_shares": 108,
+      "subscribe_limit_amount": 20000.0,
+      "subscribe_limit_period": "day"
     },
     {
       "code": "163406",
@@ -87,8 +91,8 @@
         }
       ],
       "fund_scale": 150,
-      "subscribe_status": "unknown",
-      "redeem_status": "unknown",
+      "subscribe_status": "open",
+      "redeem_status": "open",
       "circulating_shares": 90
     },
     {
@@ -117,8 +121,8 @@
         }
       ],
       "fund_scale": 80,
-      "subscribe_status": "unknown",
-      "redeem_status": "unknown",
+      "subscribe_status": "open",
+      "redeem_status": "open",
       "circulating_shares": 48
     },
     {
@@ -147,8 +151,8 @@
         }
       ],
       "fund_scale": 40,
-      "subscribe_status": "unknown",
-      "redeem_status": "unknown",
+      "subscribe_status": "open",
+      "redeem_status": "open",
       "circulating_shares": 24
     },
     {
@@ -177,8 +181,8 @@
         }
       ],
       "fund_scale": 30,
-      "subscribe_status": "unknown",
-      "redeem_status": "unknown",
+      "subscribe_status": "open",
+      "redeem_status": "open",
       "circulating_shares": 18
     },
     {
@@ -207,8 +211,8 @@
         }
       ],
       "fund_scale": 30,
-      "subscribe_status": "unknown",
-      "redeem_status": "unknown",
+      "subscribe_status": "open",
+      "redeem_status": "open",
       "circulating_shares": 18
     },
     {
@@ -237,8 +241,8 @@
         }
       ],
       "fund_scale": 18,
-      "subscribe_status": "unknown",
-      "redeem_status": "unknown",
+      "subscribe_status": "open",
+      "redeem_status": "open",
       "circulating_shares": 10.8
     },
     {
@@ -267,8 +271,8 @@
         }
       ],
       "fund_scale": 15,
-      "subscribe_status": "unknown",
-      "redeem_status": "unknown",
+      "subscribe_status": "open",
+      "redeem_status": "open",
       "circulating_shares": 9
     },
     {
@@ -297,9 +301,11 @@
         }
       ],
       "fund_scale": 12,
-      "subscribe_status": "unknown",
-      "redeem_status": "unknown",
-      "circulating_shares": 7.2
+      "subscribe_status": "limited",
+      "redeem_status": "open",
+      "circulating_shares": 7.2,
+      "subscribe_limit_amount": 200000.0,
+      "subscribe_limit_period": "day"
     },
     {
       "code": "160220",
@@ -327,8 +333,8 @@
         }
       ],
       "fund_scale": 3,
-      "subscribe_status": "unknown",
-      "redeem_status": "unknown",
+      "subscribe_status": "open",
+      "redeem_status": "open",
       "circulating_shares": 1.8
     },
     {
@@ -357,8 +363,8 @@
         }
       ],
       "fund_scale": 8,
-      "subscribe_status": "unknown",
-      "redeem_status": "unknown",
+      "subscribe_status": "open",
+      "redeem_status": "open",
       "circulating_shares": 4.8
     },
     {
@@ -387,8 +393,8 @@
         }
       ],
       "fund_scale": 12,
-      "subscribe_status": "unknown",
-      "redeem_status": "unknown",
+      "subscribe_status": "open",
+      "redeem_status": "open",
       "circulating_shares": 7.2
     },
     {
@@ -417,8 +423,8 @@
         }
       ],
       "fund_scale": 12,
-      "subscribe_status": "unknown",
-      "redeem_status": "unknown",
+      "subscribe_status": "open",
+      "redeem_status": "open",
       "circulating_shares": 7.2
     },
     {
@@ -447,8 +453,8 @@
         }
       ],
       "fund_scale": 6,
-      "subscribe_status": "unknown",
-      "redeem_status": "unknown",
+      "subscribe_status": "open",
+      "redeem_status": "open",
       "circulating_shares": 3.6
     },
     {
@@ -477,8 +483,8 @@
         }
       ],
       "fund_scale": 6,
-      "subscribe_status": "unknown",
-      "redeem_status": "unknown",
+      "subscribe_status": "open",
+      "redeem_status": "open",
       "circulating_shares": 3.6
     },
     {
@@ -507,8 +513,8 @@
         }
       ],
       "fund_scale": 6,
-      "subscribe_status": "unknown",
-      "redeem_status": "unknown",
+      "subscribe_status": "open",
+      "redeem_status": "open",
       "circulating_shares": 3.6
     },
     {
@@ -537,8 +543,8 @@
         }
       ],
       "fund_scale": 5,
-      "subscribe_status": "unknown",
-      "redeem_status": "unknown",
+      "subscribe_status": "limited",
+      "redeem_status": "open",
       "circulating_shares": 3
     },
     {
@@ -567,8 +573,8 @@
         }
       ],
       "fund_scale": 5,
-      "subscribe_status": "unknown",
-      "redeem_status": "unknown",
+      "subscribe_status": "open",
+      "redeem_status": "open",
       "circulating_shares": 3
     },
     {
@@ -597,8 +603,8 @@
         }
       ],
       "fund_scale": 4,
-      "subscribe_status": "unknown",
-      "redeem_status": "unknown",
+      "subscribe_status": "open",
+      "redeem_status": "open",
       "circulating_shares": 2.4
     },
     {
@@ -627,9 +633,11 @@
         }
       ],
       "fund_scale": 4,
-      "subscribe_status": "unknown",
-      "redeem_status": "unknown",
-      "circulating_shares": 2.4
+      "subscribe_status": "limited",
+      "redeem_status": "open",
+      "circulating_shares": 2.4,
+      "subscribe_limit_amount": 10000000.0,
+      "subscribe_limit_period": "day"
     },
     {
       "code": "501095",
@@ -657,8 +665,8 @@
         }
       ],
       "fund_scale": 4,
-      "subscribe_status": "unknown",
-      "redeem_status": "unknown",
+      "subscribe_status": "open",
+      "redeem_status": "open",
       "circulating_shares": 2.4
     },
     {
@@ -687,9 +695,11 @@
         }
       ],
       "fund_scale": 4,
-      "subscribe_status": "unknown",
-      "redeem_status": "unknown",
-      "circulating_shares": 2.4
+      "subscribe_status": "limited",
+      "redeem_status": "open",
+      "circulating_shares": 2.4,
+      "subscribe_limit_amount": 5000000.0,
+      "subscribe_limit_period": "day"
     },
     {
       "code": "501057",
@@ -717,8 +727,8 @@
         }
       ],
       "fund_scale": 4,
-      "subscribe_status": "unknown",
-      "redeem_status": "unknown",
+      "subscribe_status": "open",
+      "redeem_status": "open",
       "circulating_shares": 2.4
     },
     {
@@ -747,8 +757,8 @@
         }
       ],
       "fund_scale": 4,
-      "subscribe_status": "unknown",
-      "redeem_status": "unknown",
+      "subscribe_status": "open",
+      "redeem_status": "open",
       "circulating_shares": 2.4
     },
     {
@@ -777,8 +787,8 @@
         }
       ],
       "fund_scale": 4,
-      "subscribe_status": "unknown",
-      "redeem_status": "unknown",
+      "subscribe_status": "open",
+      "redeem_status": "open",
       "circulating_shares": 2.4
     },
     {
@@ -807,8 +817,8 @@
         }
       ],
       "fund_scale": 4,
-      "subscribe_status": "unknown",
-      "redeem_status": "unknown",
+      "subscribe_status": "open",
+      "redeem_status": "open",
       "circulating_shares": 2.4
     },
     {
@@ -837,8 +847,8 @@
         }
       ],
       "fund_scale": 4,
-      "subscribe_status": "unknown",
-      "redeem_status": "unknown",
+      "subscribe_status": "open",
+      "redeem_status": "open",
       "circulating_shares": 2.4
     },
     {
@@ -867,8 +877,8 @@
         }
       ],
       "fund_scale": 4,
-      "subscribe_status": "unknown",
-      "redeem_status": "unknown",
+      "subscribe_status": "open",
+      "redeem_status": "open",
       "circulating_shares": 2.4
     },
     {
@@ -897,8 +907,8 @@
         }
       ],
       "fund_scale": 4,
-      "subscribe_status": "unknown",
-      "redeem_status": "unknown",
+      "subscribe_status": "open",
+      "redeem_status": "open",
       "circulating_shares": 2.4
     }
   ],

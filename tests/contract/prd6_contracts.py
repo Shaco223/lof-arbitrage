@@ -30,8 +30,9 @@ COMMON_ERROR_CODES = {0, 4001, 4010, 4040, 4290, 5000}
 SOURCE_QUALITY = {"ok", "degraded", "stale"}
 LOF_TYPES = {"index", "industry", "active"}
 LOF_STATUS = {"active", "active_low_liquidity"}
-SUBSCRIBE_STATUS = {"open", "suspended", "limited", "unknown"}
-REDEEM_STATUS = {"open", "suspended", "limited", "unknown"}
+SUBSCRIBE_STATUS = {"open", "limited", "suspended", "closed", "unknown"}
+REDEEM_STATUS = {"open", "suspended", "closed", "unknown"}
+SUBSCRIBE_LIMIT_PERIOD = {"day"}
 
 
 API_LOF_LIST_ITEM = {
@@ -55,6 +56,8 @@ API_LOF_LIST_ITEM = {
     "redeem_status": FieldSpec("string", required=False, enum=tuple(sorted(REDEEM_STATUS)), nullable=True),
     "fund_scale": FieldSpec("number", required=False, nullable=True),
     "circulating_shares": FieldSpec("number", required=False, nullable=True),
+    "subscribe_limit_amount": FieldSpec("number", required=False, nullable=True),
+    "subscribe_limit_period": FieldSpec("string", required=False, enum=tuple(sorted(SUBSCRIBE_LIMIT_PERIOD)), nullable=True),
 }
 API_LOF_LIST_ITEM_LEGACY_REQUIRED = {
     "code", "name", "type", "price", "iopv", "premium",
@@ -116,6 +119,8 @@ API_LOF_DETAIL_DATA = {
     "source_quality": FieldSpec("string", enum=tuple(sorted(SOURCE_QUALITY))),
     "subscribe_status": FieldSpec("string", required=False, enum=tuple(sorted(SUBSCRIBE_STATUS)), nullable=True),
     "redeem_status": FieldSpec("string", required=False, enum=tuple(sorted(REDEEM_STATUS)), nullable=True),
+    "subscribe_limit_amount": FieldSpec("number", required=False, nullable=True),
+    "subscribe_limit_period": FieldSpec("string", required=False, enum=tuple(sorted(SUBSCRIBE_LIMIT_PERIOD)), nullable=True),
     "coverage_top10": FieldSpec("number", nullable=True),
     "coverage_breakdown": FieldSpec("object"),
     "benchmark_raw": FieldSpec("string", nullable=True),
@@ -252,10 +257,12 @@ API_LOF_LIST_SAMPLE = {
                 "coverage": 1.00,
                 "pctile_30d": 0.82,
                 "source_quality": "ok",
-                "subscribe_status": "open",
+                "subscribe_status": "limited",
                 "redeem_status": "open",
                 "fund_scale": 300.0,
                 "circulating_shares": 12.5,
+                "subscribe_limit_amount": 500000.0,
+                "subscribe_limit_period": "day",
             }
         ],
     },
@@ -285,8 +292,10 @@ API_LOF_DETAIL_SAMPLE = {
         "coverage": 1.00,
         "pctile_30d": 0.82,
         "source_quality": "ok",
-        "subscribe_status": "open",
+        "subscribe_status": "limited",
         "redeem_status": "open",
+        "subscribe_limit_amount": 500000.0,
+        "subscribe_limit_period": "day",
         "coverage_top10": 0.93,
         "coverage_breakdown": {
             "top10_weight": 0.93,

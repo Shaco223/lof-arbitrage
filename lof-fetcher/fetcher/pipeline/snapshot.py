@@ -154,6 +154,8 @@ def _build_list_item(meta: Any, realtime: dict[str, Any]) -> dict[str, Any]:
         "redeem_status": "unknown",
         "fund_scale": float(meta.scale_yi),
         "circulating_shares": None,
+        "subscribe_limit_amount": None,
+        "subscribe_limit_period": None,
     }
 
 
@@ -183,6 +185,8 @@ def _build_detail(meta: Any, realtime: dict[str, Any], components: list[Benchmar
         "source_quality": realtime["source_quality"],
         "subscribe_status": "unknown",
         "redeem_status": "unknown",
+        "subscribe_limit_amount": None,
+        "subscribe_limit_period": None,
         "coverage_top10": realtime["coverage_breakdown"]["top10_weight"],
         "coverage_breakdown": realtime["coverage_breakdown"],
         "benchmark_raw": meta.benchmark_raw,

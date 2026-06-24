@@ -62,6 +62,8 @@ exports.main = async (event) => {
       source_quality: realtime.source_quality || 'stale',
       subscribe_status: meta.subscribe_status || SUBSCRIBE_DEFAULT,
       redeem_status: meta.redeem_status || REDEEM_DEFAULT,
+      subscribe_limit_amount: numberOrNull(meta.subscribe_limit_amount),
+      subscribe_limit_period: meta.subscribe_limit_period || null,
       coverage_top10: meta.coverage_top10,
       coverage_breakdown: meta.coverage_breakdown || { top10_weight: meta.coverage_top10, benchmark_assigned_weight: 0, cash_weight: 0 },
       benchmark_raw: meta.benchmark_raw,

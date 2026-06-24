@@ -88,7 +88,9 @@ function buildListItem(meta, rt, hist) {
     subscribe_status: meta.subscribe_status || SUBSCRIBE_DEFAULT,
     redeem_status: meta.redeem_status || REDEEM_DEFAULT,
     fund_scale: numberOrNull(meta.fund_scale != null ? meta.fund_scale : meta.scale_yi),
-    circulating_shares: numberOrNull(meta.circulating_shares)
+    circulating_shares: numberOrNull(meta.circulating_shares),
+    subscribe_limit_amount: numberOrNull(meta.subscribe_limit_amount),
+    subscribe_limit_period: meta.subscribe_limit_period || null
   };
 }
 
@@ -107,7 +109,9 @@ function fillListItemDefaults(item) {
     subscribe_status: SUBSCRIBE_DEFAULT,
     redeem_status: REDEEM_DEFAULT,
     fund_scale: null,
-    circulating_shares: null
+    circulating_shares: null,
+    subscribe_limit_amount: null,
+    subscribe_limit_period: null
   };
   for (const key of Object.keys(defaults)) {
     if (item[key] === undefined) item[key] = defaults[key];

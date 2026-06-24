@@ -49,6 +49,7 @@ from fetcher.pipeline.history_backfill import (
     DEFAULT_HISTORY_FILE,
     append_close_estimates,
 )
+from fetcher.pipeline.subscribe_refresh import run_subscribe_status_refresh
 from fetcher.pipeline import process_control as pc
 from fetcher.scheduler import CN_TZ, is_trading_time
 from fetcher.sources.csv_assets import LofMeta
@@ -128,6 +129,7 @@ def run_daemon(
     idle_interval_seconds: float = DEFAULT_IDLE_INTERVAL_SECONDS,
     holdings_refresh_seconds: float = DEFAULT_HOLDINGS_REFRESH_SECONDS,
     with_holdings: bool = True,
+    with_subscribe_status: bool = True,
     history_file: str | Path | None = None,
     sediment_close_history: bool = True,
     max_iterations: int | None = None,
@@ -180,6 +182,9 @@ def run_daemon(
     cached_holdings: list[dict[str, Any]] | None = None
     cached_per_lof: list[dict[str, Any]] | None = None
     last_holdings_at: datetime | None = None
+    # Daily-class subscribe/redeem status + subscribe-limit (PRD 1.3): refresh at
+    # most once per calendar day into lof_meta (NOT into the minute snapshot).
+    subscribe_refresh_date: str | None = None
     history_path = Path(history_file) if history_file else output_root / DEFAULT_HISTORY_FILE
     # PRD 1.2.3: sediment the day's close-time premium_estimate_close exactly once,
     # on the trading -> non-trading transition (i.e. just after 15:00 close).
@@ -281,6 +286,22 @@ def run_daemon(
             # sample-dataset so the local API computes premium_nav with a NAV in the
             # same time-frame as the live price (fixes premium_nav decoupling).
             update_sample_dataset_realtime(report, dataset_path)
+
+            # PRD 1.3: refresh daily subscribe/redeem status + subscribe-limit once
+            # per calendar day (writes lof_meta, not the snapshot). Failures here
+            # must never crash the minute loop.
+            today = moment.date().isoformat()
+            if with_subscribe_status and subscribe_refresh_date != today:
+                try:
+                    codes = [m.code for m in metas]
+                    sub = run_subscribe_status_refresh(codes=codes, dataset_path=dataset_path)
+                    subscribe_refresh_date = today
+                    logger.info(
+                        "[{}] subscribe-status daily refresh: updated={} by_source={} limited_with_amount={}",
+                        loop_ts, sub.get("updated"), sub.get("by_source"), sub.get("limited_with_amount"),
+                    )
+                except Exception as exc:  # noqa: BLE001 - daily refresh must not crash daemon
+                    logger.exception("subscribe-status daily refresh failed: {}", exc)
 
             if with_holdings:
                 need_full = (

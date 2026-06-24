@@ -25,7 +25,7 @@ def test_api_lof_list_response_matches_prd6_sample_contract():
 
 @pytest.mark.contract
 def test_api_lof_list_item_contract_has_prd_1_2_fields():
-    # PRD 1.2: list items[] expose 20 fields; 9 legacy fields stay required.
+    # PRD 1.3: list items[] expose 22 fields; 9 legacy fields stay required.
     assert set(API_LOF_LIST_ITEM) == {
         "code",
         "name",
@@ -47,8 +47,10 @@ def test_api_lof_list_item_contract_has_prd_1_2_fields():
         "redeem_status",
         "fund_scale",
         "circulating_shares",
+        "subscribe_limit_amount",
+        "subscribe_limit_period",
     }
-    assert len(API_LOF_LIST_ITEM) == 20
+    assert len(API_LOF_LIST_ITEM) == 22
 
 
 @pytest.mark.contract
