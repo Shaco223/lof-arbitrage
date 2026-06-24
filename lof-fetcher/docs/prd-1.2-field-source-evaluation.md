@@ -21,12 +21,15 @@
 | `nav_estimate_error_pct` | 后端公式：`premium_error / nav_official` | 详情计算字段 | — | 高 | ✅ 真实值（云函数运行时计算） |
 | `status` | `assets/lof-watchlist-v2.csv` | csv 读取 | csv `status` 列 | 高（人工固化口径） | ✅ 真实值（lof_meta 表 `status` 已对齐 v2） |
 
+| `subscribe_status` | 天天基金移动端 `fundmob_basic`（`SGZT`）+ 备源概况页 HTML | 主源 7/7 全覆盖、结构化、40–170ms 稳定（探测 2839fad / PRD 1.3 转正） | ✅ 真实值（枚举 open/limited/suspended/closed/unknown，断源兜底 unknown） |
+| `redeem_status` | 天天基金移动端 `fundmob_basic`（`SHZT`）+ 备源概况页 HTML | 同上 | ✅ 真实值（枚举 open/suspended/closed/unknown，断源兜底 unknown） |
+| `subscribe_limit_amount` | `fundmob_basic` 申购额度文案解析 | 限大额带数字时可解析（50万/2万/20万）；开放/无数字/哨兵 1000亿→null | ✅ 部分真实值（无数字时 null，单位元） |
+| `subscribe_limit_period` | 同上文案解析 | 「单日累计」→ day | ✅ 部分真实值（无额度时 null） |
+
 ## 二、本期返回 `null` / `unknown` 的字段（免费源不稳定）
 
 | 字段 | 候选源 | 评估结论 | 本期返回 |
 |-----|------|---------|--------|
-| `subscribe_status` | 天天基金概况页 `fund.eastmoney.com/{code}.html` 中的「申购状态」标签 | HTML 抓取，结构易变；不同基金类型字段位置不一；缺乏官方 JSON | `unknown` |
-| `redeem_status` | 同上「赎回状态」 | 同 `subscribe_status` | `unknown` |
 | `fund_scale` | fundgz 概况页 `fund.eastmoney.com/{code}.html` 中的「规模」字段；或基金公告 PDF | HTML 抓取，季报披露才更新；非分钟级；本期资产 CSV 已带 `scale_yi`（人工固化），可作为 fallback | `null`（不强求实时；详情页仍可读 `scale_yi`） |
 | `circulating_shares` | 天天基金 / 东财概况页「场内流通份额」 | 日更字段；HTML 抓取；与 `fund_scale` 同样不稳定；PRD §6.1 已明确**不进入分钟快照** | `null` |
 
