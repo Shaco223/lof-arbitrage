@@ -1,0 +1,503 @@
+{
+  "ts": "2026-06-24T10:27:03+08:00",
+  "codes": [
+    "161725",
+    "161005",
+    "160706",
+    "160632",
+    "501050",
+    "501203",
+    "501090"
+  ],
+  "coverage": {
+    "eastmoney_f10_html": {
+      "subscribe": 7,
+      "redeem": 7,
+      "limit": 0,
+      "total": 7
+    },
+    "eastmoney_fundmob_basic": {
+      "subscribe": 7,
+      "redeem": 7,
+      "limit": 3,
+      "total": 7
+    },
+    "eastmoney_push2": {
+      "subscribe": 0,
+      "redeem": 0,
+      "limit": 0,
+      "total": 7
+    },
+    "jisilu_lof": {
+      "subscribe": 0,
+      "redeem": 0,
+      "limit": 0,
+      "total": 7
+    }
+  },
+  "raw_subscribe_values": [
+    "开放申购",
+    "限大额"
+  ],
+  "raw_redeem_values": [
+    "开放赎回"
+  ],
+  "raw_subscribe_limit_values": [
+    "限大额(单日累计购买上限20000元。)",
+    "限大额(单日累计购买上限20万元。)",
+    "限大额(单日累计购买上限50万元。)"
+  ],
+  "proposed_subscribe_enum": [
+    "closed",
+    "limited",
+    "open",
+    "other",
+    "suspended",
+    "unknown"
+  ],
+  "proposed_redeem_enum": [
+    "closed",
+    "open",
+    "other",
+    "suspended",
+    "unknown"
+  ],
+  "per_code": [
+    {
+      "code": "161725",
+      "ts": "2026-06-24T10:27:01+08:00",
+      "sources": [
+        {
+          "source": "eastmoney_f10_html",
+          "ok": true,
+          "elapsed_ms": 349,
+          "needs_login": false,
+          "http_status": 200,
+          "has_subscribe_field": true,
+          "has_redeem_field": true,
+          "subscribe_status_raw": "限大额",
+          "redeem_status_raw": "开放赎回",
+          "note": "overview HTML baseline; status parsed from trade-status span (less structured, HTML-fragile)"
+        },
+        {
+          "source": "eastmoney_fundmob_basic",
+          "ok": true,
+          "elapsed_ms": 171,
+          "needs_login": false,
+          "has_subscribe_field": true,
+          "has_redeem_field": true,
+          "subscribe_status_raw": "限大额",
+          "redeem_status_raw": "开放赎回",
+          "subscribe_mark": "限大额(单日累计购买上限50万元。)",
+          "min_subscribe": "10",
+          "max_subscribe": "500000",
+          "has_subscribe_limit_field": true,
+          "subscribe_limit_raw": "限大额(单日累计购买上限50万元。)",
+          "subscribe_limit_amount": 500000.0,
+          "subscribe_limit_period": "day",
+          "buy_flag": true,
+          "is_sales": "1",
+          "name": "招商中证白酒指数(LOF)A"
+        },
+        {
+          "source": "eastmoney_push2",
+          "ok": false,
+          "elapsed_ms": 147,
+          "error": "RemoteProtocolError"
+        },
+        {
+          "source": "jisilu_lof",
+          "ok": false,
+          "elapsed_ms": 228,
+          "needs_login": false,
+          "has_subscribe_field": false,
+          "has_redeem_field": false,
+          "subscribe_status_raw": null,
+          "redeem_status_raw": null,
+          "rows_returned": 20,
+          "note": "LOF list is member-gated; empty rows == not logged in"
+        }
+      ]
+    },
+    {
+      "code": "161005",
+      "ts": "2026-06-24T10:27:02+08:00",
+      "sources": [
+        {
+          "source": "eastmoney_f10_html",
+          "ok": true,
+          "elapsed_ms": 248,
+          "needs_login": false,
+          "http_status": 200,
+          "has_subscribe_field": true,
+          "has_redeem_field": true,
+          "subscribe_status_raw": "限大额",
+          "redeem_status_raw": "开放赎回",
+          "note": "overview HTML baseline; status parsed from trade-status span (less structured, HTML-fragile)"
+        },
+        {
+          "source": "eastmoney_fundmob_basic",
+          "ok": true,
+          "elapsed_ms": 58,
+          "needs_login": false,
+          "has_subscribe_field": true,
+          "has_redeem_field": true,
+          "subscribe_status_raw": "限大额",
+          "redeem_status_raw": "开放赎回",
+          "subscribe_mark": "限大额(单日累计购买上限20000元。)",
+          "min_subscribe": "10",
+          "max_subscribe": "20000",
+          "has_subscribe_limit_field": true,
+          "subscribe_limit_raw": "限大额(单日累计购买上限20000元。)",
+          "subscribe_limit_amount": 20000.0,
+          "subscribe_limit_period": "day",
+          "buy_flag": true,
+          "is_sales": "1",
+          "name": "富国天惠成长混合(LOF)A"
+        },
+        {
+          "source": "eastmoney_push2",
+          "ok": false,
+          "elapsed_ms": 226,
+          "error": "RemoteProtocolError"
+        },
+        {
+          "source": "jisilu_lof",
+          "ok": false,
+          "elapsed_ms": 76,
+          "needs_login": false,
+          "has_subscribe_field": false,
+          "has_redeem_field": false,
+          "subscribe_status_raw": null,
+          "redeem_status_raw": null,
+          "rows_returned": 20,
+          "note": "LOF list is member-gated; empty rows == not logged in"
+        }
+      ]
+    },
+    {
+      "code": "160706",
+      "ts": "2026-06-24T10:27:02+08:00",
+      "sources": [
+        {
+          "source": "eastmoney_f10_html",
+          "ok": true,
+          "elapsed_ms": 327,
+          "needs_login": false,
+          "http_status": 200,
+          "has_subscribe_field": true,
+          "has_redeem_field": true,
+          "subscribe_status_raw": "开放申购",
+          "redeem_status_raw": "开放赎回",
+          "note": "overview HTML baseline; status parsed from trade-status span (less structured, HTML-fragile)"
+        },
+        {
+          "source": "eastmoney_fundmob_basic",
+          "ok": true,
+          "elapsed_ms": 49,
+          "needs_login": false,
+          "has_subscribe_field": true,
+          "has_redeem_field": true,
+          "subscribe_status_raw": "开放申购",
+          "redeem_status_raw": "开放赎回",
+          "subscribe_mark": null,
+          "min_subscribe": "10",
+          "max_subscribe": "100000000000",
+          "has_subscribe_limit_field": false,
+          "subscribe_limit_raw": null,
+          "subscribe_limit_amount": null,
+          "subscribe_limit_period": null,
+          "buy_flag": true,
+          "is_sales": "1",
+          "name": "嘉实沪深300ETF联接A"
+        },
+        {
+          "source": "eastmoney_push2",
+          "ok": false,
+          "elapsed_ms": 205,
+          "error": "RemoteProtocolError"
+        },
+        {
+          "source": "jisilu_lof",
+          "ok": false,
+          "elapsed_ms": 85,
+          "needs_login": false,
+          "has_subscribe_field": false,
+          "has_redeem_field": false,
+          "subscribe_status_raw": null,
+          "redeem_status_raw": null,
+          "rows_returned": 20,
+          "note": "LOF list is member-gated; empty rows == not logged in"
+        }
+      ]
+    },
+    {
+      "code": "160632",
+      "ts": "2026-06-24T10:27:02+08:00",
+      "sources": [
+        {
+          "source": "eastmoney_f10_html",
+          "ok": true,
+          "elapsed_ms": 263,
+          "needs_login": false,
+          "http_status": 200,
+          "has_subscribe_field": true,
+          "has_redeem_field": true,
+          "subscribe_status_raw": "限大额",
+          "redeem_status_raw": "开放赎回",
+          "note": "overview HTML baseline; status parsed from trade-status span (less structured, HTML-fragile)"
+        },
+        {
+          "source": "eastmoney_fundmob_basic",
+          "ok": true,
+          "elapsed_ms": 57,
+          "needs_login": false,
+          "has_subscribe_field": true,
+          "has_redeem_field": true,
+          "subscribe_status_raw": "限大额",
+          "redeem_status_raw": "开放赎回",
+          "subscribe_mark": "限大额(单日累计购买上限20万元。)",
+          "min_subscribe": "10",
+          "max_subscribe": "200000",
+          "has_subscribe_limit_field": true,
+          "subscribe_limit_raw": "限大额(单日累计购买上限20万元。)",
+          "subscribe_limit_amount": 200000.0,
+          "subscribe_limit_period": "day",
+          "buy_flag": true,
+          "is_sales": "1",
+          "name": "鹏华酒A"
+        },
+        {
+          "source": "eastmoney_push2",
+          "ok": false,
+          "elapsed_ms": 304,
+          "needs_login": false,
+          "has_subscribe_field": false,
+          "has_redeem_field": false,
+          "note": "quote endpoint carries no subscribe/redeem status field",
+          "sample_keys": [
+            "f111",
+            "f139",
+            "f292",
+            "f43",
+            "f57",
+            "f58"
+          ]
+        },
+        {
+          "source": "jisilu_lof",
+          "ok": false,
+          "elapsed_ms": 75,
+          "needs_login": false,
+          "has_subscribe_field": false,
+          "has_redeem_field": false,
+          "subscribe_status_raw": null,
+          "redeem_status_raw": null,
+          "rows_returned": 20,
+          "note": "LOF list is member-gated; empty rows == not logged in"
+        }
+      ]
+    },
+    {
+      "code": "501050",
+      "ts": "2026-06-24T10:27:02+08:00",
+      "sources": [
+        {
+          "source": "eastmoney_f10_html",
+          "ok": true,
+          "elapsed_ms": 160,
+          "needs_login": false,
+          "http_status": 200,
+          "has_subscribe_field": true,
+          "has_redeem_field": true,
+          "subscribe_status_raw": "开放申购",
+          "redeem_status_raw": "开放赎回",
+          "note": "overview HTML baseline; status parsed from trade-status span (less structured, HTML-fragile)"
+        },
+        {
+          "source": "eastmoney_fundmob_basic",
+          "ok": true,
+          "elapsed_ms": 52,
+          "needs_login": false,
+          "has_subscribe_field": true,
+          "has_redeem_field": true,
+          "subscribe_status_raw": "开放申购",
+          "redeem_status_raw": "开放赎回",
+          "subscribe_mark": null,
+          "min_subscribe": "10",
+          "max_subscribe": "100000000000",
+          "has_subscribe_limit_field": false,
+          "subscribe_limit_raw": null,
+          "subscribe_limit_amount": null,
+          "subscribe_limit_period": null,
+          "buy_flag": true,
+          "is_sales": "1",
+          "name": "华夏上证50AH优选指数A"
+        },
+        {
+          "source": "eastmoney_push2",
+          "ok": false,
+          "elapsed_ms": 232,
+          "needs_login": false,
+          "has_subscribe_field": false,
+          "has_redeem_field": false,
+          "note": "quote endpoint carries no subscribe/redeem status field",
+          "sample_keys": [
+            "f111",
+            "f139",
+            "f292",
+            "f43",
+            "f57",
+            "f58"
+          ]
+        },
+        {
+          "source": "jisilu_lof",
+          "ok": false,
+          "elapsed_ms": 92,
+          "needs_login": false,
+          "has_subscribe_field": false,
+          "has_redeem_field": false,
+          "subscribe_status_raw": null,
+          "redeem_status_raw": null,
+          "rows_returned": 20,
+          "note": "LOF list is member-gated; empty rows == not logged in"
+        }
+      ]
+    },
+    {
+      "code": "501203",
+      "ts": "2026-06-24T10:27:03+08:00",
+      "sources": [
+        {
+          "source": "eastmoney_f10_html",
+          "ok": true,
+          "elapsed_ms": 149,
+          "needs_login": false,
+          "http_status": 200,
+          "has_subscribe_field": true,
+          "has_redeem_field": true,
+          "subscribe_status_raw": "限大额",
+          "redeem_status_raw": "开放赎回",
+          "note": "overview HTML baseline; status parsed from trade-status span (less structured, HTML-fragile)"
+        },
+        {
+          "source": "eastmoney_fundmob_basic",
+          "ok": true,
+          "elapsed_ms": 49,
+          "needs_login": false,
+          "has_subscribe_field": true,
+          "has_redeem_field": true,
+          "subscribe_status_raw": "限大额",
+          "redeem_status_raw": "开放赎回",
+          "subscribe_mark": null,
+          "min_subscribe": "1",
+          "max_subscribe": "--",
+          "has_subscribe_limit_field": false,
+          "subscribe_limit_raw": null,
+          "subscribe_limit_amount": null,
+          "subscribe_limit_period": null,
+          "buy_flag": false,
+          "is_sales": "--",
+          "name": "易方达创新未来混合(LOF)"
+        },
+        {
+          "source": "eastmoney_push2",
+          "ok": false,
+          "elapsed_ms": 229,
+          "needs_login": false,
+          "has_subscribe_field": false,
+          "has_redeem_field": false,
+          "note": "quote endpoint carries no subscribe/redeem status field",
+          "sample_keys": [
+            "f111",
+            "f139",
+            "f292",
+            "f43",
+            "f57",
+            "f58"
+          ]
+        },
+        {
+          "source": "jisilu_lof",
+          "ok": false,
+          "elapsed_ms": 78,
+          "needs_login": false,
+          "has_subscribe_field": false,
+          "has_redeem_field": false,
+          "subscribe_status_raw": null,
+          "redeem_status_raw": null,
+          "rows_returned": 20,
+          "note": "LOF list is member-gated; empty rows == not logged in"
+        }
+      ]
+    },
+    {
+      "code": "501090",
+      "ts": "2026-06-24T10:27:03+08:00",
+      "sources": [
+        {
+          "source": "eastmoney_f10_html",
+          "ok": true,
+          "elapsed_ms": 147,
+          "needs_login": false,
+          "http_status": 200,
+          "has_subscribe_field": true,
+          "has_redeem_field": true,
+          "subscribe_status_raw": "开放申购",
+          "redeem_status_raw": "开放赎回",
+          "note": "overview HTML baseline; status parsed from trade-status span (less structured, HTML-fragile)"
+        },
+        {
+          "source": "eastmoney_fundmob_basic",
+          "ok": true,
+          "elapsed_ms": 40,
+          "needs_login": false,
+          "has_subscribe_field": true,
+          "has_redeem_field": true,
+          "subscribe_status_raw": "开放申购",
+          "redeem_status_raw": "开放赎回",
+          "subscribe_mark": null,
+          "min_subscribe": "10",
+          "max_subscribe": "100000000000",
+          "has_subscribe_limit_field": false,
+          "subscribe_limit_raw": null,
+          "subscribe_limit_amount": null,
+          "subscribe_limit_period": null,
+          "buy_flag": true,
+          "is_sales": "1",
+          "name": "华宝中证消费龙头ETF联接A"
+        },
+        {
+          "source": "eastmoney_push2",
+          "ok": false,
+          "elapsed_ms": 240,
+          "needs_login": false,
+          "has_subscribe_field": false,
+          "has_redeem_field": false,
+          "note": "quote endpoint carries no subscribe/redeem status field",
+          "sample_keys": [
+            "f111",
+            "f139",
+            "f292",
+            "f43",
+            "f57",
+            "f58"
+          ]
+        },
+        {
+          "source": "jisilu_lof",
+          "ok": false,
+          "elapsed_ms": 85,
+          "needs_login": false,
+          "has_subscribe_field": false,
+          "has_redeem_field": false,
+          "subscribe_status_raw": null,
+          "redeem_status_raw": null,
+          "rows_returned": 20,
+          "note": "LOF list is member-gated; empty rows == not logged in"
+        }
+      ]
+    }
+  ]
+}

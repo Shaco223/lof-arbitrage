@@ -93,3 +93,5 @@ data/snapshots/
 # ===== IOPV 数据源探测 POC（dev-004）=====
 !outputs/backend-iopv-source-probe-v2.json
 !outputs/backend-iopv-source-probe-v2.md
+!outputs/backend-subscribe-status-probe-v2.json
+!outputs/backend-subscribe-status-probe-v2.md

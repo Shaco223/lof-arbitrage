@@ -401,3 +401,39 @@ node tests\local-http-smoke.test.js
 cd ..\lof-fetcher
 python -m pytest -q tests\test_history_backfill.py
 ```
+
+
+## 申购/赎回状态 + 申购额度 免费源探测 POC（只读，不接入）
+
+背景：`subscribe_status` / `redeem_status` 当前一律返回 `unknown`；用户还想看「申购额度」（单只可申购金额上限）。本节为纯只读探测产物，评估免费候选源的可得性、稳定性、字段口径，给出换源/接入建议，不接入、不动 §6 字段、不动 real_watchlist 主链路。
+
+### 运行
+```powershell
+cd lof-fetcher
+python scripts/probe_subscribe_status.py                                   # 默认 7 只盘中探测
+python scripts/probe_subscribe_status.py --repeat 3 --interval-seconds 60   # 多轮稳定性
+python scripts/probe_subscribe_status.py --codes 161725 161005             # 指定标的
+```
+产物：`outputs/backend-subscribe-status-probe-v2.json` + `.md`，含每源每只的 ok / 字段是否存在 / 原始值 / 申购额度解析 / 是否需登录 / 耗时 / 报错。
+
+### 源覆盖（2026-06-24 盘中，7 只：指数/主动/行业 + active_low_liquidity）
+- eastmoney_fundmob_basic（天天基金移动端 FundMNBasicInformation）：状态覆盖 7/7，结构化 `SGZT`(申购状态)/`SHZT`(赎回状态)；申购额度字段 `MAXSG`(单日上限,元)/`SGZTMARK`/`TRADEMARKLIST`(文案)/`MINSG`(起购)；耗时 ~40-170ms，推荐主源。
+- eastmoney_f10_html（fundf10 概况页）：状态覆盖 7/7，正则解析 `交易状态：<span>…</span>`；耗时 133-1505ms 波动、HTML 脆弱，作备源/对照基线。该页未结构化暴露申购额度数值，额度栏覆盖 0。
+- eastmoney_push2（行情接口）：无申赎/额度字段，偶发 `RemoteProtocolError`，确认不可用。
+- jisilu_lof（集思录 LOF 列表）：未登录返回 0 行（会员墙），不可用。
+- 交叉校验：fundmob_basic 与 f10_html 的状态返回值完全一致，可互校。
+
+### 申购状态 vs 申购额度（两种语义，已分栏）
+- 申购状态（开放/限大额/暂停）：fundmob_basic 7/7 全覆盖。
+- 申购额度（具体金额上限）：fundmob_basic 可解析为结构化「金额(元)+周期」。本轮 161725=50万/日、161005=2万/日、160632=20万/日；开放申购标的 MAXSG=1000亿（哨兵值，视为「无实际上限」→ amount=null）。
+- 注意：状态=「限大额」未必都带额度数字——501203 状态为限大额但 `MAXSG=--`、无额度文案，额度只能置 null。即「限大额」是状态枚举，额度是独立维度，不能相互推导。
+
+### 状态枚举建议
+- 申购：`open` / `limited`(限大额) / `suspended`(暂停申购) / `closed`(封闭期) / `unknown` / `other`
+- 赎回：`open` / `suspended`(暂停赎回) / `closed`(封闭期) / `unknown` / `other`
+- 申购额度：结构化 `{amount: 数值(元) | null, period: "day" | null, raw: 原始文案}`，无源/无上限置 null。
+
+### 接入建议与 CCR 判定
+- 申购/赎回状态：建议接入。主源 `eastmoney_fundmob_basic` + 备源 `eastmoney_f10_html` + 兜底 `unknown`。`subscribe_status`/`redeem_status` 是 §6 既有字段（PRD 1.2 已定义、当前返回 unknown），从「占位 unknown」升「真实值」不新增/改名/删字段 → 预期不触发 CCR；建议 dev-001 同步更新 `prd-1.2-field-source-evaluation.md` 该字段结论，是否升 PRD 1.3 由 dev-001 裁定。
+- 申购额度：建议接入但需走 CCR 升 PRD。当前 §6 无承载字段，接入即「结构性新增」（建议字段如 `subscribe_limit` 或 `subscribe_limit_amount` + `subscribe_limit_period`），属新增 §6 字段 → 必须先走 CCR 升 PRD 1.3，再实装。
+- 本 POC 仅探测产报告，不改主链路、不接入；real_watchlist 主链路 list/detail 维持现状（unknown）。
