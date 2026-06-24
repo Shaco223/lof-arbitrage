@@ -1,0 +1,621 @@
+{
+  "ts": "2026-06-24T16:52:01+08:00",
+  "codes": [
+    "161725",
+    "161005",
+    "160632",
+    "501203",
+    "501050",
+    "160706",
+    "160216"
+  ],
+  "point1_daily_shares": {
+    "coverage": {
+      "eastmoney_f10_gmbd": {
+        "ok": 7,
+        "total": 7,
+        "granularities": {
+          "quarterly_report": 7
+        }
+      },
+      "eastmoney_fundmob_ivinfo": {
+        "ok": 7,
+        "total": 7,
+        "granularities": {
+          "quarterly_report": 7
+        }
+      },
+      "jisilu_lof": {
+        "ok": 0,
+        "total": 7,
+        "granularities": {
+          "none": 7
+        }
+      }
+    },
+    "daily_series_found": false,
+    "conclusion": "no_free_daily_share_series; only quarter-end report disclosure",
+    "proposed_fields_if_available": [
+      "circulating_shares_daily",
+      "shares_change_daily"
+    ]
+  },
+  "point2_settlement_rule": {
+    "coverage": {
+      "eastmoney_f10_jjfl": {
+        "confirm_field": 6,
+        "onexch_sellable": 0,
+        "total": 7
+      }
+    },
+    "structured_settlement_found": false,
+    "confirm_day_raw_values": [
+      "T+1",
+      "T+2"
+    ],
+    "conclusion": "no_structured_onexchange_T+N_sellable; only open-end buy/sell CONFIRM day (T+1) which is a DIFFERENT concept",
+    "proposed_field_if_available": "purchase_settlement_days"
+  },
+  "per_code": [
+    {
+      "code": "161725",
+      "ts": "2026-06-24T16:51:59+08:00",
+      "shares_series": [
+        {
+          "source": "eastmoney_f10_gmbd",
+          "ok": true,
+          "elapsed_ms": 278,
+          "needs_login": false,
+          "http_status": 200,
+          "has_share_series": true,
+          "series_granularity": "quarterly_report",
+          "rows_returned": 37,
+          "latest_date": "2026-03-31",
+          "sample": [
+            {
+              "date": "2026-03-31",
+              "qtr_subscribe_yi": "77.65",
+              "qtr_redeem_yi": "74.93",
+              "end_total_shares_yi": "404.14",
+              "end_nav_assets_yi": "258.37"
+            },
+            {
+              "date": "2025-12-31",
+              "qtr_subscribe_yi": "54.83",
+              "qtr_redeem_yi": "65.37",
+              "end_total_shares_yi": "401.42",
+              "end_nav_assets_yi": "284.95"
+            },
+            {
+              "date": "2025-09-30",
+              "qtr_subscribe_yi": "92.34",
+              "qtr_redeem_yi": "89.82",
+              "end_total_shares_yi": "411.96",
+              "end_nav_assets_yi": "323.14"
+            }
+          ],
+          "note": "share-change table; report-date rows only (qtr), end_total_shares is quarter-end"
+        },
+        {
+          "source": "eastmoney_fundmob_ivinfo",
+          "ok": true,
+          "elapsed_ms": 198,
+          "needs_login": false,
+          "has_share_series": false,
+          "series_granularity": "quarterly_report",
+          "report_dates_returned": 45,
+          "latest_date": "2026-03-31",
+          "note": "report-date list (holdings/shares disclosure cadence); confirms quarter-end disclosure"
+        },
+        {
+          "source": "jisilu_lof",
+          "ok": false,
+          "elapsed_ms": 266,
+          "needs_login": false,
+          "has_share_series": false,
+          "series_granularity": "none",
+          "rows_returned": 20,
+          "amount_field": null,
+          "note": "LOF list is member-gated; at best a single current snapshot, no daily series"
+        }
+      ],
+      "settlement_rule": [
+        {
+          "source": "eastmoney_f10_jjfl",
+          "ok": true,
+          "elapsed_ms": 326,
+          "needs_login": false,
+          "http_status": 200,
+          "has_confirm_day_field": true,
+          "buy_confirm_day_raw": "T+1",
+          "sell_confirm_day_raw": "T+1",
+          "buy_confirm_tplusn": 1,
+          "sell_confirm_tplusn": 1,
+          "has_onexchange_sellable_field": false,
+          "settlement_days_structured": null,
+          "note": "buy/sell CONFIRM day = open-end contract wording (T+1), NOT on-exchange purchased-share sellable day"
+        }
+      ]
+    },
+    {
+      "code": "161005",
+      "ts": "2026-06-24T16:52:00+08:00",
+      "shares_series": [
+        {
+          "source": "eastmoney_f10_gmbd",
+          "ok": true,
+          "elapsed_ms": 119,
+          "needs_login": false,
+          "http_status": 200,
+          "has_share_series": true,
+          "series_granularity": "quarterly_report",
+          "rows_returned": 85,
+          "latest_date": "2026-03-31",
+          "sample": [
+            {
+              "date": "2026-03-31",
+              "qtr_subscribe_yi": "1.26",
+              "qtr_redeem_yi": "8.92",
+              "end_total_shares_yi": "64.89",
+              "end_nav_assets_yi": "185.32"
+            },
+            {
+              "date": "2025-12-31",
+              "qtr_subscribe_yi": "0.92",
+              "qtr_redeem_yi": "7.15",
+              "end_total_shares_yi": "72.55",
+              "end_nav_assets_yi": "211.02"
+            },
+            {
+              "date": "2025-09-30",
+              "qtr_subscribe_yi": "1.36",
+              "qtr_redeem_yi": "12.63",
+              "end_total_shares_yi": "78.78",
+              "end_nav_assets_yi": "226.61"
+            }
+          ],
+          "note": "share-change table; report-date rows only (qtr), end_total_shares is quarter-end"
+        },
+        {
+          "source": "eastmoney_fundmob_ivinfo",
+          "ok": true,
+          "elapsed_ms": 30,
+          "needs_login": false,
+          "has_share_series": false,
+          "series_granularity": "quarterly_report",
+          "report_dates_returned": 84,
+          "latest_date": "2026-03-31",
+          "note": "report-date list (holdings/shares disclosure cadence); confirms quarter-end disclosure"
+        },
+        {
+          "source": "jisilu_lof",
+          "ok": false,
+          "elapsed_ms": 67,
+          "needs_login": false,
+          "has_share_series": false,
+          "series_granularity": "none",
+          "rows_returned": 20,
+          "amount_field": null,
+          "note": "LOF list is member-gated; at best a single current snapshot, no daily series"
+        }
+      ],
+      "settlement_rule": [
+        {
+          "source": "eastmoney_f10_jjfl",
+          "ok": true,
+          "elapsed_ms": 167,
+          "needs_login": false,
+          "http_status": 200,
+          "has_confirm_day_field": true,
+          "buy_confirm_day_raw": "T+1",
+          "sell_confirm_day_raw": "T+1",
+          "buy_confirm_tplusn": 1,
+          "sell_confirm_tplusn": 1,
+          "has_onexchange_sellable_field": false,
+          "settlement_days_structured": null,
+          "note": "buy/sell CONFIRM day = open-end contract wording (T+1), NOT on-exchange purchased-share sellable day"
+        }
+      ]
+    },
+    {
+      "code": "160632",
+      "ts": "2026-06-24T16:52:00+08:00",
+      "shares_series": [
+        {
+          "source": "eastmoney_f10_gmbd",
+          "ok": true,
+          "elapsed_ms": 98,
+          "needs_login": false,
+          "http_status": 200,
+          "has_share_series": true,
+          "series_granularity": "quarterly_report",
+          "rows_returned": 34,
+          "latest_date": "2026-03-31",
+          "sample": [
+            {
+              "date": "2026-03-31",
+              "qtr_subscribe_yi": "9.28",
+              "qtr_redeem_yi": "8.72",
+              "end_total_shares_yi": "52.46",
+              "end_nav_assets_yi": "16.10"
+            },
+            {
+              "date": "2025-12-31",
+              "qtr_subscribe_yi": "6.34",
+              "qtr_redeem_yi": "5.87",
+              "end_total_shares_yi": "51.90",
+              "end_nav_assets_yi": "17.32"
+            },
+            {
+              "date": "2025-09-30",
+              "qtr_subscribe_yi": "7.75",
+              "qtr_redeem_yi": "9.20",
+              "end_total_shares_yi": "51.44",
+              "end_nav_assets_yi": "18.83"
+            }
+          ],
+          "note": "share-change table; report-date rows only (qtr), end_total_shares is quarter-end"
+        },
+        {
+          "source": "eastmoney_fundmob_ivinfo",
+          "ok": true,
+          "elapsed_ms": 38,
+          "needs_login": false,
+          "has_share_series": false,
+          "series_granularity": "quarterly_report",
+          "report_dates_returned": 46,
+          "latest_date": "2026-03-31",
+          "note": "report-date list (holdings/shares disclosure cadence); confirms quarter-end disclosure"
+        },
+        {
+          "source": "jisilu_lof",
+          "ok": false,
+          "elapsed_ms": 78,
+          "needs_login": false,
+          "has_share_series": false,
+          "series_granularity": "none",
+          "rows_returned": 20,
+          "amount_field": null,
+          "note": "LOF list is member-gated; at best a single current snapshot, no daily series"
+        }
+      ],
+      "settlement_rule": [
+        {
+          "source": "eastmoney_f10_jjfl",
+          "ok": true,
+          "elapsed_ms": 174,
+          "needs_login": false,
+          "http_status": 200,
+          "has_confirm_day_field": true,
+          "buy_confirm_day_raw": "T+1",
+          "sell_confirm_day_raw": "T+1",
+          "buy_confirm_tplusn": 1,
+          "sell_confirm_tplusn": 1,
+          "has_onexchange_sellable_field": false,
+          "settlement_days_structured": null,
+          "note": "buy/sell CONFIRM day = open-end contract wording (T+1), NOT on-exchange purchased-share sellable day"
+        }
+      ]
+    },
+    {
+      "code": "501203",
+      "ts": "2026-06-24T16:52:00+08:00",
+      "shares_series": [
+        {
+          "source": "eastmoney_f10_gmbd",
+          "ok": true,
+          "elapsed_ms": 91,
+          "needs_login": false,
+          "http_status": 200,
+          "has_share_series": true,
+          "series_granularity": "quarterly_report",
+          "rows_returned": 23,
+          "latest_date": "2026-03-31",
+          "sample": [
+            {
+              "date": "2026-03-31",
+              "qtr_subscribe_yi": "1.22",
+              "qtr_redeem_yi": "2.92",
+              "end_total_shares_yi": "19.73",
+              "end_nav_assets_yi": "25.69"
+            },
+            {
+              "date": "2025-12-31",
+              "qtr_subscribe_yi": "1.20",
+              "qtr_redeem_yi": "3.87",
+              "end_total_shares_yi": "21.42",
+              "end_nav_assets_yi": "29.55"
+            },
+            {
+              "date": "2025-09-30",
+              "qtr_subscribe_yi": "1.21",
+              "qtr_redeem_yi": "8.04",
+              "end_total_shares_yi": "24.10",
+              "end_nav_assets_yi": "32.50"
+            }
+          ],
+          "note": "share-change table; report-date rows only (qtr), end_total_shares is quarter-end"
+        },
+        {
+          "source": "eastmoney_fundmob_ivinfo",
+          "ok": true,
+          "elapsed_ms": 37,
+          "needs_login": false,
+          "has_share_series": false,
+          "series_granularity": "quarterly_report",
+          "report_dates_returned": 23,
+          "latest_date": "2026-03-31",
+          "note": "report-date list (holdings/shares disclosure cadence); confirms quarter-end disclosure"
+        },
+        {
+          "source": "jisilu_lof",
+          "ok": false,
+          "elapsed_ms": 89,
+          "needs_login": false,
+          "has_share_series": false,
+          "series_granularity": "none",
+          "rows_returned": 20,
+          "amount_field": null,
+          "note": "LOF list is member-gated; at best a single current snapshot, no daily series"
+        }
+      ],
+      "settlement_rule": [
+        {
+          "source": "eastmoney_f10_jjfl",
+          "ok": false,
+          "elapsed_ms": 127,
+          "needs_login": false,
+          "http_status": 200,
+          "has_confirm_day_field": false,
+          "buy_confirm_day_raw": null,
+          "sell_confirm_day_raw": null,
+          "buy_confirm_tplusn": null,
+          "sell_confirm_tplusn": null,
+          "has_onexchange_sellable_field": false,
+          "settlement_days_structured": null,
+          "note": "buy/sell CONFIRM day = open-end contract wording (T+1), NOT on-exchange purchased-share sellable day"
+        }
+      ]
+    },
+    {
+      "code": "501050",
+      "ts": "2026-06-24T16:52:00+08:00",
+      "shares_series": [
+        {
+          "source": "eastmoney_f10_gmbd",
+          "ok": true,
+          "elapsed_ms": 121,
+          "needs_login": false,
+          "http_status": 200,
+          "has_share_series": true,
+          "series_granularity": "quarterly_report",
+          "rows_returned": 44,
+          "latest_date": "2026-03-31",
+          "sample": [
+            {
+              "date": "2026-03-31",
+              "qtr_subscribe_yi": "0.23",
+              "qtr_redeem_yi": "1.32",
+              "end_total_shares_yi": "9.25",
+              "end_nav_assets_yi": "15.43"
+            },
+            {
+              "date": "2025-12-31",
+              "qtr_subscribe_yi": "0.26",
+              "qtr_redeem_yi": "1.21",
+              "end_total_shares_yi": "10.34",
+              "end_nav_assets_yi": "18.19"
+            },
+            {
+              "date": "2025-09-30",
+              "qtr_subscribe_yi": "0.30",
+              "qtr_redeem_yi": "3.05",
+              "end_total_shares_yi": "11.29",
+              "end_nav_assets_yi": "19.67"
+            }
+          ],
+          "note": "share-change table; report-date rows only (qtr), end_total_shares is quarter-end"
+        },
+        {
+          "source": "eastmoney_fundmob_ivinfo",
+          "ok": true,
+          "elapsed_ms": 25,
+          "needs_login": false,
+          "has_share_series": false,
+          "series_granularity": "quarterly_report",
+          "report_dates_returned": 39,
+          "latest_date": "2026-03-31",
+          "note": "report-date list (holdings/shares disclosure cadence); confirms quarter-end disclosure"
+        },
+        {
+          "source": "jisilu_lof",
+          "ok": false,
+          "elapsed_ms": 69,
+          "needs_login": false,
+          "has_share_series": false,
+          "series_granularity": "none",
+          "rows_returned": 20,
+          "amount_field": null,
+          "note": "LOF list is member-gated; at best a single current snapshot, no daily series"
+        }
+      ],
+      "settlement_rule": [
+        {
+          "source": "eastmoney_f10_jjfl",
+          "ok": true,
+          "elapsed_ms": 165,
+          "needs_login": false,
+          "http_status": 200,
+          "has_confirm_day_field": true,
+          "buy_confirm_day_raw": "T+1",
+          "sell_confirm_day_raw": "T+1",
+          "buy_confirm_tplusn": 1,
+          "sell_confirm_tplusn": 1,
+          "has_onexchange_sellable_field": false,
+          "settlement_days_structured": null,
+          "note": "buy/sell CONFIRM day = open-end contract wording (T+1), NOT on-exchange purchased-share sellable day"
+        }
+      ]
+    },
+    {
+      "code": "160706",
+      "ts": "2026-06-24T16:52:00+08:00",
+      "shares_series": [
+        {
+          "source": "eastmoney_f10_gmbd",
+          "ok": true,
+          "elapsed_ms": 130,
+          "needs_login": false,
+          "http_status": 200,
+          "has_share_series": true,
+          "series_granularity": "quarterly_report",
+          "rows_returned": 85,
+          "latest_date": "2026-03-31",
+          "sample": [
+            {
+              "date": "2026-03-31",
+              "qtr_subscribe_yi": "4.90",
+              "qtr_redeem_yi": "4.87",
+              "end_total_shares_yi": "63.96",
+              "end_nav_assets_yi": "72.68"
+            },
+            {
+              "date": "2025-12-31",
+              "qtr_subscribe_yi": "4.63",
+              "qtr_redeem_yi": "5.13",
+              "end_total_shares_yi": "63.92",
+              "end_nav_assets_yi": "77.56"
+            },
+            {
+              "date": "2025-09-30",
+              "qtr_subscribe_yi": "3.09",
+              "qtr_redeem_yi": "10.12",
+              "end_total_shares_yi": "64.42",
+              "end_nav_assets_yi": "78.03"
+            }
+          ],
+          "note": "share-change table; report-date rows only (qtr), end_total_shares is quarter-end"
+        },
+        {
+          "source": "eastmoney_fundmob_ivinfo",
+          "ok": true,
+          "elapsed_ms": 27,
+          "needs_login": false,
+          "has_share_series": false,
+          "series_granularity": "quarterly_report",
+          "report_dates_returned": 83,
+          "latest_date": "2026-03-31",
+          "note": "report-date list (holdings/shares disclosure cadence); confirms quarter-end disclosure"
+        },
+        {
+          "source": "jisilu_lof",
+          "ok": false,
+          "elapsed_ms": 68,
+          "needs_login": false,
+          "has_share_series": false,
+          "series_granularity": "none",
+          "rows_returned": 20,
+          "amount_field": null,
+          "note": "LOF list is member-gated; at best a single current snapshot, no daily series"
+        }
+      ],
+      "settlement_rule": [
+        {
+          "source": "eastmoney_f10_jjfl",
+          "ok": true,
+          "elapsed_ms": 141,
+          "needs_login": false,
+          "http_status": 200,
+          "has_confirm_day_field": true,
+          "buy_confirm_day_raw": "T+1",
+          "sell_confirm_day_raw": "T+1",
+          "buy_confirm_tplusn": 1,
+          "sell_confirm_tplusn": 1,
+          "has_onexchange_sellable_field": false,
+          "settlement_days_structured": null,
+          "note": "buy/sell CONFIRM day = open-end contract wording (T+1), NOT on-exchange purchased-share sellable day"
+        }
+      ]
+    },
+    {
+      "code": "160216",
+      "ts": "2026-06-24T16:52:01+08:00",
+      "shares_series": [
+        {
+          "source": "eastmoney_f10_gmbd",
+          "ok": true,
+          "elapsed_ms": 170,
+          "needs_login": false,
+          "http_status": 200,
+          "has_share_series": true,
+          "series_granularity": "quarterly_report",
+          "rows_returned": 83,
+          "latest_date": "2026-03-31",
+          "sample": [
+            {
+              "date": "2026-03-31",
+              "qtr_subscribe_yi": "3.29",
+              "qtr_redeem_yi": "7.40",
+              "end_total_shares_yi": "11.30",
+              "end_nav_assets_yi": "8.64"
+            },
+            {
+              "date": "2025-12-31",
+              "qtr_subscribe_yi": "9.64",
+              "qtr_redeem_yi": "4.22",
+              "end_total_shares_yi": "15.40",
+              "end_nav_assets_yi": "10.28"
+            },
+            {
+              "date": "2025-09-30",
+              "qtr_subscribe_yi": "4.77",
+              "qtr_redeem_yi": "3.83",
+              "end_total_shares_yi": "9.98",
+              "end_nav_assets_yi": "6.22"
+            }
+          ],
+          "note": "share-change table; report-date rows only (qtr), end_total_shares is quarter-end"
+        },
+        {
+          "source": "eastmoney_fundmob_ivinfo",
+          "ok": true,
+          "elapsed_ms": 25,
+          "needs_login": false,
+          "has_share_series": false,
+          "series_granularity": "quarterly_report",
+          "report_dates_returned": 56,
+          "latest_date": "2026-03-31",
+          "note": "report-date list (holdings/shares disclosure cadence); confirms quarter-end disclosure"
+        },
+        {
+          "source": "jisilu_lof",
+          "ok": false,
+          "elapsed_ms": 75,
+          "needs_login": false,
+          "has_share_series": false,
+          "series_granularity": "none",
+          "rows_returned": 20,
+          "amount_field": null,
+          "note": "LOF list is member-gated; at best a single current snapshot, no daily series"
+        }
+      ],
+      "settlement_rule": [
+        {
+          "source": "eastmoney_f10_jjfl",
+          "ok": true,
+          "elapsed_ms": 156,
+          "needs_login": false,
+          "http_status": 200,
+          "has_confirm_day_field": true,
+          "buy_confirm_day_raw": "T+2",
+          "sell_confirm_day_raw": "T+2",
+          "buy_confirm_tplusn": 2,
+          "sell_confirm_tplusn": 2,
+          "has_onexchange_sellable_field": false,
+          "settlement_days_structured": null,
+          "note": "buy/sell CONFIRM day = open-end contract wording (T+1), NOT on-exchange purchased-share sellable day"
+        }
+      ]
+    }
+  ]
+}

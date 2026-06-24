@@ -437,3 +437,35 @@ python scripts/probe_subscribe_status.py --codes 161725 161005             # 指
 - 申购/赎回状态：建议接入。主源 `eastmoney_fundmob_basic` + 备源 `eastmoney_f10_html` + 兜底 `unknown`。`subscribe_status`/`redeem_status` 是 §6 既有字段（PRD 1.2 已定义、当前返回 unknown），从「占位 unknown」升「真实值」不新增/改名/删字段 → 预期不触发 CCR；建议 dev-001 同步更新 `prd-1.2-field-source-evaluation.md` 该字段结论，是否升 PRD 1.3 由 dev-001 裁定。
 - 申购额度：建议接入但需走 CCR 升 PRD。当前 §6 无承载字段，接入即「结构性新增」（建议字段如 `subscribe_limit` 或 `subscribe_limit_amount` + `subscribe_limit_period`），属新增 §6 字段 → 必须先走 CCR 升 PRD 1.3，再实装。
 - 本 POC 仅探测产报告，不改主链路、不接入；real_watchlist 主链路 list/detail 维持现状（unknown）。
+
+## 份额序列 + 场内申购到账规则 免费源探测 POC（只读，不接入）
+
+背景：用户希望看「新增份额」列（= 当日份额 − 昨日份额）与「场内申购份额 T+N 可卖」规则。本节为纯只读探测产物，评估免费候选源可得性与口径，不接入、不动 §6 字段、不动 real_watchlist 主链路。
+
+### 运行
+```powershell
+cd lof-fetcher
+python scripts/probe_shares_and_settlement.py                              # 默认 7 只
+python scripts/probe_shares_and_settlement.py --codes 161725 161005        # 指定标的
+```
+产物：`outputs/backend-shares-settlement-probe-v2.json` + `.md`，含两个探测点的源×标的对比表。
+
+> **更正（2026-06-24 复测）**：本节“无稳定免费逐日份额序列”结论已被推翻。前次用 httpx 访问集思录被本机 TLS 握手断开（EOF）误判为会员墙；改用 curl 后匿名可连。集思录“实时数据-LOF”页提供场内份额（amount）与场内新增（amount_incr）逐日真实值，watchlist-v2 30 只 LOF 范围内 30/30 可得（唯缺 501311 为港股通/QDII，不在 LOF 列表）。【关键】全量 30 只需集思录登录 Cookie（游客仅前 20 条）；Cookie 走环境变量、不入库。结论：“场内份额/每日新增”改为「有源、登录后可全量获取」，待 dev-002 起 CCR（建议字段 shares_onexchange / shares_incr_daily）。
+
+### 探测点一：逐日份额序列（2026-06-24，7 只：指数/主动/行业 + active_low_liquidity）
+- 结论：**无稳定免费逐日份额序列**。份额/规模只在季报披露（季末报告日），无逐交易日序列。
+- eastmoney_f10_gmbd（FundArchivesDatas.aspx?type=gmbd 份额变动表）：7/7 命中，但粒度全为 quarterly_report，最新 2026-03-31；列为期间申购/期间赎回/期末总份额（亿份），均为季度值。
+- eastmoney_fundmob_ivinfo（FundMNIVInfoMultiple 披露报告日列表）：7/7 命中，披露节奏同为季末，交叉印证份额仅季度披露。
+- jisilu_lof（集思录 LOF 列表）：0/7，未登录拿不到目标份额字段（会员墙/分页不含该标的），即使有也只是当前快照、无历史序列。
+- 建议字段：若将来找到逐日源 → `circulating_shares_daily` / `shares_change_daily`；现阶段维持 §2.2 推迟结论，「新增份额」列本期不可做。
+
+### 探测点二：场内申购份额 T+N 可卖规则
+- 结论：**无结构化「场内申购份额 T+N 可卖」免费源**。
+- eastmoney_f10_jjfl（jjfl_{code}.html 交易规则表）：确认日字段 6/7 命中（501203 缺失），但只有「买入确认日/卖出确认日」（T+1，160216 为 T+2）。
+- 口径区别（关键）：「买入/卖出确认日」是场外申赎份额的合同确认日，不等于「场内申购份额几个交易日可在二级市场卖出」（后者是交易所登记结算规则，免费源未结构化暴露）。两者不能混用。
+- 覆盖不全：501203 的 jjfl 未拿到确认日，需解析非结构化文本。
+
+### 接入建议与 CCR 判定
+- 逐日份额/新增份额：**不建议本期接入**。无稳定免费逐日源，维持 §2.2 推迟。若后续找到付费/登录源，再评估是否新增 §6 字段（需走 CCR）。
+- 场内申购 T+N 到账：**可做静态常量表，不建议依赖免费接口自动采**。免费源只有场外确认日、无场内可卖日。若要提供 `purchase_settlement_days`（整数，单位「交易日」，无源→null），建议由 dev-002 维护静态配置表（按交易所规则人工填），而非报错源；该字段为 §6 结构性新增 → **需先走 CCR 升 PRD**。
+- 本 POC 仅探测产报告，不改主链路、不接入。
