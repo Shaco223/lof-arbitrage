@@ -14,6 +14,8 @@ import {
   fmtPctSigned,
   fmtLimitAmount,
   fmtSharesYi,
+  fmtSharesWan,
+  fmtSharesIncrWan,
   fmtVolumeWan,
   freshnessLabel,
   shouldRender
@@ -208,8 +210,16 @@ onLoad((q: Record<string, string> | undefined) => {
             <text class="label">成交额</text>
             <text class="value">{{ fmtVolumeWan(volumeAmount) }}</text>
           </view>
+          <view v-if="shouldRender(detail.shares_onexchange)" class="dual-row">
+            <text class="label">场内份额(万份)</text>
+            <text class="value">{{ fmtSharesWan(detail.shares_onexchange) }}</text>
+          </view>
+          <view v-if="shouldRender(detail.shares_incr_daily)" class="dual-row">
+            <text class="label">当日新增份额</text>
+            <text class="value" :class="(detail.shares_incr_daily ?? 0) >= 0 ? 'text-up' : 'text-down'">{{ fmtSharesIncrWan(detail.shares_incr_daily) }}</text>
+          </view>
           <view v-if="shouldRender(detail.circulating_shares)" class="dual-row">
-            <text class="label">场内份额</text>
+            <text class="label">场内份额(亿份)</text>
             <text class="value">{{ fmtSharesYi(detail.circulating_shares) }}</text>
           </view>
         </view>
@@ -270,6 +280,13 @@ onLoad((q: Record<string, string> | undefined) => {
         估值时间：{{ fmtDateTime(detail.realtime.ts) }}（{{ freshnessLabel(detail.realtime.ts) }}）
         <text v-if="shouldRender(detail.nav_official_date)" class="sub">· 披露净值日期 {{ detail.nav_official_date }}</text>
       </view>
+
+      <!-- PRD 1.4 规则区：申赎确认日（参考）；严禁标“到账可卖日”（§11 R10 红线） -->
+      <view v-if="shouldRender(detail.purchase_confirm_day) || shouldRender(detail.redeem_confirm_day)" class="rule-line">
+        <text class="rule-title">申赎确认日（参考）</text>
+        <text v-if="shouldRender(detail.purchase_confirm_day)" class="rule-item">申购 {{ detail.purchase_confirm_day }}</text>
+        <text v-if="shouldRender(detail.redeem_confirm_day)" class="rule-item">赎回 {{ detail.redeem_confirm_day }}</text>
+      </view>
     </view>
 
     <view class="card history-card" v-if="history">
@@ -286,6 +303,7 @@ onLoad((q: Record<string, string> | undefined) => {
         <text class="hist-num">收盘溢价</text>
         <text class="hist-num">预估溢价</text>
         <text class="hist-num">偏差</text>
+        <text class="hist-num">新增份额</text>
       </view>
       <view class="hist-row" v-for="row in historyRows" :key="row.date">
         <text class="hist-date">{{ row.date }}</text>
@@ -303,6 +321,10 @@ onLoad((q: Record<string, string> | undefined) => {
           class="hist-num"
           :class="shouldRender(row.premium_deviation) ? ((row.premium_deviation ?? 0) >= 0 ? 'text-up' : 'text-down') : ''"
         >{{ shouldRender(row.premium_deviation) ? fmtPctSigned(row.premium_deviation, 2) : '--' }}</text>
+        <text
+          class="hist-num"
+          :class="shouldRender(row.shares_incr_daily) ? ((row.shares_incr_daily ?? 0) >= 0 ? 'text-up' : 'text-down') : ''"
+        >{{ shouldRender(row.shares_incr_daily) ? fmtSharesIncrWan(row.shares_incr_daily) : '--' }}</text>
       </view>
     </view>
 
@@ -380,12 +402,15 @@ onLoad((q: Record<string, string> | undefined) => {
 
 .fresh-line { color: #909399; font-size: 24rpx; margin-top: 18rpx; }
 .fresh-line .sub { color: #c0c4cc; font-size: 22rpx; }
+.rule-line { display: flex; flex-wrap: wrap; align-items: center; gap: 12rpx; margin-top: 12rpx; font-size: 24rpx; color: #606266; }
+.rule-title { color: #909399; }
+.rule-item { background: #f5f7fa; color: #606266; padding: 4rpx 12rpx; border-radius: 6rpx; font-size: 22rpx; }
 
 .section-head { display: flex; align-items: center; justify-content: space-between; }
 .section-title { font-size: 30rpx; font-weight: 600; color: #1f2d3d; margin-bottom: 8rpx; }
 .history-summary { margin: 4rpx 0 12rpx; color: #606266; font-size: 24rpx; }
 /* 历史逐日列表（代替原折线图 + 溢价柱） */
-.hist-head, .hist-row { display: grid; grid-template-columns: 1.2fr 1fr 1fr 1.05fr 1.05fr 0.95fr; gap: 8rpx; padding: 12rpx 0; align-items: center; font-size: 22rpx; }
+.hist-head, .hist-row { display: grid; grid-template-columns: 1.05fr 0.85fr 0.85fr 0.95fr 0.95fr 0.85fr 0.95fr; gap: 6rpx; padding: 12rpx 0; align-items: center; font-size: 21rpx; }
 .hist-head { color: #909399; border-bottom: 1rpx solid #ebeef5; }
 .hist-row { border-top: 1rpx solid #f0f2f5; color: #606266; }
 .hist-row:first-of-type { border-top: 0; }

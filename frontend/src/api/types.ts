@@ -49,6 +49,14 @@ export interface LofListItem {
   redeem_limit_amount?: number | null
   /** PRD 1.3：赎回限额周期 */
   redeem_limit_period?: string | null
+  /** PRD 1.4：场内份额（万份） */
+  shares_onexchange?: number | null
+  /** PRD 1.4：当日新增份额（万份） */
+  shares_incr_daily?: number | null
+  /** PRD 1.4：申购确认日，如 T+1（参考口径，非到账可卖日） */
+  purchase_confirm_day?: number | string | null
+  /** PRD 1.4：赎回确认日，如 T+1（参考口径，非到账可卖日） */
+  redeem_confirm_day?: number | string | null
   /** 基金规模，单位"亿元" */
   fund_scale?: number | null
   /** 场内流通份额，单位"亿份" */
@@ -129,6 +137,14 @@ export interface LofDetailData {
   redeem_limit_amount?: number | null
   /** PRD 1.3：赎回限额周期 */
   redeem_limit_period?: string | null
+  /** PRD 1.4：场内份额（万份） */
+  shares_onexchange?: number | null
+  /** PRD 1.4：当日新增份额（万份） */
+  shares_incr_daily?: number | null
+  /** PRD 1.4：申购确认日，如 T+1（参考口径，非到账可卖日） */
+  purchase_confirm_day?: number | string | null
+  /** PRD 1.4：赎回确认日，如 T+1（参考口径，非到账可卖日） */
+  redeem_confirm_day?: number | string | null
 }
 
 /** 历史项（api-lof-history） */
@@ -142,6 +158,8 @@ export interface LofHistoryItem {
   premium_estimate_close?: number | null
   /** PRD 1.2.3：溢价偏差 = 预估溢价 - 收盘溢价 */
   premium_deviation?: number | null
+  /** PRD 1.4：当日新增份额（万份，逐日累积不回填，前期为 null） */
+  shares_incr_daily?: number | null
 }
 
 export interface LofHistoryData {
