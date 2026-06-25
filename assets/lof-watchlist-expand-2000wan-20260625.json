@@ -1,0 +1,861 @@
+{
+  "as_of": "2026-06-25",
+  "criterion": "jisilu shares_onexchange(amount) > 2000 wan",
+  "count": 122,
+  "items": [
+    {
+      "code": "161226",
+      "name": "国投白银LOF",
+      "category": "index",
+      "shares_onexchange": 365367.0,
+      "index_nm": "白银期货"
+    },
+    {
+      "code": "161725",
+      "name": "白酒基金LOF",
+      "category": "index",
+      "shares_onexchange": 361333.0,
+      "index_nm": "中证白酒"
+    },
+    {
+      "code": "163417",
+      "name": "兴全合宜LOF",
+      "category": "stock",
+      "shares_onexchange": 108844.0,
+      "index_nm": null
+    },
+    {
+      "code": "161716",
+      "name": "招商双债LOF",
+      "category": "index",
+      "shares_onexchange": 85339.0,
+      "index_nm": "--"
+    },
+    {
+      "code": "163402",
+      "name": "兴全趋势LOF",
+      "category": "stock",
+      "shares_onexchange": 69422.0,
+      "index_nm": null
+    },
+    {
+      "code": "161726",
+      "name": "生物医药LOF",
+      "category": "index",
+      "shares_onexchange": 48088.0,
+      "index_nm": "生物医药"
+    },
+    {
+      "code": "160632",
+      "name": "酒LOF",
+      "category": "index",
+      "shares_onexchange": 40859.0,
+      "index_nm": "中证酒"
+    },
+    {
+      "code": "161005",
+      "name": "富国天惠LOF",
+      "category": "stock",
+      "shares_onexchange": 36718.0,
+      "index_nm": null
+    },
+    {
+      "code": "167301",
+      "name": "保险主题LOF",
+      "category": "index",
+      "shares_onexchange": 35201.0,
+      "index_nm": "保险主题"
+    },
+    {
+      "code": "501227",
+      "name": "泓德红利优选LOF",
+      "category": "index",
+      "shares_onexchange": 30388.0,
+      "index_nm": "中证红利"
+    },
+    {
+      "code": "162412",
+      "name": "医疗基金LOF",
+      "category": "index",
+      "shares_onexchange": 28220.0,
+      "index_nm": "中证医疗"
+    },
+    {
+      "code": "162605",
+      "name": "景顺鼎益LOF",
+      "category": "stock",
+      "shares_onexchange": 26899.0,
+      "index_nm": null
+    },
+    {
+      "code": "160706",
+      "name": "沪深300LOF",
+      "category": "index",
+      "shares_onexchange": 23885.0,
+      "index_nm": "沪深300"
+    },
+    {
+      "code": "163418",
+      "name": "兴全合兴LOF",
+      "category": "stock",
+      "shares_onexchange": 21199.0,
+      "index_nm": null
+    },
+    {
+      "code": "163406",
+      "name": "兴全合润LOF",
+      "category": "stock",
+      "shares_onexchange": 20168.0,
+      "index_nm": null
+    },
+    {
+      "code": "161903",
+      "name": "万家行业优选LOF",
+      "category": "stock",
+      "shares_onexchange": 17329.0,
+      "index_nm": null
+    },
+    {
+      "code": "161026",
+      "name": "国企改革LOF",
+      "category": "index",
+      "shares_onexchange": 17259.0,
+      "index_nm": "国企改革"
+    },
+    {
+      "code": "160505",
+      "name": "博时主题LOF",
+      "category": "stock",
+      "shares_onexchange": 16217.0,
+      "index_nm": null
+    },
+    {
+      "code": "163113",
+      "name": "申万证券LOF",
+      "category": "index",
+      "shares_onexchange": 16099.0,
+      "index_nm": "CSSW证券"
+    },
+    {
+      "code": "501050",
+      "name": "50AHLOF",
+      "category": "index",
+      "shares_onexchange": 15968.0,
+      "index_nm": "上证50优选"
+    },
+    {
+      "code": "161812",
+      "name": "深证100LOF",
+      "category": "index",
+      "shares_onexchange": 15871.0,
+      "index_nm": "深证100"
+    },
+    {
+      "code": "161720",
+      "name": "证券基金LOF",
+      "category": "index",
+      "shares_onexchange": 15543.0,
+      "index_nm": "证券公司"
+    },
+    {
+      "code": "160219",
+      "name": "医药LOF",
+      "category": "index",
+      "shares_onexchange": 15209.0,
+      "index_nm": "国证医药"
+    },
+    {
+      "code": "162703",
+      "name": "广发小盘LOF",
+      "category": "stock",
+      "shares_onexchange": 14256.0,
+      "index_nm": null
+    },
+    {
+      "code": "161024",
+      "name": "军工LOF",
+      "category": "index",
+      "shares_onexchange": 14075.0,
+      "index_nm": "中证军工"
+    },
+    {
+      "code": "161027",
+      "name": "证券LOF",
+      "category": "index",
+      "shares_onexchange": 13725.0,
+      "index_nm": "证券公司"
+    },
+    {
+      "code": "501090",
+      "name": "消费龙头LOF",
+      "category": "index",
+      "shares_onexchange": 12510.0,
+      "index_nm": "消费龙头"
+    },
+    {
+      "code": "163109",
+      "name": "申万深成LOF",
+      "category": "index",
+      "shares_onexchange": 12171.0,
+      "index_nm": "深证成指"
+    },
+    {
+      "code": "501029",
+      "name": "红利基金LOF",
+      "category": "index",
+      "shares_onexchange": 11948.0,
+      "index_nm": "标普A股红利"
+    },
+    {
+      "code": "501205",
+      "name": "鹏华创新未来LOF",
+      "category": "stock",
+      "shares_onexchange": 11499.0,
+      "index_nm": null
+    },
+    {
+      "code": "161227",
+      "name": "国投深证100LOF",
+      "category": "index",
+      "shares_onexchange": 11188.0,
+      "index_nm": "深证100"
+    },
+    {
+      "code": "160133",
+      "name": "南方天元LOF",
+      "category": "stock",
+      "shares_onexchange": 11016.0,
+      "index_nm": null
+    },
+    {
+      "code": "501096",
+      "name": "国联安科创LOF",
+      "category": "stock",
+      "shares_onexchange": 10703.0,
+      "index_nm": null
+    },
+    {
+      "code": "160631",
+      "name": "银行LOF基金",
+      "category": "index",
+      "shares_onexchange": 9125.0,
+      "index_nm": "中证银行"
+    },
+    {
+      "code": "501026",
+      "name": "财通福享混合LOF",
+      "category": "stock",
+      "shares_onexchange": 8936.0,
+      "index_nm": null
+    },
+    {
+      "code": "160222",
+      "name": "食品LOF",
+      "category": "index",
+      "shares_onexchange": 8637.0,
+      "index_nm": "国证食品"
+    },
+    {
+      "code": "501207",
+      "name": "华夏创新未来LOF",
+      "category": "stock",
+      "shares_onexchange": 8582.0,
+      "index_nm": null
+    },
+    {
+      "code": "160919",
+      "name": "产业升级LOF",
+      "category": "stock",
+      "shares_onexchange": 8480.0,
+      "index_nm": null
+    },
+    {
+      "code": "160813",
+      "name": "长盛同盛LOF",
+      "category": "stock",
+      "shares_onexchange": 8102.0,
+      "index_nm": null
+    },
+    {
+      "code": "160630",
+      "name": "国防LOF",
+      "category": "index",
+      "shares_onexchange": 8011.0,
+      "index_nm": "中证国防"
+    },
+    {
+      "code": "161028",
+      "name": "新能源车LOF",
+      "category": "index",
+      "shares_onexchange": 7641.0,
+      "index_nm": "CS新能车"
+    },
+    {
+      "code": "501009",
+      "name": "生物科技LOF",
+      "category": "index",
+      "shares_onexchange": 7158.0,
+      "index_nm": "中证生科"
+    },
+    {
+      "code": "160323",
+      "name": "华夏磐泰LOF",
+      "category": "stock",
+      "shares_onexchange": 6908.0,
+      "index_nm": null
+    },
+    {
+      "code": "160916",
+      "name": "优选LOF",
+      "category": "stock",
+      "shares_onexchange": 6847.0,
+      "index_nm": null
+    },
+    {
+      "code": "165525",
+      "name": "基建工程LOF",
+      "category": "index",
+      "shares_onexchange": 6759.0,
+      "index_nm": "基建工程"
+    },
+    {
+      "code": "162607",
+      "name": "景顺资源LOF",
+      "category": "stock",
+      "shares_onexchange": 6596.0,
+      "index_nm": null
+    },
+    {
+      "code": "163415",
+      "name": "兴全商业模式LOF",
+      "category": "stock",
+      "shares_onexchange": 6568.0,
+      "index_nm": null
+    },
+    {
+      "code": "163503",
+      "name": "天治核心LOF",
+      "category": "stock",
+      "shares_onexchange": 6311.0,
+      "index_nm": null
+    },
+    {
+      "code": "160311",
+      "name": "华夏蓝筹LOF",
+      "category": "stock",
+      "shares_onexchange": 6262.0,
+      "index_nm": null
+    },
+    {
+      "code": "160314",
+      "name": "华夏行业LOF",
+      "category": "stock",
+      "shares_onexchange": 6173.0,
+      "index_nm": null
+    },
+    {
+      "code": "501219",
+      "name": "智胜先锋LOF",
+      "category": "stock",
+      "shares_onexchange": 6126.0,
+      "index_nm": null
+    },
+    {
+      "code": "165521",
+      "name": "金融LOF",
+      "category": "index",
+      "shares_onexchange": 5965.0,
+      "index_nm": "800金融"
+    },
+    {
+      "code": "160611",
+      "name": "鹏华优质治理LOF",
+      "category": "stock",
+      "shares_onexchange": 5850.0,
+      "index_nm": null
+    },
+    {
+      "code": "162509",
+      "name": "中证A100LOF",
+      "category": "index",
+      "shares_onexchange": 5473.0,
+      "index_nm": "中证A100"
+    },
+    {
+      "code": "160607",
+      "name": "鹏华价值优势LOF",
+      "category": "stock",
+      "shares_onexchange": 5387.0,
+      "index_nm": null
+    },
+    {
+      "code": "160625",
+      "name": "证保LOF",
+      "category": "index",
+      "shares_onexchange": 5322.0,
+      "index_nm": "800非银"
+    },
+    {
+      "code": "501206",
+      "name": "添富创新未来LOF",
+      "category": "stock",
+      "shares_onexchange": 5194.0,
+      "index_nm": null
+    },
+    {
+      "code": "501089",
+      "name": "消费红利增强LOF",
+      "category": "index",
+      "shares_onexchange": 5118.0,
+      "index_nm": "消费红利"
+    },
+    {
+      "code": "161131",
+      "name": "易方达科润LOF",
+      "category": "stock",
+      "shares_onexchange": 4844.0,
+      "index_nm": null
+    },
+    {
+      "code": "160918",
+      "name": "中小盘LOF",
+      "category": "stock",
+      "shares_onexchange": 4828.0,
+      "index_nm": null
+    },
+    {
+      "code": "161610",
+      "name": "融通领先成长LOF",
+      "category": "stock",
+      "shares_onexchange": 4716.0,
+      "index_nm": null
+    },
+    {
+      "code": "160812",
+      "name": "长盛同益LOF",
+      "category": "stock",
+      "shares_onexchange": 4652.0,
+      "index_nm": null
+    },
+    {
+      "code": "501078",
+      "name": "科创配置LOF",
+      "category": "stock",
+      "shares_onexchange": 4634.0,
+      "index_nm": null
+    },
+    {
+      "code": "501208",
+      "name": "中欧创新未来LOF",
+      "category": "stock",
+      "shares_onexchange": 4618.0,
+      "index_nm": null
+    },
+    {
+      "code": "168103",
+      "name": "九泰锐益LOF",
+      "category": "stock",
+      "shares_onexchange": 4599.0,
+      "index_nm": null
+    },
+    {
+      "code": "501203",
+      "name": "易基创新未来LOF",
+      "category": "stock",
+      "shares_onexchange": 4581.0,
+      "index_nm": null
+    },
+    {
+      "code": "160221",
+      "name": "有色金属LOF",
+      "category": "index",
+      "shares_onexchange": 4463.0,
+      "index_nm": "国证有色"
+    },
+    {
+      "code": "501015",
+      "name": "财通升级混合LOF",
+      "category": "stock",
+      "shares_onexchange": 4200.0,
+      "index_nm": null
+    },
+    {
+      "code": "163118",
+      "name": "医药生物LOF",
+      "category": "index",
+      "shares_onexchange": 4175.0,
+      "index_nm": "医药生物"
+    },
+    {
+      "code": "161810",
+      "name": "银华内需LOF",
+      "category": "stock",
+      "shares_onexchange": 3807.0,
+      "index_nm": null
+    },
+    {
+      "code": "161025",
+      "name": "互联网LOF",
+      "category": "index",
+      "shares_onexchange": 3711.0,
+      "index_nm": "移动互联"
+    },
+    {
+      "code": "501011",
+      "name": "中药基金LOF",
+      "category": "index",
+      "shares_onexchange": 3687.0,
+      "index_nm": "中证中药"
+    },
+    {
+      "code": "160805",
+      "name": "长盛同智LOF",
+      "category": "stock",
+      "shares_onexchange": 3660.0,
+      "index_nm": null
+    },
+    {
+      "code": "160633",
+      "name": "券商LOF",
+      "category": "index",
+      "shares_onexchange": 3618.0,
+      "index_nm": "证券公司"
+    },
+    {
+      "code": "501057",
+      "name": "新能源车LOF",
+      "category": "index",
+      "shares_onexchange": 3571.0,
+      "index_nm": "新能源车"
+    },
+    {
+      "code": "502056",
+      "name": "医疗基金LOF",
+      "category": "index",
+      "shares_onexchange": 3563.0,
+      "index_nm": "中证医疗"
+    },
+    {
+      "code": "501085",
+      "name": "财通科创LOF",
+      "category": "stock",
+      "shares_onexchange": 3546.0,
+      "index_nm": null
+    },
+    {
+      "code": "501186",
+      "name": "华夏兴融LOF",
+      "category": "stock",
+      "shares_onexchange": 3541.0,
+      "index_nm": null
+    },
+    {
+      "code": "166001",
+      "name": "中欧趋势LOF",
+      "category": "stock",
+      "shares_onexchange": 3522.0,
+      "index_nm": null
+    },
+    {
+      "code": "163409",
+      "name": "兴全绿色LOF",
+      "category": "stock",
+      "shares_onexchange": 3432.0,
+      "index_nm": null
+    },
+    {
+      "code": "160106",
+      "name": "南方高增LOF",
+      "category": "stock",
+      "shares_onexchange": 3403.0,
+      "index_nm": null
+    },
+    {
+      "code": "160142",
+      "name": "南方优势产业LOF",
+      "category": "stock",
+      "shares_onexchange": 3385.0,
+      "index_nm": null
+    },
+    {
+      "code": "160643",
+      "name": "空天军工LOF",
+      "category": "index",
+      "shares_onexchange": 3350.0,
+      "index_nm": "空天军工"
+    },
+    {
+      "code": "160119",
+      "name": "500ETF联接LOF",
+      "category": "index",
+      "shares_onexchange": 3344.0,
+      "index_nm": "中证500"
+    },
+    {
+      "code": "169105",
+      "name": "东方红睿华LOF",
+      "category": "stock",
+      "shares_onexchange": 3344.0,
+      "index_nm": null
+    },
+    {
+      "code": "160127",
+      "name": "南方消费LOF",
+      "category": "stock",
+      "shares_onexchange": 3282.0,
+      "index_nm": null
+    },
+    {
+      "code": "501079",
+      "name": "科创大成LOF",
+      "category": "stock",
+      "shares_onexchange": 3255.0,
+      "index_nm": null
+    },
+    {
+      "code": "161816",
+      "name": "中证90LOF",
+      "category": "index",
+      "shares_onexchange": 3144.0,
+      "index_nm": "等权90"
+    },
+    {
+      "code": "501005",
+      "name": "精准医疗LOF",
+      "category": "index",
+      "shares_onexchange": 3144.0,
+      "index_nm": "CS精准医"
+    },
+    {
+      "code": "501188",
+      "name": "添富核心精选LOF",
+      "category": "stock",
+      "shares_onexchange": 3022.0,
+      "index_nm": null
+    },
+    {
+      "code": "160218",
+      "name": "房地产LOF",
+      "category": "index",
+      "shares_onexchange": 3014.0,
+      "index_nm": "国证地产"
+    },
+    {
+      "code": "502048",
+      "name": "上证50LOF",
+      "category": "index",
+      "shares_onexchange": 3008.0,
+      "index_nm": "上证50"
+    },
+    {
+      "code": "160806",
+      "name": "长盛中证800LOF",
+      "category": "index",
+      "shares_onexchange": 2894.0,
+      "index_nm": "中证800"
+    },
+    {
+      "code": "162006",
+      "name": "长城久富LOF",
+      "category": "stock",
+      "shares_onexchange": 2859.0,
+      "index_nm": null
+    },
+    {
+      "code": "501077",
+      "name": "富国创新企业LOF",
+      "category": "stock",
+      "shares_onexchange": 2766.0,
+      "index_nm": null
+    },
+    {
+      "code": "501016",
+      "name": "券商基金LOF",
+      "category": "index",
+      "shares_onexchange": 2689.0,
+      "index_nm": "CSSW证券"
+    },
+    {
+      "code": "161217",
+      "name": "国投资源LOF",
+      "category": "index",
+      "shares_onexchange": 2665.0,
+      "index_nm": "中证上游"
+    },
+    {
+      "code": "163407",
+      "name": "兴全沪深300LOF",
+      "category": "index",
+      "shares_onexchange": 2664.0,
+      "index_nm": "沪深300"
+    },
+    {
+      "code": "501095",
+      "name": "中银证券科技创新LOF",
+      "category": "stock",
+      "shares_onexchange": 2620.0,
+      "index_nm": null
+    },
+    {
+      "code": "165313",
+      "name": "建信优势LOF",
+      "category": "stock",
+      "shares_onexchange": 2611.0,
+      "index_nm": null
+    },
+    {
+      "code": "161715",
+      "name": "大宗商品LOF",
+      "category": "index",
+      "shares_onexchange": 2542.0,
+      "index_nm": "大宗商品"
+    },
+    {
+      "code": "502010",
+      "name": "证券LOF",
+      "category": "index",
+      "shares_onexchange": 2500.0,
+      "index_nm": "证券公司"
+    },
+    {
+      "code": "160610",
+      "name": "鹏华动力LOF",
+      "category": "stock",
+      "shares_onexchange": 2487.0,
+      "index_nm": null
+    },
+    {
+      "code": "161017",
+      "name": "500增强LOF",
+      "category": "index",
+      "shares_onexchange": 2461.0,
+      "index_nm": "中证500"
+    },
+    {
+      "code": "161122",
+      "name": "生物科技LOF",
+      "category": "index",
+      "shares_onexchange": 2444.0,
+      "index_nm": "CSWD生科"
+    },
+    {
+      "code": "501082",
+      "name": "科创投资LOF",
+      "category": "stock",
+      "shares_onexchange": 2439.0,
+      "index_nm": null
+    },
+    {
+      "code": "169101",
+      "name": "东方红睿丰LOF",
+      "category": "stock",
+      "shares_onexchange": 2425.0,
+      "index_nm": null
+    },
+    {
+      "code": "161123",
+      "name": "并购重组LOF",
+      "category": "index",
+      "shares_onexchange": 2365.0,
+      "index_nm": "CSWD并购"
+    },
+    {
+      "code": "163114",
+      "name": "申万环保LOF",
+      "category": "index",
+      "shares_onexchange": 2336.0,
+      "index_nm": "中证环保"
+    },
+    {
+      "code": "163412",
+      "name": "兴全轻资产LOF",
+      "category": "stock",
+      "shares_onexchange": 2332.0,
+      "index_nm": null
+    },
+    {
+      "code": "502003",
+      "name": "军工LOF",
+      "category": "index",
+      "shares_onexchange": 2292.0,
+      "index_nm": "中证军工"
+    },
+    {
+      "code": "501201",
+      "name": "科创红土LOF",
+      "category": "stock",
+      "shares_onexchange": 2287.0,
+      "index_nm": null
+    },
+    {
+      "code": "501043",
+      "name": "沪深300LOF",
+      "category": "index",
+      "shares_onexchange": 2285.0,
+      "index_nm": "沪深300"
+    },
+    {
+      "code": "160910",
+      "name": "创新成长LOF",
+      "category": "stock",
+      "shares_onexchange": 2248.0,
+      "index_nm": null
+    },
+    {
+      "code": "164403",
+      "name": "农业精选LOF",
+      "category": "stock",
+      "shares_onexchange": 2239.0,
+      "index_nm": null
+    },
+    {
+      "code": "163801",
+      "name": "中银中国LOF",
+      "category": "stock",
+      "shares_onexchange": 2228.0,
+      "index_nm": null
+    },
+    {
+      "code": "165520",
+      "name": "有色LOF",
+      "category": "index",
+      "shares_onexchange": 2157.0,
+      "index_nm": "800有色"
+    },
+    {
+      "code": "161631",
+      "name": "人工智能LOF",
+      "category": "index",
+      "shares_onexchange": 2096.0,
+      "index_nm": "CS人工智"
+    },
+    {
+      "code": "501019",
+      "name": "军工基金LOF",
+      "category": "index",
+      "shares_onexchange": 2085.0,
+      "index_nm": "国证军工"
+    },
+    {
+      "code": "501202",
+      "name": "华泰创新先锋LOF",
+      "category": "stock",
+      "shares_onexchange": 2041.0,
+      "index_nm": null
+    },
+    {
+      "code": "501073",
+      "name": "华安智联LOF",
+      "category": "stock",
+      "shares_onexchange": 2010.0,
+      "index_nm": null
+    },
+    {
+      "code": "502013",
+      "name": "一带一路LOF",
+      "category": "index",
+      "shares_onexchange": 2009.0,
+      "index_nm": "CSSW丝路"
+    }
+  ]
+}
