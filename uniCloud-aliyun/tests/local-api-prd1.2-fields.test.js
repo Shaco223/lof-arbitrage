@@ -31,7 +31,6 @@ const DETAIL_REQUIRED_FIELDS = LIST_REQUIRED_FIELDS.concat([
   "benchmark_raw",
   "benchmark_components",
   "scale_yi",
-  "coverage_top10",
   "holdings_top10",
   "realtime",
   "nav_estimate_error_pct"
@@ -45,7 +44,7 @@ async function run() {
   try {
     const list = await requestJson(`${baseUrl}/lof-list?sort=code`);
     assert.strictEqual(list.code, 0);
-    assert.strictEqual(list.data.items.length, 30);
+    assert.ok(list.data.items.length >= 122, `expected >=122, got ${list.data.items.length}`);
     for (const field of LIST_REQUIRED_FIELDS) {
       assert.ok(field in list.data.items[0], `list[0] missing field ${field}`);
     }

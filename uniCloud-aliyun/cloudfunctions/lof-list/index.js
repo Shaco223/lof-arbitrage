@@ -29,7 +29,7 @@ exports.main = async (event) => {
     }
 
     const metaWhere = { status: db.command.in(['active', 'active_low_liquidity']) };
-    const metaRes = await db.collection('lof_meta').where(metaWhere).limit(100).get();
+    const metaRes = await db.collection('lof_meta').where(metaWhere).limit(200).get();
     const metas = metaRes.data || [];
     const codes = metas.map((item) => item.code);
     if (!codes.length) {

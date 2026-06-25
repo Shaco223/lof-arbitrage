@@ -18,8 +18,8 @@ async function run() {
 
   assert.strictEqual(first.code, 0);
   assert.strictEqual(second.code, 0);
-  assert.strictEqual(first.data.items.length, 30);
-  assert.strictEqual(second.data.items.length, 30);
+  assert.ok(first.data.items.length >= 122, `expected >=122, got ${first.data.items.length}`);
+  assert.ok(second.data.items.length >= 122, `expected >=122, got ${second.data.items.length}`);
   assert.deepStrictEqual(second, first);
   assert.deepStrictEqual(calls, ['lof_meta', 'lof_realtime', 'lof_history']);
 

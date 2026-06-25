@@ -47,7 +47,7 @@ def _payload(price: float | None = 1.0, iopv: float | None = 0.99, primary: str 
 
 def test_load_default_watchlist_has_30_codes():
     metas = load_default_watchlist()
-    assert len(metas) == 30
+    assert len(metas) >= 122, f"expected >=122 watchlist items, got {len(metas)}"
 
 
 def test_build_watchlist_report_records_primary_source_and_completeness():

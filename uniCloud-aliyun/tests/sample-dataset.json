@@ -2,1456 +2,2690 @@
   "ts": "2026-06-18T10:31:00+08:00",
   "lof_meta": [
     {
+      "code": "161226",
+      "name": "国投白银LOF",
+      "type": "index",
+      "scale_yi": 36.5,
+      "benchmark_raw": "白银期货",
+      "status": "active"
+    },
+    {
       "code": "161725",
-      "name": "招商中证白酒指数(LOF)A",
+      "name": "白酒基金LOF",
       "type": "index",
-      "scale_yi": 300,
-      "status": "active",
-      "coverage_top10": 0.475,
-      "coverage_breakdown": {
-        "top10_weight": 0.475,
-        "benchmark_assigned_weight": 0.95,
-        "cash_weight": 0.05
-      },
-      "benchmark_raw": "中证白酒指数收益率×95%+银行活期存款利率(税后)×5%",
-      "benchmark_components": [
-        {
-          "index_code": "399997.SZ",
-          "name": "中证白酒指数",
-          "weight": 0.95
-        },
-        {
-          "index_code": "CASH",
-          "name": "银行活期存款利率",
-          "weight": 0.05
-        }
-      ],
-      "fund_scale": 300,
-      "subscribe_status": "limited",
-      "redeem_status": "open",
-      "circulating_shares": 180,
-      "subscribe_limit_amount": 500000.0,
-      "subscribe_limit_period": "day",
-      "shares_onexchange": 361315.0,
-      "shares_incr_daily": 63.0,
-      "purchase_confirm_day": "T+1",
-      "redeem_confirm_day": "T+1"
+      "scale_yi": 36.1,
+      "benchmark_raw": "中证白酒",
+      "status": "active"
     },
     {
-      "code": "161005",
-      "name": "富国天惠成长混合(LOF)A",
+      "code": "163417",
+      "name": "兴全合宜LOF",
       "type": "active",
-      "scale_yi": 180,
-      "status": "active",
-      "coverage_top10": 0.355,
-      "coverage_breakdown": {
-        "top10_weight": 0.355,
-        "benchmark_assigned_weight": 1,
-        "cash_weight": 0
-      },
-      "benchmark_raw": "沪深300指数收益率×80%+中证综合债券指数收益率×20%",
-      "benchmark_components": [
-        {
-          "index_code": "000300.SH",
-          "name": "沪深300指数",
-          "weight": 0.8
-        },
-        {
-          "index_code": "H11009.CSI",
-          "name": "中证综合债券指数",
-          "weight": 0.2
-        }
-      ],
-      "fund_scale": 180,
-      "subscribe_status": "limited",
-      "redeem_status": "open",
-      "circulating_shares": 108,
-      "subscribe_limit_amount": 20000.0,
-      "subscribe_limit_period": "day",
-      "shares_onexchange": 36780.0,
-      "shares_incr_daily": -86.0,
-      "purchase_confirm_day": "T+1",
-      "redeem_confirm_day": "T+1"
+      "scale_yi": 10.9,
+      "benchmark_raw": "",
+      "status": "active"
     },
     {
-      "code": "163406",
-      "name": "兴全合润混合A",
+      "code": "161716",
+      "name": "招商双债LOF",
+      "type": "index",
+      "scale_yi": 8.5,
+      "benchmark_raw": "--",
+      "status": "active"
+    },
+    {
+      "code": "163402",
+      "name": "兴全趋势LOF",
       "type": "active",
-      "scale_yi": 150,
-      "status": "active",
-      "coverage_top10": 0.39,
-      "coverage_breakdown": {
-        "top10_weight": 0.39,
-        "benchmark_assigned_weight": 1,
-        "cash_weight": 0
-      },
-      "benchmark_raw": "沪深300指数收益率×75%+上证国债指数收益率×25%",
-      "benchmark_components": [
-        {
-          "index_code": "000300.SH",
-          "name": "沪深300指数",
-          "weight": 0.75
-        },
-        {
-          "index_code": "000012.SH",
-          "name": "上证国债指数",
-          "weight": 0.25
-        }
-      ],
-      "fund_scale": 150,
-      "subscribe_status": "open",
-      "redeem_status": "open",
-      "circulating_shares": 90,
-      "shares_onexchange": 20271.0,
-      "shares_incr_daily": -276.0,
-      "purchase_confirm_day": "T+1",
-      "redeem_confirm_day": "T+1"
+      "scale_yi": 6.9,
+      "benchmark_raw": "",
+      "status": "active"
     },
     {
-      "code": "160706",
-      "name": "嘉实沪深300ETF联接A",
+      "code": "161726",
+      "name": "生物医药LOF",
       "type": "index",
-      "scale_yi": 80,
-      "status": "active",
-      "coverage_top10": 0.475,
-      "coverage_breakdown": {
-        "top10_weight": 0.475,
-        "benchmark_assigned_weight": 0.95,
-        "cash_weight": 0.05
-      },
-      "benchmark_raw": "沪深300指数收益率×95%+银行活期存款利率(税后)×5%",
-      "benchmark_components": [
-        {
-          "index_code": "000300.SH",
-          "name": "沪深300指数",
-          "weight": 0.95
-        },
-        {
-          "index_code": "CASH",
-          "name": "银行活期存款利率",
-          "weight": 0.05
-        }
-      ],
-      "fund_scale": 80,
-      "subscribe_status": "open",
-      "redeem_status": "open",
-      "circulating_shares": 48,
-      "shares_onexchange": 23954.0,
-      "shares_incr_daily": -173.0,
-      "purchase_confirm_day": "T+1",
-      "redeem_confirm_day": "T+1"
-    },
-    {
-      "code": "501050",
-      "name": "华夏上证50AH优选指数A",
-      "type": "index",
-      "scale_yi": 40,
-      "status": "active",
-      "coverage_top10": 0.475,
-      "coverage_breakdown": {
-        "top10_weight": 0.475,
-        "benchmark_assigned_weight": 0.95,
-        "cash_weight": 0.05
-      },
-      "benchmark_raw": "上证50AH优选指数收益率×95%+银行活期存款利率(税后)×5%",
-      "benchmark_components": [
-        {
-          "index_code": "950090.CSI",
-          "name": "上证50AH优选指数",
-          "weight": 0.95
-        },
-        {
-          "index_code": "CASH",
-          "name": "银行活期存款利率",
-          "weight": 0.05
-        }
-      ],
-      "fund_scale": 40,
-      "subscribe_status": "open",
-      "redeem_status": "open",
-      "circulating_shares": 24,
-      "shares_onexchange": 15968.0,
-      "shares_incr_daily": -162.0,
-      "purchase_confirm_day": "T+1",
-      "redeem_confirm_day": "T+1"
-    },
-    {
-      "code": "160505",
-      "name": "博时主题行业混合(LOF)",
-      "type": "active",
-      "scale_yi": 30,
-      "status": "active",
-      "coverage_top10": 0.495,
-      "coverage_breakdown": {
-        "top10_weight": 0.495,
-        "benchmark_assigned_weight": 1,
-        "cash_weight": 0
-      },
-      "benchmark_raw": "沪深300指数收益率×80%+中证综合债券指数收益率×20%",
-      "benchmark_components": [
-        {
-          "index_code": "000300.SH",
-          "name": "沪深300指数",
-          "weight": 0.8
-        },
-        {
-          "index_code": "H11009.CSI",
-          "name": "中证综合债券指数",
-          "weight": 0.2
-        }
-      ],
-      "fund_scale": 30,
-      "subscribe_status": "open",
-      "redeem_status": "open",
-      "circulating_shares": 18,
-      "shares_onexchange": 16217.0,
-      "shares_incr_daily": -41.0,
-      "purchase_confirm_day": "T+1",
-      "redeem_confirm_day": "T+1"
-    },
-    {
-      "code": "162605",
-      "name": "景顺长城鼎益混合(LOF)A",
-      "type": "active",
-      "scale_yi": 30,
-      "status": "active",
-      "coverage_top10": 0.32,
-      "coverage_breakdown": {
-        "top10_weight": 0.32,
-        "benchmark_assigned_weight": 1,
-        "cash_weight": 0
-      },
-      "benchmark_raw": "沪深300指数收益率×80%+中证综合债券指数收益率×20%",
-      "benchmark_components": [
-        {
-          "index_code": "000300.SH",
-          "name": "沪深300指数",
-          "weight": 0.8
-        },
-        {
-          "index_code": "H11009.CSI",
-          "name": "中证综合债券指数",
-          "weight": 0.2
-        }
-      ],
-      "fund_scale": 30,
-      "subscribe_status": "open",
-      "redeem_status": "open",
-      "circulating_shares": 18,
-      "shares_onexchange": 27273.0,
-      "shares_incr_daily": -302.0,
-      "purchase_confirm_day": "T+1",
-      "redeem_confirm_day": "T+1"
-    },
-    {
-      "code": "161024",
-      "name": "富国中证军工指数(LOF)A",
-      "type": "index",
-      "scale_yi": 18,
-      "status": "active",
-      "coverage_top10": 0.475,
-      "coverage_breakdown": {
-        "top10_weight": 0.475,
-        "benchmark_assigned_weight": 0.95,
-        "cash_weight": 0.05
-      },
-      "benchmark_raw": "中证军工指数收益率×95%+银行活期存款利率(税后)×5%",
-      "benchmark_components": [
-        {
-          "index_code": "399967.SZ",
-          "name": "中证军工指数",
-          "weight": 0.95
-        },
-        {
-          "index_code": "CASH",
-          "name": "银行活期存款利率",
-          "weight": 0.05
-        }
-      ],
-      "fund_scale": 18,
-      "subscribe_status": "open",
-      "redeem_status": "open",
-      "circulating_shares": 10.8,
-      "shares_onexchange": 14075.0,
-      "shares_incr_daily": -20.0,
-      "purchase_confirm_day": "T+1",
-      "redeem_confirm_day": "T+1"
-    },
-    {
-      "code": "160119",
-      "name": "南方中证500ETF联接(LOF)A",
-      "type": "index",
-      "scale_yi": 15,
-      "status": "active",
-      "coverage_top10": 0.475,
-      "coverage_breakdown": {
-        "top10_weight": 0.475,
-        "benchmark_assigned_weight": 0.95,
-        "cash_weight": 0.05
-      },
-      "benchmark_raw": "中证500指数收益率×95%+银行活期存款利率(税后)×5%",
-      "benchmark_components": [
-        {
-          "index_code": "000905.SH",
-          "name": "中证500指数",
-          "weight": 0.95
-        },
-        {
-          "index_code": "CASH",
-          "name": "银行活期存款利率",
-          "weight": 0.05
-        }
-      ],
-      "fund_scale": 15,
-      "subscribe_status": "open",
-      "redeem_status": "open",
-      "circulating_shares": 9,
-      "shares_onexchange": 3350.0,
-      "shares_incr_daily": -24.0,
-      "purchase_confirm_day": "T+1",
-      "redeem_confirm_day": "T+1"
+      "scale_yi": 4.8,
+      "benchmark_raw": "生物医药",
+      "status": "active"
     },
     {
       "code": "160632",
-      "name": "鹏华酒A",
-      "type": "industry",
-      "scale_yi": 12,
-      "status": "active",
-      "coverage_top10": 0.425,
-      "coverage_breakdown": {
-        "top10_weight": 0.425,
-        "benchmark_assigned_weight": 0.95,
-        "cash_weight": 0.05
-      },
-      "benchmark_raw": "中证酒指数收益率×95%+银行活期存款利率(税后)×5%",
-      "benchmark_components": [
-        {
-          "index_code": "399987.SZ",
-          "name": "中证酒指数",
-          "weight": 0.95
-        },
-        {
-          "index_code": "CASH",
-          "name": "银行活期存款利率",
-          "weight": 0.05
-        }
-      ],
-      "fund_scale": 12,
-      "subscribe_status": "limited",
-      "redeem_status": "open",
-      "circulating_shares": 7.2,
-      "subscribe_limit_amount": 200000.0,
-      "subscribe_limit_period": "day",
-      "shares_onexchange": 40812.0,
-      "shares_incr_daily": 1.0,
-      "purchase_confirm_day": "T+1",
-      "redeem_confirm_day": "T+1"
+      "name": "酒LOF",
+      "type": "index",
+      "scale_yi": 4.1,
+      "benchmark_raw": "中证酒",
+      "status": "active"
     },
     {
-      "code": "160220",
-      "name": "国泰民益混合(LOF)A",
+      "code": "161005",
+      "name": "富国天惠LOF",
       "type": "active",
-      "scale_yi": 3,
-      "status": "active",
-      "coverage_top10": 0.46,
-      "coverage_breakdown": {
-        "top10_weight": 0.46,
-        "benchmark_assigned_weight": 1,
-        "cash_weight": 0
-      },
-      "benchmark_raw": "沪深300指数收益率×60%+中证综合债券指数收益率×40%",
-      "benchmark_components": [
-        {
-          "index_code": "000300.SH",
-          "name": "沪深300指数",
-          "weight": 0.6
-        },
-        {
-          "index_code": "H11009.CSI",
-          "name": "中证综合债券指数",
-          "weight": 0.4
-        }
-      ],
-      "fund_scale": 3,
-      "subscribe_status": "open",
-      "redeem_status": "open",
-      "circulating_shares": 1.8,
-      "shares_onexchange": 522.0,
-      "shares_incr_daily": 2.0,
-      "purchase_confirm_day": "T+1",
-      "redeem_confirm_day": "T+1"
+      "scale_yi": 3.7,
+      "benchmark_raw": "",
+      "status": "active"
     },
     {
-      "code": "161903",
-      "name": "万家行业优选混合(LOF)",
-      "type": "active",
-      "scale_yi": 8,
-      "status": "active",
-      "coverage_top10": 0.495,
-      "coverage_breakdown": {
-        "top10_weight": 0.495,
-        "benchmark_assigned_weight": 1,
-        "cash_weight": 0
-      },
-      "benchmark_raw": "沪深300指数收益率×75%+中证综合债券指数收益率×25%",
-      "benchmark_components": [
-        {
-          "index_code": "000300.SH",
-          "name": "沪深300指数",
-          "weight": 0.75
-        },
-        {
-          "index_code": "H11009.CSI",
-          "name": "中证综合债券指数",
-          "weight": 0.25
-        }
-      ],
-      "fund_scale": 8,
-      "subscribe_status": "open",
-      "redeem_status": "open",
-      "circulating_shares": 4.8,
-      "shares_onexchange": 17629.0,
-      "shares_incr_daily": 20.0,
-      "purchase_confirm_day": "T+1",
-      "redeem_confirm_day": "T+1"
+      "code": "167301",
+      "name": "保险主题LOF",
+      "type": "index",
+      "scale_yi": 3.5,
+      "benchmark_raw": "保险主题",
+      "status": "active"
     },
     {
       "code": "501227",
-      "name": "泓德红利优选混合(LOF)A",
-      "type": "active",
-      "scale_yi": 12,
-      "status": "active",
-      "coverage_top10": 0.32,
-      "coverage_breakdown": {
-        "top10_weight": 0.32,
-        "benchmark_assigned_weight": 1,
-        "cash_weight": 0
-      },
-      "benchmark_raw": "沪深300指数收益率×75%+中证综合债券指数收益率×25%",
-      "benchmark_components": [
-        {
-          "index_code": "000300.SH",
-          "name": "沪深300指数",
-          "weight": 0.75
-        },
-        {
-          "index_code": "H11009.CSI",
-          "name": "中证综合债券指数",
-          "weight": 0.25
-        }
-      ],
-      "fund_scale": 12,
-      "subscribe_status": "open",
-      "redeem_status": "open",
-      "circulating_shares": 7.2,
-      "shares_onexchange": 30510.0,
-      "shares_incr_daily": -1.0,
-      "purchase_confirm_day": "T+1",
-      "redeem_confirm_day": "T+1"
-    },
-    {
-      "code": "501205",
-      "name": "鹏华创新未来混合(LOF)C",
-      "type": "active",
-      "scale_yi": 12,
-      "status": "active",
-      "coverage_top10": 0.355,
-      "coverage_breakdown": {
-        "top10_weight": 0.355,
-        "benchmark_assigned_weight": 1,
-        "cash_weight": 0
-      },
-      "benchmark_raw": "沪深300指数收益率×75%+中证综合债券指数收益率×25%",
-      "benchmark_components": [
-        {
-          "index_code": "000300.SH",
-          "name": "沪深300指数",
-          "weight": 0.75
-        },
-        {
-          "index_code": "H11009.CSI",
-          "name": "中证综合债券指数",
-          "weight": 0.25
-        }
-      ],
-      "fund_scale": 12,
-      "subscribe_status": "open",
-      "redeem_status": "open",
-      "circulating_shares": 7.2,
-      "shares_onexchange": 11498.0,
-      "shares_incr_daily": -3.0,
-      "purchase_confirm_day": "T+1",
-      "redeem_confirm_day": "T+1"
-    },
-    {
-      "code": "501096",
-      "name": "国联安科创混合(LOF)",
-      "type": "active",
-      "scale_yi": 6,
-      "status": "active",
-      "coverage_top10": 0.39,
-      "coverage_breakdown": {
-        "top10_weight": 0.39,
-        "benchmark_assigned_weight": 1,
-        "cash_weight": 0
-      },
-      "benchmark_raw": "中国战略新兴产业成份指数收益率×70%+中证综合债券指数收益率×30%",
-      "benchmark_components": [
-        {
-          "index_code": "000891.CSI",
-          "name": "中国战略新兴产业成份指数",
-          "weight": 0.7
-        },
-        {
-          "index_code": "H11009.CSI",
-          "name": "中证综合债券指数",
-          "weight": 0.3
-        }
-      ],
-      "fund_scale": 6,
-      "subscribe_status": "open",
-      "redeem_status": "open",
-      "circulating_shares": 3.6,
-      "shares_onexchange": 6717.0,
-      "shares_incr_daily": 3977.0,
-      "purchase_confirm_day": "T+1",
-      "redeem_confirm_day": "T+1"
-    },
-    {
-      "code": "501099",
-      "name": "平安新兴产业混合(LOF)",
-      "type": "active",
-      "scale_yi": 6,
-      "status": "active",
-      "coverage_top10": 0.425,
-      "coverage_breakdown": {
-        "top10_weight": 0.425,
-        "benchmark_assigned_weight": 1,
-        "cash_weight": 0
-      },
-      "benchmark_raw": "中国战略新兴产业成份指数收益率×70%+中证综合债券指数收益率×30%",
-      "benchmark_components": [
-        {
-          "index_code": "000891.CSI",
-          "name": "中国战略新兴产业成份指数",
-          "weight": 0.7
-        },
-        {
-          "index_code": "H11009.CSI",
-          "name": "中证综合债券指数",
-          "weight": 0.3
-        }
-      ],
-      "fund_scale": 6,
-      "subscribe_status": "open",
-      "redeem_status": "open",
-      "circulating_shares": 3.6,
-      "shares_onexchange": 1111.0,
-      "shares_incr_daily": -82.0,
-      "purchase_confirm_day": "T+1",
-      "redeem_confirm_day": "T+1"
-    },
-    {
-      "code": "501201",
-      "name": "红土创新科技创新股票(LOF)A",
-      "type": "active",
-      "scale_yi": 6,
-      "status": "active",
-      "coverage_top10": 0.46,
-      "coverage_breakdown": {
-        "top10_weight": 0.46,
-        "benchmark_assigned_weight": 1,
-        "cash_weight": 0
-      },
-      "benchmark_raw": "中国战略新兴产业成份指数收益率×80%+中证综合债券指数收益率×20%",
-      "benchmark_components": [
-        {
-          "index_code": "000891.CSI",
-          "name": "中国战略新兴产业成份指数",
-          "weight": 0.8
-        },
-        {
-          "index_code": "H11009.CSI",
-          "name": "中证综合债券指数",
-          "weight": 0.2
-        }
-      ],
-      "fund_scale": 6,
-      "subscribe_status": "open",
-      "redeem_status": "open",
-      "circulating_shares": 3.6,
-      "shares_onexchange": 2244.0,
-      "shares_incr_daily": 209.0,
-      "purchase_confirm_day": "T+1",
-      "redeem_confirm_day": "T+1"
-    },
-    {
-      "code": "501203",
-      "name": "易方达创新未来混合(LOF)",
-      "type": "active",
-      "scale_yi": 5,
-      "status": "active_low_liquidity",
-      "coverage_top10": 0.495,
-      "coverage_breakdown": {
-        "top10_weight": 0.495,
-        "benchmark_assigned_weight": 1,
-        "cash_weight": 0
-      },
-      "benchmark_raw": "沪深300指数收益率×75%+中证综合债券指数收益率×25%",
-      "benchmark_components": [
-        {
-          "index_code": "000300.SH",
-          "name": "沪深300指数",
-          "weight": 0.75
-        },
-        {
-          "index_code": "H11009.CSI",
-          "name": "中证综合债券指数",
-          "weight": 0.25
-        }
-      ],
-      "fund_scale": 5,
-      "subscribe_status": "limited",
-      "redeem_status": "open",
-      "circulating_shares": 3,
-      "shares_onexchange": 4660.0,
-      "shares_incr_daily": -92.0,
-      "purchase_confirm_day": null,
-      "redeem_confirm_day": null
-    },
-    {
-      "code": "501208",
-      "name": "中欧创新未来混合(LOF)",
-      "type": "active",
-      "scale_yi": 5,
-      "status": "active_low_liquidity",
-      "coverage_top10": 0.32,
-      "coverage_breakdown": {
-        "top10_weight": 0.32,
-        "benchmark_assigned_weight": 1,
-        "cash_weight": 0
-      },
-      "benchmark_raw": "沪深300指数收益率×75%+中证综合债券指数收益率×25%",
-      "benchmark_components": [
-        {
-          "index_code": "000300.SH",
-          "name": "沪深300指数",
-          "weight": 0.75
-        },
-        {
-          "index_code": "H11009.CSI",
-          "name": "中证综合债券指数",
-          "weight": 0.25
-        }
-      ],
-      "fund_scale": 5,
-      "subscribe_status": "open",
-      "redeem_status": "open",
-      "circulating_shares": 3,
-      "shares_onexchange": 4635.0,
-      "shares_incr_daily": -37.0,
-      "purchase_confirm_day": "T+1",
-      "redeem_confirm_day": "T+1"
-    },
-    {
-      "code": "501085",
-      "name": "财通科创主题灵活配置混合(LOF)",
-      "type": "active",
-      "scale_yi": 4,
-      "status": "active_low_liquidity",
-      "coverage_top10": 0.355,
-      "coverage_breakdown": {
-        "top10_weight": 0.355,
-        "benchmark_assigned_weight": 1,
-        "cash_weight": 0
-      },
-      "benchmark_raw": "中国战略新兴产业成份指数收益率×70%+中证综合债券指数收益率×30%",
-      "benchmark_components": [
-        {
-          "index_code": "000891.CSI",
-          "name": "中国战略新兴产业成份指数",
-          "weight": 0.7
-        },
-        {
-          "index_code": "H11009.CSI",
-          "name": "中证综合债券指数",
-          "weight": 0.3
-        }
-      ],
-      "fund_scale": 4,
-      "subscribe_status": "open",
-      "redeem_status": "open",
-      "circulating_shares": 2.4,
-      "shares_onexchange": 3552.0,
-      "shares_incr_daily": 83.0,
-      "purchase_confirm_day": "T+1",
-      "redeem_confirm_day": "T+1"
-    },
-    {
-      "code": "501219",
-      "name": "华夏智胜先锋股票(LOF)A",
-      "type": "active",
-      "scale_yi": 4,
-      "status": "active_low_liquidity",
-      "coverage_top10": 0.39,
-      "coverage_breakdown": {
-        "top10_weight": 0.39,
-        "benchmark_assigned_weight": 1,
-        "cash_weight": 0
-      },
-      "benchmark_raw": "中证800指数收益率×80%+中证综合债券指数收益率×20%",
-      "benchmark_components": [
-        {
-          "index_code": "000906.SH",
-          "name": "中证800指数",
-          "weight": 0.8
-        },
-        {
-          "index_code": "H11009.CSI",
-          "name": "中证综合债券指数",
-          "weight": 0.2
-        }
-      ],
-      "fund_scale": 4,
-      "subscribe_status": "limited",
-      "redeem_status": "open",
-      "circulating_shares": 2.4,
-      "subscribe_limit_amount": 10000000.0,
-      "subscribe_limit_period": "day",
-      "shares_onexchange": 6142.0,
-      "shares_incr_daily": -81.0,
-      "purchase_confirm_day": "T+1",
-      "redeem_confirm_day": "T+1"
-    },
-    {
-      "code": "501095",
-      "name": "中银证券科技创新混合(LOF)",
-      "type": "active",
-      "scale_yi": 4,
-      "status": "active_low_liquidity",
-      "coverage_top10": 0.425,
-      "coverage_breakdown": {
-        "top10_weight": 0.425,
-        "benchmark_assigned_weight": 1,
-        "cash_weight": 0
-      },
-      "benchmark_raw": "中国战略新兴产业成份指数收益率×70%+中证综合债券指数收益率×30%",
-      "benchmark_components": [
-        {
-          "index_code": "000891.CSI",
-          "name": "中国战略新兴产业成份指数",
-          "weight": 0.7
-        },
-        {
-          "index_code": "H11009.CSI",
-          "name": "中证综合债券指数",
-          "weight": 0.3
-        }
-      ],
-      "fund_scale": 4,
-      "subscribe_status": "open",
-      "redeem_status": "open",
-      "circulating_shares": 2.4,
-      "shares_onexchange": 2630.0,
-      "shares_incr_daily": -135.0,
-      "purchase_confirm_day": "T+1",
-      "redeem_confirm_day": "T+1"
-    },
-    {
-      "code": "501077",
-      "name": "富国创新企业灵活配置混合(LOF)A",
-      "type": "active",
-      "scale_yi": 4,
-      "status": "active_low_liquidity",
-      "coverage_top10": 0.46,
-      "coverage_breakdown": {
-        "top10_weight": 0.46,
-        "benchmark_assigned_weight": 1,
-        "cash_weight": 0
-      },
-      "benchmark_raw": "沪深300指数收益率×75%+中证综合债券指数收益率×25%",
-      "benchmark_components": [
-        {
-          "index_code": "000300.SH",
-          "name": "沪深300指数",
-          "weight": 0.75
-        },
-        {
-          "index_code": "H11009.CSI",
-          "name": "中证综合债券指数",
-          "weight": 0.25
-        }
-      ],
-      "fund_scale": 4,
-      "subscribe_status": "limited",
-      "redeem_status": "open",
-      "circulating_shares": 2.4,
-      "subscribe_limit_amount": 5000000.0,
-      "subscribe_limit_period": "day",
-      "shares_onexchange": 2766.0,
-      "shares_incr_daily": -7.0,
-      "purchase_confirm_day": "T+1",
-      "redeem_confirm_day": "T+1"
-    },
-    {
-      "code": "501057",
-      "name": "汇添富中证新能源汽车产业指数(LOF)A",
+      "name": "泓德红利优选LOF",
       "type": "index",
-      "scale_yi": 4,
-      "status": "active_low_liquidity",
-      "coverage_top10": 0.475,
-      "coverage_breakdown": {
-        "top10_weight": 0.475,
-        "benchmark_assigned_weight": 0.95,
-        "cash_weight": 0.05
-      },
-      "benchmark_raw": "中证新能源汽车产业指数收益率×95%+银行活期存款利率(税后)×5%",
-      "benchmark_components": [
-        {
-          "index_code": "930997.CSI",
-          "name": "中证新能源汽车产业指数",
-          "weight": 0.95
-        },
-        {
-          "index_code": "CASH",
-          "name": "银行活期存款利率",
-          "weight": 0.05
-        }
-      ],
-      "fund_scale": 4,
-      "subscribe_status": "open",
-      "redeem_status": "open",
-      "circulating_shares": 2.4,
-      "shares_onexchange": 3576.0,
-      "shares_incr_daily": -19.0,
-      "purchase_confirm_day": "T+1",
-      "redeem_confirm_day": "T+1"
+      "scale_yi": 3.0,
+      "benchmark_raw": "中证红利",
+      "status": "active"
     },
     {
-      "code": "501206",
-      "name": "汇添富创新未来混合(LOF)",
-      "type": "active",
-      "scale_yi": 4,
-      "status": "active_low_liquidity",
-      "coverage_top10": 0.32,
-      "coverage_breakdown": {
-        "top10_weight": 0.32,
-        "benchmark_assigned_weight": 1,
-        "cash_weight": 0
-      },
-      "benchmark_raw": "沪深300指数收益率×75%+中证综合债券指数收益率×25%",
-      "benchmark_components": [
-        {
-          "index_code": "000300.SH",
-          "name": "沪深300指数",
-          "weight": 0.75
-        },
-        {
-          "index_code": "H11009.CSI",
-          "name": "中证综合债券指数",
-          "weight": 0.25
-        }
-      ],
-      "fund_scale": 4,
-      "subscribe_status": "open",
-      "redeem_status": "open",
-      "circulating_shares": 2.4,
-      "shares_onexchange": 5331.0,
-      "shares_incr_daily": -63.0,
-      "purchase_confirm_day": null,
-      "redeem_confirm_day": null
+      "code": "162412",
+      "name": "医疗基金LOF",
+      "type": "index",
+      "scale_yi": 2.8,
+      "benchmark_raw": "中证医疗",
+      "status": "active"
     },
     {
-      "code": "501078",
-      "name": "广发科创主题灵活配置混合(LOF)",
+      "code": "162605",
+      "name": "景顺鼎益LOF",
       "type": "active",
-      "scale_yi": 4,
-      "status": "active_low_liquidity",
-      "coverage_top10": 0.355,
-      "coverage_breakdown": {
-        "top10_weight": 0.355,
-        "benchmark_assigned_weight": 1,
-        "cash_weight": 0
-      },
-      "benchmark_raw": "中国战略新兴产业成份指数收益率×70%+中证综合债券指数收益率×30%",
-      "benchmark_components": [
-        {
-          "index_code": "000891.CSI",
-          "name": "中国战略新兴产业成份指数",
-          "weight": 0.7
-        },
-        {
-          "index_code": "H11009.CSI",
-          "name": "中证综合债券指数",
-          "weight": 0.3
-        }
-      ],
-      "fund_scale": 4,
-      "subscribe_status": "open",
-      "redeem_status": "open",
-      "circulating_shares": 2.4,
-      "shares_onexchange": 4641.0,
-      "shares_incr_daily": -10.0,
-      "purchase_confirm_day": "T+1",
-      "redeem_confirm_day": "T+1"
+      "scale_yi": 2.7,
+      "benchmark_raw": "",
+      "status": "active"
     },
     {
-      "code": "501097",
-      "name": "国寿安保科技创新混合(LOF)",
+      "code": "160706",
+      "name": "沪深300LOF",
+      "type": "index",
+      "scale_yi": 2.4,
+      "benchmark_raw": "沪深300",
+      "status": "active"
+    },
+    {
+      "code": "163418",
+      "name": "兴全合兴LOF",
       "type": "active",
-      "scale_yi": 4,
-      "status": "active_low_liquidity",
-      "coverage_top10": 0.39,
-      "coverage_breakdown": {
-        "top10_weight": 0.39,
-        "benchmark_assigned_weight": 1,
-        "cash_weight": 0
-      },
-      "benchmark_raw": "中国战略新兴产业成份指数收益率×70%+中证综合债券指数收益率×30%",
-      "benchmark_components": [
-        {
-          "index_code": "000891.CSI",
-          "name": "中国战略新兴产业成份指数",
-          "weight": 0.7
-        },
-        {
-          "index_code": "H11009.CSI",
-          "name": "中证综合债券指数",
-          "weight": 0.3
-        }
-      ],
-      "fund_scale": 4,
-      "subscribe_status": "open",
-      "redeem_status": "open",
-      "circulating_shares": 2.4,
-      "shares_onexchange": 729.0,
-      "shares_incr_daily": 30.0,
-      "purchase_confirm_day": "T+1",
-      "redeem_confirm_day": "T+1"
+      "scale_yi": 2.1,
+      "benchmark_raw": "",
+      "status": "active"
+    },
+    {
+      "code": "163406",
+      "name": "兴全合润LOF",
+      "type": "active",
+      "scale_yi": 2.0,
+      "benchmark_raw": "",
+      "status": "active"
+    },
+    {
+      "code": "161903",
+      "name": "万家行业优选LOF",
+      "type": "active",
+      "scale_yi": 1.7,
+      "benchmark_raw": "",
+      "status": "active"
+    },
+    {
+      "code": "161026",
+      "name": "国企改革LOF",
+      "type": "index",
+      "scale_yi": 1.7,
+      "benchmark_raw": "国企改革",
+      "status": "active"
+    },
+    {
+      "code": "160505",
+      "name": "博时主题LOF",
+      "type": "active",
+      "scale_yi": 1.6,
+      "benchmark_raw": "",
+      "status": "active"
+    },
+    {
+      "code": "163113",
+      "name": "申万证券LOF",
+      "type": "index",
+      "scale_yi": 1.6,
+      "benchmark_raw": "CSSW证券",
+      "status": "active"
+    },
+    {
+      "code": "501050",
+      "name": "50AHLOF",
+      "type": "index",
+      "scale_yi": 1.6,
+      "benchmark_raw": "上证50优选",
+      "status": "active"
+    },
+    {
+      "code": "161812",
+      "name": "深证100LOF",
+      "type": "index",
+      "scale_yi": 1.6,
+      "benchmark_raw": "深证100",
+      "status": "active"
+    },
+    {
+      "code": "161720",
+      "name": "证券基金LOF",
+      "type": "index",
+      "scale_yi": 1.6,
+      "benchmark_raw": "证券公司",
+      "status": "active"
+    },
+    {
+      "code": "160219",
+      "name": "医药LOF",
+      "type": "index",
+      "scale_yi": 1.5,
+      "benchmark_raw": "国证医药",
+      "status": "active"
+    },
+    {
+      "code": "162703",
+      "name": "广发小盘LOF",
+      "type": "active",
+      "scale_yi": 1.4,
+      "benchmark_raw": "",
+      "status": "active"
+    },
+    {
+      "code": "161024",
+      "name": "军工LOF",
+      "type": "index",
+      "scale_yi": 1.4,
+      "benchmark_raw": "中证军工",
+      "status": "active"
+    },
+    {
+      "code": "161027",
+      "name": "证券LOF",
+      "type": "index",
+      "scale_yi": 1.4,
+      "benchmark_raw": "证券公司",
+      "status": "active"
     },
     {
       "code": "501090",
-      "name": "华宝中证消费龙头ETF联接A",
+      "name": "消费龙头LOF",
       "type": "index",
-      "scale_yi": 4,
-      "status": "active_low_liquidity",
-      "coverage_top10": 0.475,
-      "coverage_breakdown": {
-        "top10_weight": 0.475,
-        "benchmark_assigned_weight": 0.95,
-        "cash_weight": 0.05
-      },
-      "benchmark_raw": "中证消费龙头指数收益率×95%+银行活期存款利率(税后)×5%",
-      "benchmark_components": [
-        {
-          "index_code": "931068.CSI",
-          "name": "中证消费龙头指数",
-          "weight": 0.95
-        },
-        {
-          "index_code": "CASH",
-          "name": "银行活期存款利率",
-          "weight": 0.05
-        }
-      ],
-      "fund_scale": 4,
-      "subscribe_status": "open",
-      "redeem_status": "open",
-      "circulating_shares": 2.4,
-      "shares_onexchange": 12508.0,
-      "shares_incr_daily": 1.0,
-      "purchase_confirm_day": "T+1",
-      "redeem_confirm_day": "T+1"
+      "scale_yi": 1.3,
+      "benchmark_raw": "消费龙头",
+      "status": "active"
     },
     {
-      "code": "501081",
-      "name": "中欧科创主题混合(LOF)A",
+      "code": "163109",
+      "name": "申万深成LOF",
+      "type": "index",
+      "scale_yi": 1.2,
+      "benchmark_raw": "深证成指",
+      "status": "active"
+    },
+    {
+      "code": "501029",
+      "name": "红利基金LOF",
+      "type": "index",
+      "scale_yi": 1.2,
+      "benchmark_raw": "标普A股红利",
+      "status": "active"
+    },
+    {
+      "code": "501205",
+      "name": "鹏华创新未来LOF",
       "type": "active",
-      "scale_yi": 4,
-      "status": "active_low_liquidity",
-      "coverage_top10": 0.46,
-      "coverage_breakdown": {
-        "top10_weight": 0.46,
-        "benchmark_assigned_weight": 1,
-        "cash_weight": 0
-      },
-      "benchmark_raw": "中国战略新兴产业成份指数收益率×70%+中证综合债券指数收益率×30%",
-      "benchmark_components": [
-        {
-          "index_code": "000891.CSI",
-          "name": "中国战略新兴产业成份指数",
-          "weight": 0.7
-        },
-        {
-          "index_code": "H11009.CSI",
-          "name": "中证综合债券指数",
-          "weight": 0.3
-        }
-      ],
-      "fund_scale": 4,
-      "subscribe_status": "open",
-      "redeem_status": "open",
-      "circulating_shares": 2.4,
-      "shares_onexchange": 1940.0,
-      "shares_incr_daily": -8.0,
-      "purchase_confirm_day": "T+1",
-      "redeem_confirm_day": "T+1"
+      "scale_yi": 1.1,
+      "benchmark_raw": "",
+      "status": "active"
     },
     {
-      "code": "501311",
-      "name": "嘉实港股通新经济指数A",
+      "code": "161227",
+      "name": "国投深证100LOF",
       "type": "index",
-      "scale_yi": 4,
-      "status": "active_low_liquidity",
-      "coverage_top10": 0.475,
-      "coverage_breakdown": {
-        "top10_weight": 0.475,
-        "benchmark_assigned_weight": 0.95,
-        "cash_weight": 0.05
-      },
-      "benchmark_raw": "中证港股通新经济指数收益率×95%+银行活期存款利率(税后)×5%",
-      "benchmark_components": [
-        {
-          "index_code": "930709.CSI",
-          "name": "中证港股通新经济指数",
-          "weight": 0.95
-        },
-        {
-          "index_code": "CASH",
-          "name": "银行活期存款利率",
-          "weight": 0.05
-        }
-      ],
-      "fund_scale": 4,
-      "subscribe_status": "open",
-      "redeem_status": "open",
-      "circulating_shares": 2.4,
-      "shares_onexchange": null,
-      "shares_incr_daily": null,
-      "purchase_confirm_day": "T+1",
-      "redeem_confirm_day": "T+1"
+      "scale_yi": 1.1,
+      "benchmark_raw": "深证100",
+      "status": "active"
+    },
+    {
+      "code": "160133",
+      "name": "南方天元LOF",
+      "type": "active",
+      "scale_yi": 1.1,
+      "benchmark_raw": "",
+      "status": "active"
+    },
+    {
+      "code": "501096",
+      "name": "国联安科创LOF",
+      "type": "active",
+      "scale_yi": 1.1,
+      "benchmark_raw": "",
+      "status": "active"
+    },
+    {
+      "code": "160631",
+      "name": "银行LOF基金",
+      "type": "index",
+      "scale_yi": 0.9,
+      "benchmark_raw": "中证银行",
+      "status": "active"
+    },
+    {
+      "code": "501026",
+      "name": "财通福享混合LOF",
+      "type": "active",
+      "scale_yi": 0.9,
+      "benchmark_raw": "",
+      "status": "active"
+    },
+    {
+      "code": "160222",
+      "name": "食品LOF",
+      "type": "index",
+      "scale_yi": 0.9,
+      "benchmark_raw": "国证食品",
+      "status": "active"
+    },
+    {
+      "code": "501207",
+      "name": "华夏创新未来LOF",
+      "type": "active",
+      "scale_yi": 0.9,
+      "benchmark_raw": "",
+      "status": "active"
+    },
+    {
+      "code": "160919",
+      "name": "产业升级LOF",
+      "type": "active",
+      "scale_yi": 0.8,
+      "benchmark_raw": "",
+      "status": "active"
+    },
+    {
+      "code": "160813",
+      "name": "长盛同盛LOF",
+      "type": "active",
+      "scale_yi": 0.8,
+      "benchmark_raw": "",
+      "status": "active"
+    },
+    {
+      "code": "160630",
+      "name": "国防LOF",
+      "type": "index",
+      "scale_yi": 0.8,
+      "benchmark_raw": "中证国防",
+      "status": "active"
+    },
+    {
+      "code": "161028",
+      "name": "新能源车LOF",
+      "type": "index",
+      "scale_yi": 0.8,
+      "benchmark_raw": "CS新能车",
+      "status": "active"
+    },
+    {
+      "code": "501009",
+      "name": "生物科技LOF",
+      "type": "index",
+      "scale_yi": 0.7,
+      "benchmark_raw": "中证生科",
+      "status": "active"
+    },
+    {
+      "code": "160323",
+      "name": "华夏磐泰LOF",
+      "type": "active",
+      "scale_yi": 0.7,
+      "benchmark_raw": "",
+      "status": "active"
+    },
+    {
+      "code": "160916",
+      "name": "优选LOF",
+      "type": "active",
+      "scale_yi": 0.7,
+      "benchmark_raw": "",
+      "status": "active"
+    },
+    {
+      "code": "165525",
+      "name": "基建工程LOF",
+      "type": "index",
+      "scale_yi": 0.7,
+      "benchmark_raw": "基建工程",
+      "status": "active"
+    },
+    {
+      "code": "162607",
+      "name": "景顺资源LOF",
+      "type": "active",
+      "scale_yi": 0.7,
+      "benchmark_raw": "",
+      "status": "active"
+    },
+    {
+      "code": "163415",
+      "name": "兴全商业模式LOF",
+      "type": "active",
+      "scale_yi": 0.7,
+      "benchmark_raw": "",
+      "status": "active"
+    },
+    {
+      "code": "163503",
+      "name": "天治核心LOF",
+      "type": "active",
+      "scale_yi": 0.6,
+      "benchmark_raw": "",
+      "status": "active"
+    },
+    {
+      "code": "160311",
+      "name": "华夏蓝筹LOF",
+      "type": "active",
+      "scale_yi": 0.6,
+      "benchmark_raw": "",
+      "status": "active"
+    },
+    {
+      "code": "160314",
+      "name": "华夏行业LOF",
+      "type": "active",
+      "scale_yi": 0.6,
+      "benchmark_raw": "",
+      "status": "active"
+    },
+    {
+      "code": "501219",
+      "name": "智胜先锋LOF",
+      "type": "active",
+      "scale_yi": 0.6,
+      "benchmark_raw": "",
+      "status": "active"
+    },
+    {
+      "code": "165521",
+      "name": "金融LOF",
+      "type": "index",
+      "scale_yi": 0.6,
+      "benchmark_raw": "800金融",
+      "status": "active"
+    },
+    {
+      "code": "160611",
+      "name": "鹏华优质治理LOF",
+      "type": "active",
+      "scale_yi": 0.6,
+      "benchmark_raw": "",
+      "status": "active"
+    },
+    {
+      "code": "162509",
+      "name": "中证A100LOF",
+      "type": "index",
+      "scale_yi": 0.5,
+      "benchmark_raw": "中证A100",
+      "status": "active"
+    },
+    {
+      "code": "160607",
+      "name": "鹏华价值优势LOF",
+      "type": "active",
+      "scale_yi": 0.5,
+      "benchmark_raw": "",
+      "status": "active"
+    },
+    {
+      "code": "160625",
+      "name": "证保LOF",
+      "type": "index",
+      "scale_yi": 0.5,
+      "benchmark_raw": "800非银",
+      "status": "active"
+    },
+    {
+      "code": "501206",
+      "name": "添富创新未来LOF",
+      "type": "active",
+      "scale_yi": 0.5,
+      "benchmark_raw": "",
+      "status": "active"
+    },
+    {
+      "code": "501089",
+      "name": "消费红利增强LOF",
+      "type": "index",
+      "scale_yi": 0.5,
+      "benchmark_raw": "消费红利",
+      "status": "active"
+    },
+    {
+      "code": "161131",
+      "name": "易方达科润LOF",
+      "type": "active",
+      "scale_yi": 0.5,
+      "benchmark_raw": "",
+      "status": "active"
+    },
+    {
+      "code": "160918",
+      "name": "中小盘LOF",
+      "type": "active",
+      "scale_yi": 0.5,
+      "benchmark_raw": "",
+      "status": "active"
+    },
+    {
+      "code": "161610",
+      "name": "融通领先成长LOF",
+      "type": "active",
+      "scale_yi": 0.5,
+      "benchmark_raw": "",
+      "status": "active"
+    },
+    {
+      "code": "160812",
+      "name": "长盛同益LOF",
+      "type": "active",
+      "scale_yi": 0.5,
+      "benchmark_raw": "",
+      "status": "active"
+    },
+    {
+      "code": "501078",
+      "name": "科创配置LOF",
+      "type": "active",
+      "scale_yi": 0.5,
+      "benchmark_raw": "",
+      "status": "active"
+    },
+    {
+      "code": "501208",
+      "name": "中欧创新未来LOF",
+      "type": "active",
+      "scale_yi": 0.5,
+      "benchmark_raw": "",
+      "status": "active"
+    },
+    {
+      "code": "168103",
+      "name": "九泰锐益LOF",
+      "type": "active",
+      "scale_yi": 0.5,
+      "benchmark_raw": "",
+      "status": "active"
+    },
+    {
+      "code": "501203",
+      "name": "易基创新未来LOF",
+      "type": "active",
+      "scale_yi": 0.5,
+      "benchmark_raw": "",
+      "status": "active"
+    },
+    {
+      "code": "160221",
+      "name": "有色金属LOF",
+      "type": "index",
+      "scale_yi": 0.4,
+      "benchmark_raw": "国证有色",
+      "status": "active"
+    },
+    {
+      "code": "501015",
+      "name": "财通升级混合LOF",
+      "type": "active",
+      "scale_yi": 0.4,
+      "benchmark_raw": "",
+      "status": "active"
+    },
+    {
+      "code": "163118",
+      "name": "医药生物LOF",
+      "type": "index",
+      "scale_yi": 0.4,
+      "benchmark_raw": "医药生物",
+      "status": "active"
+    },
+    {
+      "code": "161810",
+      "name": "银华内需LOF",
+      "type": "active",
+      "scale_yi": 0.4,
+      "benchmark_raw": "",
+      "status": "active"
+    },
+    {
+      "code": "161025",
+      "name": "互联网LOF",
+      "type": "index",
+      "scale_yi": 0.4,
+      "benchmark_raw": "移动互联",
+      "status": "active"
+    },
+    {
+      "code": "501011",
+      "name": "中药基金LOF",
+      "type": "index",
+      "scale_yi": 0.4,
+      "benchmark_raw": "中证中药",
+      "status": "active"
+    },
+    {
+      "code": "160805",
+      "name": "长盛同智LOF",
+      "type": "active",
+      "scale_yi": 0.4,
+      "benchmark_raw": "",
+      "status": "active"
+    },
+    {
+      "code": "160633",
+      "name": "券商LOF",
+      "type": "index",
+      "scale_yi": 0.4,
+      "benchmark_raw": "证券公司",
+      "status": "active"
+    },
+    {
+      "code": "501057",
+      "name": "新能源车LOF",
+      "type": "index",
+      "scale_yi": 0.4,
+      "benchmark_raw": "新能源车",
+      "status": "active"
+    },
+    {
+      "code": "502056",
+      "name": "医疗基金LOF",
+      "type": "index",
+      "scale_yi": 0.4,
+      "benchmark_raw": "中证医疗",
+      "status": "active"
+    },
+    {
+      "code": "501085",
+      "name": "财通科创LOF",
+      "type": "active",
+      "scale_yi": 0.4,
+      "benchmark_raw": "",
+      "status": "active"
+    },
+    {
+      "code": "501186",
+      "name": "华夏兴融LOF",
+      "type": "active",
+      "scale_yi": 0.4,
+      "benchmark_raw": "",
+      "status": "active"
+    },
+    {
+      "code": "166001",
+      "name": "中欧趋势LOF",
+      "type": "active",
+      "scale_yi": 0.4,
+      "benchmark_raw": "",
+      "status": "active"
+    },
+    {
+      "code": "163409",
+      "name": "兴全绿色LOF",
+      "type": "active",
+      "scale_yi": 0.3,
+      "benchmark_raw": "",
+      "status": "active"
+    },
+    {
+      "code": "160106",
+      "name": "南方高增LOF",
+      "type": "active",
+      "scale_yi": 0.3,
+      "benchmark_raw": "",
+      "status": "active"
+    },
+    {
+      "code": "160142",
+      "name": "南方优势产业LOF",
+      "type": "active",
+      "scale_yi": 0.3,
+      "benchmark_raw": "",
+      "status": "active"
+    },
+    {
+      "code": "160643",
+      "name": "空天军工LOF",
+      "type": "index",
+      "scale_yi": 0.3,
+      "benchmark_raw": "空天军工",
+      "status": "active"
+    },
+    {
+      "code": "160119",
+      "name": "500ETF联接LOF",
+      "type": "index",
+      "scale_yi": 0.3,
+      "benchmark_raw": "中证500",
+      "status": "active"
+    },
+    {
+      "code": "169105",
+      "name": "东方红睿华LOF",
+      "type": "active",
+      "scale_yi": 0.3,
+      "benchmark_raw": "",
+      "status": "active"
+    },
+    {
+      "code": "160127",
+      "name": "南方消费LOF",
+      "type": "active",
+      "scale_yi": 0.3,
+      "benchmark_raw": "",
+      "status": "active"
+    },
+    {
+      "code": "501079",
+      "name": "科创大成LOF",
+      "type": "active",
+      "scale_yi": 0.3,
+      "benchmark_raw": "",
+      "status": "active"
+    },
+    {
+      "code": "161816",
+      "name": "中证90LOF",
+      "type": "index",
+      "scale_yi": 0.3,
+      "benchmark_raw": "等权90",
+      "status": "active"
+    },
+    {
+      "code": "501005",
+      "name": "精准医疗LOF",
+      "type": "index",
+      "scale_yi": 0.3,
+      "benchmark_raw": "CS精准医",
+      "status": "active"
+    },
+    {
+      "code": "501188",
+      "name": "添富核心精选LOF",
+      "type": "active",
+      "scale_yi": 0.3,
+      "benchmark_raw": "",
+      "status": "active"
+    },
+    {
+      "code": "160218",
+      "name": "房地产LOF",
+      "type": "index",
+      "scale_yi": 0.3,
+      "benchmark_raw": "国证地产",
+      "status": "active"
+    },
+    {
+      "code": "502048",
+      "name": "上证50LOF",
+      "type": "index",
+      "scale_yi": 0.3,
+      "benchmark_raw": "上证50",
+      "status": "active"
+    },
+    {
+      "code": "160806",
+      "name": "长盛中证800LOF",
+      "type": "index",
+      "scale_yi": 0.3,
+      "benchmark_raw": "中证800",
+      "status": "active"
+    },
+    {
+      "code": "162006",
+      "name": "长城久富LOF",
+      "type": "active",
+      "scale_yi": 0.3,
+      "benchmark_raw": "",
+      "status": "active"
+    },
+    {
+      "code": "501077",
+      "name": "富国创新企业LOF",
+      "type": "active",
+      "scale_yi": 0.3,
+      "benchmark_raw": "",
+      "status": "active"
+    },
+    {
+      "code": "501016",
+      "name": "券商基金LOF",
+      "type": "index",
+      "scale_yi": 0.3,
+      "benchmark_raw": "CSSW证券",
+      "status": "active"
+    },
+    {
+      "code": "161217",
+      "name": "国投资源LOF",
+      "type": "index",
+      "scale_yi": 0.3,
+      "benchmark_raw": "中证上游",
+      "status": "active"
+    },
+    {
+      "code": "163407",
+      "name": "兴全沪深300LOF",
+      "type": "index",
+      "scale_yi": 0.3,
+      "benchmark_raw": "沪深300",
+      "status": "active"
+    },
+    {
+      "code": "501095",
+      "name": "中银证券科技创新LOF",
+      "type": "active",
+      "scale_yi": 0.3,
+      "benchmark_raw": "",
+      "status": "active"
+    },
+    {
+      "code": "165313",
+      "name": "建信优势LOF",
+      "type": "active",
+      "scale_yi": 0.3,
+      "benchmark_raw": "",
+      "status": "active"
+    },
+    {
+      "code": "161715",
+      "name": "大宗商品LOF",
+      "type": "index",
+      "scale_yi": 0.3,
+      "benchmark_raw": "大宗商品",
+      "status": "active"
+    },
+    {
+      "code": "502010",
+      "name": "证券LOF",
+      "type": "index",
+      "scale_yi": 0.3,
+      "benchmark_raw": "证券公司",
+      "status": "active"
+    },
+    {
+      "code": "160610",
+      "name": "鹏华动力LOF",
+      "type": "active",
+      "scale_yi": 0.2,
+      "benchmark_raw": "",
+      "status": "active"
+    },
+    {
+      "code": "161017",
+      "name": "500增强LOF",
+      "type": "index",
+      "scale_yi": 0.2,
+      "benchmark_raw": "中证500",
+      "status": "active"
+    },
+    {
+      "code": "161122",
+      "name": "生物科技LOF",
+      "type": "index",
+      "scale_yi": 0.2,
+      "benchmark_raw": "CSWD生科",
+      "status": "active"
+    },
+    {
+      "code": "501082",
+      "name": "科创投资LOF",
+      "type": "active",
+      "scale_yi": 0.2,
+      "benchmark_raw": "",
+      "status": "active"
+    },
+    {
+      "code": "169101",
+      "name": "东方红睿丰LOF",
+      "type": "active",
+      "scale_yi": 0.2,
+      "benchmark_raw": "",
+      "status": "active"
+    },
+    {
+      "code": "161123",
+      "name": "并购重组LOF",
+      "type": "index",
+      "scale_yi": 0.2,
+      "benchmark_raw": "CSWD并购",
+      "status": "active"
+    },
+    {
+      "code": "163114",
+      "name": "申万环保LOF",
+      "type": "index",
+      "scale_yi": 0.2,
+      "benchmark_raw": "中证环保",
+      "status": "active"
+    },
+    {
+      "code": "163412",
+      "name": "兴全轻资产LOF",
+      "type": "active",
+      "scale_yi": 0.2,
+      "benchmark_raw": "",
+      "status": "active"
+    },
+    {
+      "code": "502003",
+      "name": "军工LOF",
+      "type": "index",
+      "scale_yi": 0.2,
+      "benchmark_raw": "中证军工",
+      "status": "active"
+    },
+    {
+      "code": "501201",
+      "name": "科创红土LOF",
+      "type": "active",
+      "scale_yi": 0.2,
+      "benchmark_raw": "",
+      "status": "active"
+    },
+    {
+      "code": "501043",
+      "name": "沪深300LOF",
+      "type": "index",
+      "scale_yi": 0.2,
+      "benchmark_raw": "沪深300",
+      "status": "active"
+    },
+    {
+      "code": "160910",
+      "name": "创新成长LOF",
+      "type": "active",
+      "scale_yi": 0.2,
+      "benchmark_raw": "",
+      "status": "active"
+    },
+    {
+      "code": "164403",
+      "name": "农业精选LOF",
+      "type": "active",
+      "scale_yi": 0.2,
+      "benchmark_raw": "",
+      "status": "active"
+    },
+    {
+      "code": "163801",
+      "name": "中银中国LOF",
+      "type": "active",
+      "scale_yi": 0.2,
+      "benchmark_raw": "",
+      "status": "active"
+    },
+    {
+      "code": "165520",
+      "name": "有色LOF",
+      "type": "index",
+      "scale_yi": 0.2,
+      "benchmark_raw": "800有色",
+      "status": "active"
+    },
+    {
+      "code": "161631",
+      "name": "人工智能LOF",
+      "type": "index",
+      "scale_yi": 0.2,
+      "benchmark_raw": "CS人工智",
+      "status": "active"
+    },
+    {
+      "code": "501019",
+      "name": "军工基金LOF",
+      "type": "index",
+      "scale_yi": 0.2,
+      "benchmark_raw": "国证军工",
+      "status": "active"
+    },
+    {
+      "code": "501202",
+      "name": "华泰创新先锋LOF",
+      "type": "active",
+      "scale_yi": 0.2,
+      "benchmark_raw": "",
+      "status": "active"
+    },
+    {
+      "code": "501073",
+      "name": "华安智联LOF",
+      "type": "active",
+      "scale_yi": 0.2,
+      "benchmark_raw": "",
+      "status": "active"
+    },
+    {
+      "code": "502013",
+      "name": "一带一路LOF",
+      "type": "index",
+      "scale_yi": 0.2,
+      "benchmark_raw": "CSSW丝路",
+      "status": "active"
     }
   ],
   "lof_realtime": [
     {
-      "code": "161725",
-      "ts": "2026-06-18T10:31:00+08:00",
-      "price": 0.8347,
-      "iopv": 0.85,
-      "premium": -0.018,
-      "coverage": 1,
+      "code": "161226",
+      "name": "国投白银LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 1.776,
+      "price_change_pct": -0.051789,
+      "volume_amount": 28344.0,
+      "iopv": 1.6442,
+      "premium": 0.080161,
+      "coverage": 1.0,
       "source_quality": "ok",
-      "price_change_pct": -0.014932,
-      "volume_amount": 4280.6,
-      "nav_official": 0.8487,
-      "nav_official_date": "2026-06-17",
+      "nav_official": 1.6881,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "161725",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 0.516,
+      "iopv": 0.516,
+      "premium": 0.0,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "price_change_pct": 0.017751,
+      "volume_amount": 6536.0,
+      "nav_official": 0.5066,
+      "nav_official_date": "2026-06-25",
+      "premium_error": 0.001
+    },
+    {
+      "code": "163417",
+      "name": "兴全合宜LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 2.256,
+      "price_change_pct": 0.019892,
+      "volume_amount": 2944.0,
+      "iopv": 2.2776,
+      "premium": -0.009484,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 2.2769,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "161716",
+      "name": "招商双债LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 1.656,
+      "price_change_pct": 0.001815,
+      "volume_amount": 1895.0,
+      "iopv": 1.6563,
+      "premium": -0.000181,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 1.6545,
+      "nav_official_date": "2026-06-24"
+    },
+    {
+      "code": "163402",
+      "name": "兴全趋势LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 0.982,
+      "price_change_pct": 0.027197,
+      "volume_amount": 1774.0,
+      "iopv": 0.9903,
+      "premium": -0.008381,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 0.9746,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "161726",
+      "name": "生物医药LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 0.356,
+      "price_change_pct": 0.002817,
+      "volume_amount": 490.0,
+      "iopv": 0.3566,
+      "premium": -0.001683,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 0.3533,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "160632",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 0.25,
+      "iopv": 0.2495,
+      "premium": 0.002004,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "price_change_pct": 0.01626,
+      "volume_amount": 492.0,
+      "nav_official": 0.2458,
+      "nav_official_date": "2026-06-25",
       "premium_error": 0.001
     },
     {
       "code": "161005",
-      "ts": "2026-06-18T10:31:00+08:00",
-      "price": 0.8764,
-      "iopv": 0.887,
-      "premium": -0.01195,
-      "coverage": 1,
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 3.204,
+      "iopv": 3.2509,
+      "premium": -0.014427,
+      "coverage": 1.0,
       "source_quality": "ok",
-      "price_change_pct": -0.012,
-      "volume_amount": 5600,
-      "nav_official": 0.8859,
-      "nav_official_date": "2026-06-17",
+      "price_change_pct": 0.005965,
+      "volume_amount": 865.0,
+      "nav_official": 3.2063,
+      "nav_official_date": "2026-06-25",
       "premium_error": 0.0014
     },
     {
-      "code": "163406",
-      "ts": "2026-06-18T10:31:00+08:00",
-      "price": 0.9185,
-      "iopv": 0.924,
-      "premium": -0.005952,
-      "coverage": 1,
+      "code": "167301",
+      "name": "保险主题LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 0.997,
+      "price_change_pct": 0.010132,
+      "volume_amount": 1387.0,
+      "iopv": 0.9939,
+      "premium": 0.003119,
+      "coverage": 1.0,
       "source_quality": "ok",
-      "price_change_pct": -0.01498,
-      "volume_amount": 4259,
-      "nav_official": 0.9226,
-      "nav_official_date": "2026-06-17",
-      "premium_error": 0.0018
-    },
-    {
-      "code": "160706",
-      "ts": "2026-06-18T10:31:00+08:00",
-      "price": 0.961,
-      "iopv": 0.961,
-      "premium": 0,
-      "coverage": 1,
-      "source_quality": "ok",
-      "price_change_pct": -0.017596,
-      "volume_amount": 3081.8,
-      "nav_official": 0.9593,
-      "nav_official_date": "2026-06-17",
-      "premium_error": 0.0022
-    },
-    {
-      "code": "501050",
-      "ts": "2026-06-18T10:31:00+08:00",
-      "price": 1.004,
-      "iopv": 0.998,
-      "premium": 0.006012,
-      "coverage": 1,
-      "source_quality": "ok",
-      "price_change_pct": -0.014832,
-      "volume_amount": 4325.6,
-      "nav_official": 0.9965,
-      "nav_official_date": "2026-06-17",
-      "premium_error": 0.0026
-    },
-    {
-      "code": "160505",
-      "ts": "2026-06-18T10:31:00+08:00",
-      "price": 1.0474,
-      "iopv": 1.035,
-      "premium": 0.011981,
-      "coverage": 1,
-      "source_quality": "ok",
-      "price_change_pct": 0.002168,
-      "volume_amount": 11975.6,
-      "nav_official": 1.0352,
-      "nav_official_date": "2026-06-17",
-      "premium_error": 0.003
-    },
-    {
-      "code": "162605",
-      "ts": "2026-06-18T10:31:00+08:00",
-      "price": 1.0913,
-      "iopv": 1.072,
-      "premium": 0.018004,
-      "coverage": 1,
-      "source_quality": "ok",
-      "price_change_pct": -0.008396,
-      "volume_amount": 7221.8,
-      "nav_official": 1.0711,
-      "nav_official_date": "2026-06-17",
-      "premium_error": 0.0034
-    },
-    {
-      "code": "161024",
-      "ts": "2026-06-18T10:31:00+08:00",
-      "price": 1.1356,
-      "iopv": 1.109,
-      "premium": 0.023986,
-      "coverage": 1,
-      "source_quality": "ok",
-      "price_change_pct": 0.019492,
-      "volume_amount": 19771.4,
-      "nav_official": 1.1112,
-      "nav_official_date": "2026-06-17",
-      "premium_error": 0.0038
-    },
-    {
-      "code": "160119",
-      "ts": "2026-06-18T10:31:00+08:00",
-      "price": 1.1804,
-      "iopv": 1.146,
-      "premium": 0.030017,
-      "coverage": 1,
-      "source_quality": "ok",
-      "price_change_pct": -0.00882,
-      "volume_amount": 7031,
-      "nav_official": 1.145,
-      "nav_official_date": "2026-06-17",
-      "premium_error": 0.0042
-    },
-    {
-      "code": "160632",
-      "ts": "2026-06-18T10:31:00+08:00",
-      "price": 1.2256,
-      "iopv": 1.183,
-      "premium": 0.03601,
-      "coverage": 1,
-      "source_quality": "ok",
-      "price_change_pct": 0.004532,
-      "volume_amount": 13039.4,
-      "nav_official": 1.1835,
-      "nav_official_date": "2026-06-17",
-      "premium_error": 0.001
-    },
-    {
-      "code": "160220",
-      "ts": "2026-06-18T10:31:00+08:00",
-      "price": 1.198,
-      "iopv": 1.22,
-      "premium": -0.018033,
-      "coverage": 1,
-      "source_quality": "ok",
-      "price_change_pct": 0.001864,
-      "volume_amount": 11838.8,
-      "nav_official": 1.2202,
-      "nav_official_date": "2026-06-17",
-      "premium_error": 0.0014
-    },
-    {
-      "code": "161903",
-      "ts": "2026-06-18T10:31:00+08:00",
-      "price": 1.2419,
-      "iopv": 1.257,
-      "premium": -0.012013,
-      "coverage": 1,
-      "source_quality": "ok",
-      "price_change_pct": 0.00946,
-      "volume_amount": 15257,
-      "nav_official": 1.2582,
-      "nav_official_date": "2026-06-17",
-      "premium_error": 0.0018
+      "nav_official": 0.984,
+      "nav_official_date": "2026-06-25"
     },
     {
       "code": "501227",
-      "ts": "2026-06-18T10:31:00+08:00",
-      "price": 0.8449,
-      "iopv": 0.85,
-      "premium": -0.006,
-      "coverage": 1,
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 0.992,
+      "iopv": 1.0016,
+      "premium": -0.009585,
+      "coverage": 1.0,
       "source_quality": "ok",
-      "price_change_pct": -0.00568,
-      "volume_amount": 8444,
-      "nav_official": 0.8495,
-      "nav_official_date": "2026-06-17",
+      "price_change_pct": -0.010967,
+      "volume_amount": 510.0,
+      "nav_official": 1.0098,
+      "nav_official_date": "2026-06-25",
       "premium_error": 0.0022
     },
     {
-      "code": "501205",
-      "ts": "2026-06-18T10:31:00+08:00",
-      "price": 0.887,
-      "iopv": 0.887,
-      "premium": 0,
-      "coverage": 1,
+      "code": "162412",
+      "name": "医疗基金LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 0.532,
+      "price_change_pct": 0.007576,
+      "volume_amount": 87.0,
+      "iopv": 0.5309,
+      "premium": 0.002072,
+      "coverage": 1.0,
       "source_quality": "ok",
-      "price_change_pct": -0.002256,
-      "volume_amount": 9984.8,
-      "nav_official": 0.8868,
-      "nav_official_date": "2026-06-17",
-      "premium_error": 0.0026
+      "nav_official": 0.5273,
+      "nav_official_date": "2026-06-25"
     },
     {
-      "code": "501096",
-      "ts": "2026-06-18T10:31:00+08:00",
-      "price": 0.9295,
-      "iopv": 0.924,
-      "premium": 0.005952,
-      "coverage": 1,
+      "code": "162605",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 2.0,
+      "iopv": 2.0265,
+      "premium": -0.013077,
+      "coverage": 1.0,
       "source_quality": "ok",
-      "price_change_pct": -0.009944,
-      "volume_amount": 6525.2,
-      "nav_official": 0.9231,
-      "nav_official_date": "2026-06-17",
-      "premium_error": 0.003
-    },
-    {
-      "code": "501099",
-      "ts": "2026-06-18T10:31:00+08:00",
-      "price": 0.9725,
-      "iopv": 0.961,
-      "premium": 0.011967,
-      "coverage": 1,
-      "source_quality": "ok",
-      "price_change_pct": 0.001484,
-      "volume_amount": 11667.8,
-      "nav_official": 0.9611,
-      "nav_official_date": "2026-06-17",
+      "price_change_pct": 0.03146,
+      "volume_amount": 1489.0,
+      "nav_official": 1.973,
+      "nav_official_date": "2026-06-25",
       "premium_error": 0.0034
     },
     {
-      "code": "501201",
-      "ts": "2026-06-18T10:31:00+08:00",
-      "price": 1.016,
-      "iopv": 0.998,
-      "premium": 0.018036,
-      "coverage": 1,
+      "code": "160706",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 1.271,
+      "iopv": 1.2795,
+      "premium": -0.006643,
+      "coverage": 1.0,
       "source_quality": "ok",
-      "price_change_pct": -0.00416,
-      "volume_amount": 9128,
-      "nav_official": 0.9976,
-      "nav_official_date": "2026-06-17",
-      "premium_error": 0.0038
+      "price_change_pct": 0.015176,
+      "volume_amount": 217.0,
+      "nav_official": 1.2608,
+      "nav_official_date": "2026-06-25",
+      "premium_error": 0.0022
     },
     {
-      "code": "501203",
-      "ts": "2026-06-18T10:31:00+08:00",
-      "price": 1.0598,
-      "iopv": 1.035,
-      "premium": 0.023961,
-      "coverage": 1,
+      "code": "163418",
+      "name": "兴全合兴LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 1.006,
+      "price_change_pct": 0.022358,
+      "volume_amount": 357.0,
+      "iopv": 1.0297,
+      "premium": -0.023016,
+      "coverage": 1.0,
       "source_quality": "ok",
-      "price_change_pct": 0.016792,
-      "volume_amount": 18556.4,
-      "nav_official": 1.0367,
-      "nav_official_date": "2026-06-17",
-      "premium_error": 0.0042
+      "nav_official": 1.0098,
+      "nav_official_date": "2026-06-25"
     },
     {
-      "code": "501208",
-      "ts": "2026-06-18T10:31:00+08:00",
-      "price": 1.1042,
-      "iopv": 1.072,
-      "premium": 0.030037,
-      "coverage": 1,
+      "code": "163406",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 2.884,
+      "iopv": 2.9139,
+      "premium": -0.010261,
+      "coverage": 1.0,
       "source_quality": "ok",
-      "price_change_pct": -0.017492,
-      "volume_amount": 3128.6,
-      "nav_official": 1.0701,
-      "nav_official_date": "2026-06-17",
-      "premium_error": 0.001
-    },
-    {
-      "code": "501085",
-      "ts": "2026-06-18T10:31:00+08:00",
-      "price": 1.1489,
-      "iopv": 1.109,
-      "premium": 0.035978,
-      "coverage": 1,
-      "source_quality": "ok",
-      "price_change_pct": -0.010136,
-      "volume_amount": 6438.8,
-      "nav_official": 1.1079,
-      "nav_official_date": "2026-06-17",
-      "premium_error": 0.0014
-    },
-    {
-      "code": "501219",
-      "ts": "2026-06-18T10:31:00+08:00",
-      "price": 1.1254,
-      "iopv": 1.146,
-      "premium": -0.017976,
-      "coverage": 1,
-      "source_quality": "ok",
-      "price_change_pct": 0.009364,
-      "volume_amount": 15213.8,
-      "nav_official": 1.1471,
-      "nav_official_date": "2026-06-17",
+      "price_change_pct": 0.027066,
+      "volume_amount": 993.0,
+      "nav_official": 2.8475,
+      "nav_official_date": "2026-06-25",
       "premium_error": 0.0018
     },
     {
-      "code": "501095",
-      "ts": "2026-06-18T10:31:00+08:00",
-      "price": 1.1688,
-      "iopv": 1.183,
-      "premium": -0.012003,
-      "coverage": 1,
+      "code": "161903",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 1.73,
+      "iopv": 1.748,
+      "premium": -0.010297,
+      "coverage": 1.0,
       "source_quality": "ok",
-      "price_change_pct": -0.00042,
-      "volume_amount": 10811,
-      "nav_official": 1.183,
-      "nav_official_date": "2026-06-17",
-      "premium_error": 0.0022
+      "price_change_pct": 0.012288,
+      "volume_amount": 756.0,
+      "nav_official": 1.7249,
+      "nav_official_date": "2026-06-25",
+      "premium_error": 0.0018
     },
     {
-      "code": "501077",
-      "ts": "2026-06-18T10:31:00+08:00",
-      "price": 1.2127,
-      "iopv": 1.22,
-      "premium": -0.005984,
-      "coverage": 1,
+      "code": "161026",
+      "name": "国企改革LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 1.234,
+      "price_change_pct": 0.00982,
+      "volume_amount": 91.0,
+      "iopv": 1.2435,
+      "premium": -0.00764,
+      "coverage": 1.0,
       "source_quality": "ok",
-      "price_change_pct": 0.010812,
-      "volume_amount": 15865.4,
-      "nav_official": 1.2213,
-      "nav_official_date": "2026-06-17",
-      "premium_error": 0.0026
+      "nav_official": 1.227,
+      "nav_official_date": "2026-06-25"
     },
     {
-      "code": "501057",
-      "ts": "2026-06-18T10:31:00+08:00",
-      "price": 1.257,
-      "iopv": 1.257,
-      "premium": 0,
-      "coverage": 1,
+      "code": "160505",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 1.134,
+      "iopv": 1.1404,
+      "premium": -0.005612,
+      "coverage": 1.0,
       "source_quality": "ok",
-      "price_change_pct": -0.005308,
-      "volume_amount": 8611.4,
-      "nav_official": 1.2563,
-      "nav_official_date": "2026-06-17",
+      "price_change_pct": -0.001761,
+      "volume_amount": 201.0,
+      "nav_official": 1.146,
+      "nav_official_date": "2026-06-25",
       "premium_error": 0.003
     },
     {
-      "code": "501206",
-      "ts": "2026-06-18T10:31:00+08:00",
-      "price": 0.8551,
-      "iopv": 0.85,
-      "premium": 0.006,
-      "coverage": 1,
+      "code": "163113",
+      "name": "申万证券LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 0.966,
+      "price_change_pct": 0.02439,
+      "volume_amount": 54.0,
+      "iopv": 0.9758,
+      "premium": -0.010043,
+      "coverage": 1.0,
       "source_quality": "ok",
-      "price_change_pct": 0.009172,
-      "volume_amount": 15127.4,
-      "nav_official": 0.8508,
-      "nav_official_date": "2026-06-17",
-      "premium_error": 0.0034
+      "nav_official": 0.9452,
+      "nav_official_date": "2026-06-25"
     },
     {
-      "code": "501078",
-      "ts": "2026-06-18T10:31:00+08:00",
-      "price": 0.8976,
-      "iopv": 0.887,
-      "premium": 0.01195,
-      "coverage": 1,
+      "code": "501050",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 1.739,
+      "iopv": 1.7543,
+      "premium": -0.008721,
+      "coverage": 1.0,
       "source_quality": "ok",
-      "price_change_pct": -0.004424,
-      "volume_amount": 9009.2,
-      "nav_official": 0.8866,
-      "nav_official_date": "2026-06-17",
+      "price_change_pct": 0.006948,
+      "volume_amount": 115.0,
+      "nav_official": 1.745,
+      "nav_official_date": "2026-06-25",
+      "premium_error": 0.0026
+    },
+    {
+      "code": "161812",
+      "name": "深证100LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 1.57,
+      "price_change_pct": 0.024136,
+      "volume_amount": 37.0,
+      "iopv": 1.5789,
+      "premium": -0.005637,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 1.545,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "161720",
+      "name": "证券基金LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 1.207,
+      "price_change_pct": 0.029863,
+      "volume_amount": 185.0,
+      "iopv": 1.2156,
+      "premium": -0.007075,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 1.1771,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "160219",
+      "name": "医药LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 0.516,
+      "price_change_pct": 0.007812,
+      "volume_amount": 40.0,
+      "iopv": 0.5179,
+      "premium": -0.003669,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 0.5145,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "162703",
+      "name": "广发小盘LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 2.795,
+      "price_change_pct": 0.026065,
+      "volume_amount": 1315.0,
+      "iopv": 2.8562,
+      "premium": -0.021427,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 2.7653,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "161024",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 1.218,
+      "iopv": 1.2246,
+      "premium": -0.00539,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "price_change_pct": -0.002457,
+      "volume_amount": 106.0,
+      "nav_official": 1.226,
+      "nav_official_date": "2026-06-25",
       "premium_error": 0.0038
     },
     {
-      "code": "501097",
-      "ts": "2026-06-18T10:31:00+08:00",
-      "price": 0.9406,
-      "iopv": 0.924,
-      "premium": 0.017965,
-      "coverage": 1,
+      "code": "161027",
+      "name": "证券LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 1.084,
+      "price_change_pct": 0.032381,
+      "volume_amount": 195.0,
+      "iopv": 1.0906,
+      "premium": -0.006052,
+      "coverage": 1.0,
       "source_quality": "ok",
-      "price_change_pct": -0.019468,
-      "volume_amount": 2239.4,
-      "nav_official": 0.9222,
-      "nav_official_date": "2026-06-17",
-      "premium_error": 0.0042
+      "nav_official": 1.056,
+      "nav_official_date": "2026-06-25"
     },
     {
       "code": "501090",
-      "ts": "2026-06-18T10:31:00+08:00",
-      "price": 0.9841,
-      "iopv": 0.961,
-      "premium": 0.024037,
-      "coverage": 1,
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 1.01,
+      "iopv": 1.0054,
+      "premium": 0.004575,
+      "coverage": 1.0,
       "source_quality": "ok",
-      "price_change_pct": 0.0072,
-      "volume_amount": 14240,
-      "nav_official": 0.9617,
-      "nav_official_date": "2026-06-17",
+      "price_change_pct": 0.002979,
+      "volume_amount": 67.0,
+      "nav_official": 1.0046,
+      "nav_official_date": "2026-06-25",
       "premium_error": 0.001
     },
     {
-      "code": "501081",
-      "ts": "2026-06-18T10:31:00+08:00",
-      "price": 1.0279,
-      "iopv": 0.998,
-      "premium": 0.02996,
-      "coverage": 1,
+      "code": "163109",
+      "name": "申万深成LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 0.89,
+      "price_change_pct": 0.018307,
+      "volume_amount": 69.0,
+      "iopv": 0.894,
+      "premium": -0.004474,
+      "coverage": 1.0,
       "source_quality": "ok",
-      "price_change_pct": -0.01204,
-      "volume_amount": 5582,
-      "nav_official": 0.9968,
-      "nav_official_date": "2026-06-17",
+      "nav_official": 0.8789,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "501029",
+      "name": "红利基金LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 1.663,
+      "price_change_pct": -0.010708,
+      "volume_amount": 114.0,
+      "iopv": 1.666,
+      "premium": -0.001801,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 1.6831,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "501205",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 1.289,
+      "iopv": 1.3105,
+      "premium": -0.016406,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "price_change_pct": 0.037007,
+      "volume_amount": 1039.0,
+      "nav_official": 1.2518,
+      "nav_official_date": "2026-06-25",
+      "premium_error": 0.0026
+    },
+    {
+      "code": "161227",
+      "name": "国投深证100LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 1.859,
+      "price_change_pct": 0.02199,
+      "volume_amount": 107.0,
+      "iopv": 1.8737,
+      "premium": -0.007845,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 1.8327,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "160133",
+      "name": "南方天元LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 4.178,
+      "price_change_pct": 0.002399,
+      "volume_amount": 99.0,
+      "iopv": 4.1934,
+      "premium": -0.003672,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 4.1858,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "501096",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 2.298,
+      "iopv": 2.3194,
+      "premium": -0.009227,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "price_change_pct": -0.027096,
+      "volume_amount": 13675.0,
+      "nav_official": 2.2154,
+      "nav_official_date": "2026-06-25",
+      "premium_error": 0.003
+    },
+    {
+      "code": "160631",
+      "name": "银行LOF基金",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 1.267,
+      "price_change_pct": -0.014774,
+      "volume_amount": 18.0,
+      "iopv": 1.2741,
+      "premium": -0.005573,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 1.2845,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "501026",
+      "name": "财通福享混合LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 3.103,
+      "price_change_pct": 0.032956,
+      "volume_amount": 5184.0,
+      "iopv": 3.1847,
+      "premium": -0.025654,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 3.0315,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "160222",
+      "name": "食品LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 0.622,
+      "price_change_pct": -0.011129,
+      "volume_amount": 55.0,
+      "iopv": 0.6304,
+      "premium": -0.013325,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 0.6261,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "501207",
+      "name": "华夏创新未来LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 0.888,
+      "price_change_pct": 0.024221,
+      "volume_amount": 45.0,
+      "iopv": 0.9024,
+      "premium": -0.015957,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 0.8837,
+      "nav_official_date": "2026-06-24"
+    },
+    {
+      "code": "160919",
+      "name": "产业升级LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 3.93,
+      "price_change_pct": 0.013148,
+      "volume_amount": 22.0,
+      "iopv": 3.9535,
+      "premium": -0.005944,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 3.9132,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "160813",
+      "name": "长盛同盛LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 2.162,
+      "price_change_pct": 0.021739,
+      "volume_amount": 14.0,
+      "iopv": 2.1916,
+      "premium": -0.013506,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 2.147,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "160630",
+      "name": "国防LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 1.073,
+      "price_change_pct": -0.006481,
+      "volume_amount": 33.0,
+      "iopv": 1.0818,
+      "premium": -0.008135,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 1.0808,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "161028",
+      "name": "新能源车LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 1.183,
+      "price_change_pct": -0.011696,
+      "volume_amount": 42.0,
+      "iopv": 1.1879,
+      "premium": -0.004125,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 1.201,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "501009",
+      "name": "生物科技LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 1.13,
+      "price_change_pct": 0.006233,
+      "volume_amount": 40.0,
+      "iopv": 1.128,
+      "premium": 0.001773,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 1.1189,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "160323",
+      "name": "华夏磐泰LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 1.77,
+      "price_change_pct": -0.002817,
+      "volume_amount": 272.0,
+      "iopv": 1.7656,
+      "premium": 0.002492,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 1.7691,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "160916",
+      "name": "优选LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 4.27,
+      "price_change_pct": 0.009456,
+      "volume_amount": 76.0,
+      "iopv": 4.3145,
+      "premium": -0.010314,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 4.278,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "165525",
+      "name": "基建工程LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 0.74,
+      "price_change_pct": 0.00271,
+      "volume_amount": 27.0,
+      "iopv": 0.7389,
+      "premium": 0.001489,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 0.7409,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "162607",
+      "name": "景顺资源LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 0.456,
+      "price_change_pct": 0.0,
+      "volume_amount": 145.0,
+      "iopv": 0.4565,
+      "premium": -0.001095,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 0.462,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "163415",
+      "name": "兴全商业模式LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 5.886,
+      "price_change_pct": 0.026509,
+      "volume_amount": 1051.0,
+      "iopv": 6.0008,
+      "premium": -0.019131,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 5.869,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "163503",
+      "name": "天治核心LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 0.476,
+      "price_change_pct": 0.014925,
+      "volume_amount": 2.0,
+      "iopv": 0.4826,
+      "premium": -0.013676,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 0.4764,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "160311",
+      "name": "华夏蓝筹LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 1.601,
+      "price_change_pct": -0.008669,
+      "volume_amount": 42.0,
+      "iopv": 1.608,
+      "premium": -0.004353,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 1.613,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "160314",
+      "name": "华夏行业LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 1.671,
+      "price_change_pct": 0.017661,
+      "volume_amount": 67.0,
+      "iopv": 1.7306,
+      "premium": -0.034439,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 1.674,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "501219",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 1.833,
+      "iopv": 1.8518,
+      "premium": -0.010152,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "price_change_pct": 0.001639,
+      "volume_amount": 205.0,
+      "nav_official": 1.8351,
+      "nav_official_date": "2026-06-25",
+      "premium_error": 0.0018
+    },
+    {
+      "code": "165521",
+      "name": "金融LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 1.22,
+      "price_change_pct": 0.014975,
+      "volume_amount": 3.0,
+      "iopv": 1.2159,
+      "premium": 0.003372,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 1.2058,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "160611",
+      "name": "鹏华优质治理LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 1.241,
+      "price_change_pct": -0.003213,
+      "volume_amount": 2.0,
+      "iopv": 1.2495,
+      "premium": -0.006803,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 1.253,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "162509",
+      "name": "中证A100LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 1.065,
+      "price_change_pct": 0.012357,
+      "volume_amount": 1.0,
+      "iopv": 1.0724,
+      "premium": -0.0069,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 1.0592,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "160607",
+      "name": "鹏华价值优势LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 1.014,
+      "price_change_pct": 0.016032,
+      "volume_amount": 58.0,
+      "iopv": 1.0224,
+      "premium": -0.008216,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 0.999,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "160625",
+      "name": "证保LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 0.86,
+      "price_change_pct": 0.02503,
+      "volume_amount": 55.0,
+      "iopv": 0.8634,
+      "premium": -0.003938,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 0.8398,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "501206",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 1.113,
+      "iopv": 1.1391,
+      "premium": -0.022913,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "price_change_pct": 0.023919,
+      "volume_amount": 124.0,
+      "nav_official": 1.1141,
+      "nav_official_date": "2026-06-25",
+      "premium_error": 0.0034
+    },
+    {
+      "code": "501089",
+      "name": "消费红利增强LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 0.966,
+      "price_change_pct": -0.007194,
+      "volume_amount": 70.0,
+      "iopv": 0.9636,
+      "premium": 0.002491,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 0.972,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "161131",
+      "name": "易方达科润LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 1.098,
+      "price_change_pct": 0.033898,
+      "volume_amount": 186.0,
+      "iopv": 1.1208,
+      "premium": -0.020343,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 1.0909,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "160918",
+      "name": "中小盘LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 2.354,
+      "price_change_pct": -0.003809,
+      "volume_amount": 5.0,
+      "iopv": 2.3583,
+      "premium": -0.001823,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 2.3662,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "161610",
+      "name": "融通领先成长LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 2.36,
+      "price_change_pct": 0.034181,
+      "volume_amount": 25.0,
+      "iopv": 2.4013,
+      "premium": -0.017199,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 2.336,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "160812",
+      "name": "长盛同益LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 2.684,
+      "price_change_pct": 0.011685,
+      "volume_amount": 21.0,
+      "iopv": 2.761,
+      "premium": -0.027888,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 2.708,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "501078",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 3.26,
+      "iopv": 3.3524,
+      "premium": -0.027562,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "price_change_pct": 0.010853,
+      "volume_amount": 53.0,
+      "nav_official": 3.2462,
+      "nav_official_date": "2026-06-25",
+      "premium_error": 0.0038
+    },
+    {
+      "code": "501208",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 1.579,
+      "iopv": 1.6188,
+      "premium": -0.024586,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "price_change_pct": 0.031352,
+      "volume_amount": 360.0,
+      "nav_official": 1.5733,
+      "nav_official_date": "2026-06-25",
+      "premium_error": 0.001
+    },
+    {
+      "code": "168103",
+      "name": "九泰锐益LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 1.39,
+      "price_change_pct": 0.007246,
+      "volume_amount": 12.0,
+      "iopv": 1.4081,
+      "premium": -0.012854,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 1.398,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "501203",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 1.816,
+      "iopv": 1.8762,
+      "premium": -0.032086,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "price_change_pct": 0.018508,
+      "volume_amount": 201.0,
+      "nav_official": 1.7946,
+      "nav_official_date": "2026-06-25",
+      "premium_error": 0.0042
+    },
+    {
+      "code": "160221",
+      "name": "有色金属LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 2.311,
+      "price_change_pct": -0.022833,
+      "volume_amount": 93.0,
+      "iopv": 2.3197,
+      "premium": -0.00375,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 2.3744,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "501015",
+      "name": "财通升级混合LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 4.11,
+      "price_change_pct": 0.028529,
+      "volume_amount": 2938.0,
+      "iopv": 4.2165,
+      "premium": -0.025258,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 4.043,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "163118",
+      "name": "医药生物LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 0.608,
+      "price_change_pct": 0.011647,
+      "volume_amount": 22.0,
+      "iopv": 0.6094,
+      "premium": -0.002297,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 0.6061,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "161810",
+      "name": "银华内需LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 3.94,
+      "price_change_pct": -0.037616,
+      "volume_amount": 281.0,
+      "iopv": 3.9719,
+      "premium": -0.008031,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 4.078,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "161025",
+      "name": "互联网LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 1.656,
+      "price_change_pct": 0.027933,
+      "volume_amount": 196.0,
+      "iopv": 1.678,
+      "premium": -0.013111,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 1.621,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "501011",
+      "name": "中药基金LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 0.931,
+      "price_change_pct": -0.013771,
+      "volume_amount": 54.0,
+      "iopv": 0.9325,
+      "premium": -0.001609,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 0.9421,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "160805",
+      "name": "长盛同智LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 0.769,
+      "price_change_pct": 0.006545,
+      "volume_amount": 3.0,
+      "iopv": 0.7573,
+      "premium": 0.01545,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 0.768,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "160633",
+      "name": "券商LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 1.119,
+      "price_change_pct": -0.008857,
+      "volume_amount": 1223.0,
+      "iopv": 1.1295,
+      "premium": -0.009296,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 1.0939,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "501057",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 2.499,
+      "iopv": 2.5138,
+      "premium": -0.005888,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "price_change_pct": -0.011862,
+      "volume_amount": 86.0,
+      "nav_official": 2.5428,
+      "nav_official_date": "2026-06-25",
+      "premium_error": 0.003
+    },
+    {
+      "code": "502056",
+      "name": "医疗基金LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 0.604,
+      "price_change_pct": 0.006667,
+      "volume_amount": 28.0,
+      "iopv": 0.6012,
+      "premium": 0.004657,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 0.597,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "501085",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 4.02,
+      "iopv": 4.1672,
+      "premium": -0.035323,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "price_change_pct": 0.020823,
+      "volume_amount": 683.0,
+      "nav_official": 3.966,
+      "nav_official_date": "2026-06-25",
       "premium_error": 0.0014
     },
     {
-      "code": "501311",
-      "ts": "2026-06-18T10:31:00+08:00",
-      "price": 1.0723,
-      "iopv": 1.035,
-      "premium": 0.036039,
-      "coverage": 1,
+      "code": "501186",
+      "name": "华夏兴融LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 0.794,
+      "price_change_pct": -0.009975,
+      "volume_amount": 1.0,
+      "iopv": 0.8026,
+      "premium": -0.010715,
+      "coverage": 1.0,
       "source_quality": "ok",
-      "price_change_pct": -0.008968,
-      "volume_amount": 6964.4,
-      "nav_official": 1.0341,
-      "nav_official_date": "2026-06-17",
-      "premium_error": 0.0018
+      "nav_official": 0.8079,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "166001",
+      "name": "中欧趋势LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 1.712,
+      "price_change_pct": 0.007652,
+      "volume_amount": 73.0,
+      "iopv": 1.7537,
+      "premium": -0.023778,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 1.7207,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "163409",
+      "name": "兴全绿色LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 1.591,
+      "price_change_pct": 0.003785,
+      "volume_amount": 9.0,
+      "iopv": 1.6066,
+      "premium": -0.00971,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 1.607,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "160106",
+      "name": "南方高增LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 1.492,
+      "price_change_pct": 0.008108,
+      "volume_amount": 24.0,
+      "iopv": 1.5197,
+      "premium": -0.018227,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 1.5034,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "160142",
+      "name": "南方优势产业LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 1.219,
+      "price_change_pct": -0.003271,
+      "volume_amount": 45.0,
+      "iopv": 1.2479,
+      "premium": -0.023159,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 1.2199,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "160643",
+      "name": "空天军工LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 1.278,
+      "price_change_pct": -0.001563,
+      "volume_amount": 64.0,
+      "iopv": 1.2865,
+      "premium": -0.006607,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 1.2886,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "160119",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 2.49,
+      "iopv": 2.5074,
+      "premium": -0.006939,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "price_change_pct": 0.010552,
+      "volume_amount": 121.0,
+      "nav_official": 2.4809,
+      "nav_official_date": "2026-06-25",
+      "premium_error": 0.0042
+    },
+    {
+      "code": "169105",
+      "name": "东方红睿华LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 2.212,
+      "price_change_pct": 0.014679,
+      "volume_amount": 8.0,
+      "iopv": 2.2565,
+      "premium": -0.019721,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 2.2199,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "160127",
+      "name": "南方消费LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 0.851,
+      "price_change_pct": 0.0,
+      "volume_amount": 1.0,
+      "iopv": 0.8644,
+      "premium": -0.015502,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 0.8565,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "501079",
+      "name": "科创大成LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 6.395,
+      "price_change_pct": 0.076056,
+      "volume_amount": 1680.0,
+      "iopv": 6.4749,
+      "premium": -0.01234,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 6.1376,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "161816",
+      "name": "中证90LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 1.045,
+      "price_change_pct": 0.006744,
+      "volume_amount": 18.0,
+      "iopv": 1.0094,
+      "premium": 0.035268,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 0.9962,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "501005",
+      "name": "精准医疗LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 0.937,
+      "price_change_pct": 0.015168,
+      "volume_amount": 127.0,
+      "iopv": 0.9352,
+      "premium": 0.001925,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 0.9203,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "501188",
+      "name": "添富核心精选LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 1.495,
+      "price_change_pct": 0.039638,
+      "volume_amount": 130.0,
+      "iopv": 1.5115,
+      "premium": -0.010916,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 1.4734,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "160218",
+      "name": "房地产LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 0.54,
+      "price_change_pct": -0.012797,
+      "volume_amount": 4.0,
+      "iopv": 0.539,
+      "premium": 0.001855,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 0.5433,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "502048",
+      "name": "上证50LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 1.262,
+      "price_change_pct": 0.012029,
+      "volume_amount": 21.0,
+      "iopv": 1.2678,
+      "premium": -0.004575,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 1.2536,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "160806",
+      "name": "长盛中证800LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 2.23,
+      "price_change_pct": 0.012716,
+      "volume_amount": 1.0,
+      "iopv": 2.2622,
+      "premium": -0.014234,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 2.232,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "162006",
+      "name": "长城久富LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 2.15,
+      "price_change_pct": 0.03167,
+      "volume_amount": 20.0,
+      "iopv": 2.1895,
+      "premium": -0.018041,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 2.1335,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "501077",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 3.628,
+      "iopv": 3.6764,
+      "premium": -0.013165,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "price_change_pct": 0.020822,
+      "volume_amount": 169.0,
+      "nav_official": 3.6123,
+      "nav_official_date": "2026-06-25",
+      "premium_error": 0.0026
+    },
+    {
+      "code": "501016",
+      "name": "券商基金LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 1.25,
+      "price_change_pct": 0.035626,
+      "volume_amount": 152.0,
+      "iopv": 1.258,
+      "premium": -0.006359,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 1.2183,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "161217",
+      "name": "国投资源LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 2.223,
+      "price_change_pct": -0.020273,
+      "volume_amount": 90.0,
+      "iopv": 2.2394,
+      "premium": -0.007323,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 2.2829,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "163407",
+      "name": "兴全沪深300LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 2.627,
+      "price_change_pct": 0.004973,
+      "volume_amount": 58.0,
+      "iopv": 2.6246,
+      "premium": 0.000914,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 2.6083,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "501095",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 1.246,
+      "iopv": 1.2809,
+      "premium": -0.027246,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "price_change_pct": 0.031457,
+      "volume_amount": 86.0,
+      "nav_official": 1.2256,
+      "nav_official_date": "2026-06-25",
+      "premium_error": 0.0022
+    },
+    {
+      "code": "165313",
+      "name": "建信优势LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 5.502,
+      "price_change_pct": 0.064423,
+      "volume_amount": 59.0,
+      "iopv": 5.484,
+      "premium": 0.003282,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 5.324,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "161715",
+      "name": "大宗商品LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 2.299,
+      "price_change_pct": -0.012457,
+      "volume_amount": 48.0,
+      "iopv": 2.3264,
+      "premium": -0.011778,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 2.3496,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "502010",
+      "name": "证券LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 1.321,
+      "price_change_pct": 0.030421,
+      "volume_amount": 66.0,
+      "iopv": 1.3288,
+      "premium": -0.00587,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 1.2865,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "160610",
+      "name": "鹏华动力LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 1.404,
+      "price_change_pct": 0.008621,
+      "volume_amount": 40.0,
+      "iopv": 1.4124,
+      "premium": -0.005947,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 1.402,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "161017",
+      "name": "500增强LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 2.902,
+      "price_change_pct": 0.01115,
+      "volume_amount": 97.0,
+      "iopv": 2.929,
+      "premium": -0.009218,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 2.898,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "161122",
+      "name": "生物科技LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 0.495,
+      "price_change_pct": 0.0,
+      "volume_amount": 21.0,
+      "iopv": 0.4935,
+      "premium": 0.00304,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 0.4941,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "501082",
+      "name": "科创投资LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 5.45,
+      "price_change_pct": 0.090218,
+      "volume_amount": 1052.0,
+      "iopv": 5.3961,
+      "premium": 0.009989,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 5.2003,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "169101",
+      "name": "东方红睿丰LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 2.74,
+      "price_change_pct": 0.023916,
+      "volume_amount": 77.0,
+      "iopv": 2.8184,
+      "premium": -0.027817,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 2.712,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "161123",
+      "name": "并购重组LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 1.587,
+      "price_change_pct": -0.003766,
+      "volume_amount": 4.0,
+      "iopv": 1.5884,
+      "premium": -0.000881,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 1.6031,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "163114",
+      "name": "申万环保LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 1.365,
+      "price_change_pct": 0.000733,
+      "volume_amount": 6.0,
+      "iopv": 1.373,
+      "premium": -0.005827,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 1.3744,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "163412",
+      "name": "兴全轻资产LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 4.835,
+      "price_change_pct": 0.025668,
+      "volume_amount": 137.0,
+      "iopv": 4.8844,
+      "premium": -0.010114,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 4.756,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "502003",
+      "name": "军工LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 1.522,
+      "price_change_pct": -0.004578,
+      "volume_amount": 24.0,
+      "iopv": 1.5355,
+      "premium": -0.008792,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 1.5369,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "501201",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 3.589,
+      "iopv": 3.6148,
+      "premium": -0.007137,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "price_change_pct": 0.043011,
+      "volume_amount": 868.0,
+      "nav_official": 3.4757,
+      "nav_official_date": "2026-06-25",
+      "premium_error": 0.0038
+    },
+    {
+      "code": "501043",
+      "name": "沪深300LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 1.71,
+      "price_change_pct": 0.014235,
+      "volume_amount": 25.0,
+      "iopv": 1.7125,
+      "premium": -0.00146,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 1.6874,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "160910",
+      "name": "创新成长LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 0.87,
+      "price_change_pct": 0.009281,
+      "volume_amount": 1.0,
+      "iopv": 0.8687,
+      "premium": 0.001496,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 0.867,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "164403",
+      "name": "农业精选LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 0.838,
+      "price_change_pct": -0.009456,
+      "volume_amount": 8.0,
+      "iopv": 0.8383,
+      "premium": -0.000358,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 0.8461,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "163801",
+      "name": "中银中国LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 1.149,
+      "price_change_pct": 0.037004,
+      "volume_amount": 44.0,
+      "iopv": 1.1669,
+      "premium": -0.01534,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 1.1302,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "165520",
+      "name": "有色LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 2.821,
+      "price_change_pct": -0.02455,
+      "volume_amount": 214.0,
+      "iopv": 2.8402,
+      "premium": -0.00676,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 2.9173,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "161631",
+      "name": "人工智能LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 3.359,
+      "price_change_pct": 0.031951,
+      "volume_amount": 427.0,
+      "iopv": 3.3829,
+      "premium": -0.007065,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 3.2698,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "501019",
+      "name": "军工基金LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 1.327,
+      "price_change_pct": 0.009125,
+      "volume_amount": 70.0,
+      "iopv": 1.3254,
+      "premium": 0.001207,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 1.3238,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "501202",
+      "name": "华泰创新先锋LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 1.287,
+      "price_change_pct": 0.01981,
+      "volume_amount": 18.0,
+      "iopv": 1.309,
+      "premium": -0.016807,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 1.2868,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "501073",
+      "name": "华安智联LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 2.495,
+      "price_change_pct": 0.0238,
+      "volume_amount": 416.0,
+      "iopv": 2.5365,
+      "premium": -0.016361,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 2.4847,
+      "nav_official_date": "2026-06-25"
+    },
+    {
+      "code": "502013",
+      "name": "一带一路LOF",
+      "ts": "2026-06-25T15:07:33.630232+08:00",
+      "price": 1.407,
+      "price_change_pct": 0.00788,
+      "volume_amount": 5.0,
+      "iopv": 1.418,
+      "premium": -0.007757,
+      "coverage": 1.0,
+      "source_quality": "ok",
+      "nav_official": 1.41,
+      "nav_official_date": "2026-06-25"
     }
   ],
   "lof_history": [
