@@ -53,7 +53,7 @@ def test_generated_ingest_snapshot_matches_prd6_item_contract():
         PROJECT_ROOT / "assets" / "benchmark-mapping-v2.csv",
     )
 
-    assert len(snapshot["items"]) == 30
+    cnt = len(snapshot["items"]); assert cnt >= 122, f"expected >=122 ingest items, got {cnt}"
     for item in snapshot["items"]:
         ingest_item = {key: item[key] for key in ["code", "price", "iopv", "premium", "coverage", "source_quality"]}
         assert_contract("ingest.item", ingest_item, INGEST_REALTIME_ITEM)

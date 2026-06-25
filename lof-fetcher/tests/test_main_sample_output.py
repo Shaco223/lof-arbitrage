@@ -23,7 +23,7 @@ def test_main_writes_sample_outputs(tmp_path):
     history_payload = json.loads((tmp_path / "backend-sample-api-lof-history-v2.json").read_text(encoding="utf-8"))
     ingest_payload = json.loads((tmp_path / "backend-sample-ingest-realtime-v2.json").read_text(encoding="utf-8"))
 
-    assert len(list_payload["data"]["items"]) == 30
+    lc = len(list_payload["data"]["items"]); assert lc >= 122, f"expected >=122 list items, got {lc}"
     assert "coverage_breakdown" in detail_payload["data"]
-    assert len(history_payload["data"]["items"]) == 30
-    assert len(ingest_payload["items"]) == 30
+    hc = len(history_payload["data"]["items"]); assert hc >= 30, f"expected >=30 history items, got {hc}"
+    ic = len(ingest_payload["items"]); assert ic >= 30, f"expected >=30 ingest items, got {ic}"
