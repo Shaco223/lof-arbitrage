@@ -78,7 +78,6 @@ data/snapshots/
 # ===== M3 POC 长跑/降级证据（dev-005 测试硬校验依赖） =====
 !outputs/backend-real-poc-long-run-v2.json
 !outputs/backend-real-poc-report-v2.json
-!outputs/local-minute-snapshots-v2.jsonl
 !outputs/degraded-evidence/
 !outputs/degraded-evidence/**
 
@@ -89,7 +88,6 @@ data/snapshots/
 !outputs/backend-real-watchlist-stability-v2.json
 !outputs/backend-real-watchlist-stability-v2.md
 !outputs/backend-real-watchlist-stability-v2-conclusion.md
-!outputs/local-minute-snapshots-watchlist-v2.jsonl
 
 # ===== IOPV 数据源探测 POC（dev-004）=====
 !outputs/backend-iopv-source-probe-v2.json

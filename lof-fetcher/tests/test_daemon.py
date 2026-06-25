@@ -52,6 +52,10 @@ def test_daemon_collects_every_tick_during_trading_hours(tmp_path):
         now=lambda: datetime(2026, 6, 22, 10, 0, 0, tzinfo=CN),
         trading_check=lambda _m: True,
         payload_provider=provider,
+        pid_file=None,
+        stop_file=None,
+        log_file=None,
+        enforce_singleton=False,
     )
     assert summary["collect_iterations"] == 3
     assert summary["idle_iterations"] == 0
@@ -87,6 +91,10 @@ def test_daemon_sleeps_and_does_not_collect_outside_trading_hours(tmp_path):
         now=lambda: datetime(2026, 6, 22, 20, 0, 0, tzinfo=CN),  # after close
         trading_check=lambda _m: False,
         payload_provider=provider,
+        pid_file=None,
+        stop_file=None,
+        log_file=None,
+        enforce_singleton=False,
     )
     assert summary["idle_iterations"] == 2
     assert summary["collect_iterations"] == 0
@@ -114,6 +122,10 @@ def test_daemon_single_lof_failure_does_not_break_others(tmp_path):
         now=lambda: datetime(2026, 6, 22, 10, 0, 0, tzinfo=CN),
         trading_check=lambda _m: True,
         payload_provider=provider,
+        pid_file=None,
+        stop_file=None,
+        log_file=None,
+        enforce_singleton=False,
     )
     assert summary["collect_iterations"] == 1
     assert summary["last_summary"]["ok_count"] == 1
@@ -140,6 +152,10 @@ def test_daemon_two_consecutive_failures_escalate_to_stale(tmp_path):
         now=lambda: datetime(2026, 6, 22, 10, 0, 0, tzinfo=CN),
         trading_check=lambda _m: True,
         payload_provider=provider,
+        pid_file=None,
+        stop_file=None,
+        log_file=None,
+        enforce_singleton=False,
     )
     rows = [json.loads(l) for l in snap.read_text(encoding="utf-8").strip().splitlines()]
     assert rows[0]["items"][0]["source_quality"] == "degraded"
@@ -170,6 +186,10 @@ def test_daemon_iteration_exception_is_caught_and_loop_continues(tmp_path):
         now=lambda: datetime(2026, 6, 22, 10, 0, 0, tzinfo=CN),
         trading_check=lambda _m: True,
         payload_provider=flaky_provider,
+        pid_file=None,
+        stop_file=None,
+        log_file=None,
+        enforce_singleton=False,
     )
     assert summary["error_iterations"] == 1
     assert summary["collect_iterations"] == 1  # second tick recovered
