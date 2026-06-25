@@ -52,6 +52,20 @@ export function fmtSharesYi(v: number | undefined | null): string {
   return Number(v).toFixed(2) + ' 亿份'
 }
 
+/** PRD 1.4：份额（万份），千分位整数展示，如 361315 -> "361,315 万份" */
+export function fmtSharesWan(v: number | undefined | null): string {
+  if (v === undefined || v === null || Number.isNaN(v)) return '--'
+  return Math.round(Number(v)).toLocaleString('en-US') + ' 万份'
+}
+
+/** PRD 1.4：当日新增份额（万份），带正负号，如 +63 / -86 万份 */
+export function fmtSharesIncrWan(v: number | undefined | null): string {
+  if (v === undefined || v === null || Number.isNaN(v)) return '--'
+  const n = Math.round(Number(v))
+  const sign = n > 0 ? '+' : ''
+  return sign + n.toLocaleString('en-US') + ' 万'
+}
+
 /** PRD §8 覆盖率三档颜色 */
 export type CoverageLevel = 'green' | 'yellow' | 'red'
 
