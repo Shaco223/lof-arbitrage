@@ -28,6 +28,9 @@ const lastTs = ref('')
 const nowTick = ref(Date.now())
 const sort = ref<ListParams['sort']>('premium_desc')
 const type = ref<ListParams['type']>('all')
+const searchQuery = ref('')
+const currentPage = ref(1)
+const pageSize = 20
 
 let pollTimer: ReturnType<typeof setInterval> | undefined
 let clockTimer: ReturnType<typeof setInterval> | undefined
@@ -46,8 +49,24 @@ const sortTabs: Array<{ label: string; value: ListParams['sort'] }> = [
 ]
 
 const highSignalCount = computed(() =>
-  list.value.filter((item) => signalType(item) !== 'none').length
+  filteredList.value.filter((item) => signalType(item) !== 'none').length
 )
+
+const filteredList = computed(() => {
+  const q = searchQuery.value.trim().toLowerCase()
+  if (!q) return list.value
+  return list.value.filter(item =>
+    item.code.toLowerCase().includes(q) ||
+    item.name.toLowerCase().includes(q)
+  )
+})
+
+const pagedList = computed(() => {
+  const start = (currentPage.value - 1) * pageSize
+  return filteredList.value.slice(start, start + pageSize)
+})
+
+const totalPages = computed(() => Math.max(1, Math.ceil(filteredList.value.length / pageSize)))
 
 const interfaceModeText = computed(() => {
   if (isMockMode) return 'mock'
@@ -173,8 +192,15 @@ onUnmounted(() => {
       </scroll-view>
     </view>
 
+    <!-- 搜索框 -->
+    <view class="search-bar">
+      <text class="search-label">搜索</text>
+      <input class="search-input" v-model="searchQuery" placeholder="基金代码或名称，支持模糊匹配" @input="currentPage=1" />
+      <text v-if="searchQuery" class="search-clear" @tap="searchQuery='';currentPage=1">x</text>
+    </view>
+
     <!-- 状态提示：仅 loading / error 时显示 -->
-    <view v-if="loading && list.length === 0" class="state state-loading">正在读取数据…</view>
+    <view v-if="loading && filteredList.length === 0" class="state state-loading">正在读取数据…</view>
     <view v-if="error" class="state state-error">列表加载失败：{{ error }}</view>
 
     <!-- 列表 -->
@@ -187,7 +213,7 @@ onUnmounted(() => {
       </view>
 
       <view
-        v-for="item in list"
+        v-for="item in pagedList"
         :key="item.code"
         class="row"
         :class="[`signal-${signalType(item)}`]"
@@ -223,7 +249,7 @@ onUnmounted(() => {
         </view>
       </view>
 
-      <view v-if="!loading && !error && list.length === 0" class="empty">暂无数据，请确认本地真实 API 已启动。</view>
+      <view v-if="!loading && !error && filteredList.length === 0" class="empty">暂无数据，请确认本地真实 API 已启动。</view>
     </view>
   </view>
 </template>
@@ -285,4 +311,18 @@ onUnmounted(() => {
 .p-sub { font-size: 20rpx; opacity: 0.85; }
 
 .empty { padding: 64rpx 24rpx; text-align: center; color: #909399; font-size: 24rpx; }
+
+/* 搜索框 - 可视化设计 */
+.search-bar { display: flex; align-items: center; gap: 10rpx; margin-bottom: 16rpx; padding: 0 18rpx; height: 76rpx; border-radius: 14rpx; border: 2rpx solid #d9e1ec; background: #f8faff; box-sizing: border-box; }
+.search-bar:focus-within { border-color: #1f6feb; background: #fff; }
+.search-label { font-size: 26rpx; color: #606266; font-weight: 600; flex-shrink: 0; }
+.search-input { flex: 1; height: 100%; font-size: 26rpx; color: #303133; background: transparent; border: none; outline: none; box-sizing: border-box; }
+.search-input::placeholder { color: #bcc4d0; font-size: 24rpx; }
+.search-clear { font-size: 30rpx; color: #c0c4cc; padding: 8rpx 4rpx; flex-shrink: 0; }
+
+/* 分页 */
+.pagination { display: flex; align-items: center; justify-content: center; gap: 20rpx; padding: 24rpx 0 32rpx; }
+.page-btn { padding: 14rpx 28rpx; border-radius: 10rpx; font-size: 24rpx; color: #fff; background: #1f2d3d; }
+.page-btn.disabled { opacity: 0.35; }
+.page-info { font-size: 24rpx; color: #606266; }
 </style>
