@@ -139,6 +139,19 @@ function goDetail(code: string) {
   uni.navigateTo({ url: `/pages/detail/detail?code=${code}` })
 }
 
+function prevPage() {
+  if (currentPage.value > 1) currentPage.value--
+}
+
+function nextPage() {
+  if (currentPage.value < totalPages.value) currentPage.value++
+}
+
+function clearSearch() {
+  searchQuery.value = ''
+  currentPage.value = 1
+}
+
 onPullDownRefresh(() => loadList(true))
 
 onMounted(() => {
@@ -196,7 +209,7 @@ onUnmounted(() => {
     <view class="search-bar">
       <text class="search-label">搜索</text>
       <input class="search-input" v-model="searchQuery" placeholder="基金代码或名称，支持模糊匹配" @input="currentPage=1" />
-      <text v-if="searchQuery" class="search-clear" @tap="searchQuery='';currentPage=1">x</text>
+      <text v-if="searchQuery" class="search-clear" @tap="clearSearch()">x</text>
     </view>
 
     <!-- 状态提示：仅 loading / error 时显示 -->
@@ -250,6 +263,13 @@ onUnmounted(() => {
       </view>
 
       <view v-if="!loading && !error && filteredList.length === 0" class="empty">暂无数据，请确认本地真实 API 已启动。</view>
+    </view>
+
+    <!-- ?? -->
+    <view class="pagination" v-if="!loading && filteredList.length > 0">
+      <button class="page-btn" :class="{ disabled: currentPage <= 1 }" @tap="prevPage()">上一页</button>
+      <text class="page-info">{{ currentPage }} / {{ totalPages }}</text>
+      <button class="page-btn" :class="{ disabled: currentPage >= totalPages }" @tap="nextPage()">下一页</button>
     </view>
   </view>
 </template>
