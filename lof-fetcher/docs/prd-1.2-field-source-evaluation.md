@@ -72,3 +72,31 @@ node tests/local-minute-snapshots.test.js
 node tests/history-fallback.test.js
 node tests/normalize-query.test.js
 ```
+
+## 六、PRD 1.6 QDII/跨境基金参考指数估算溢价评估（PM 补充）
+
+> 来源：dev-004 QDII reference-index estimate POC，commit `2e30d4a`。本节只记录 PRD 1.6 字段与数据源口径，不代表已实装线上链路。
+
+### 6.1 POC 结论
+- 集思录 QDII 登录后能拿全量列表，但 `estimate_value` / `discount_rt` 为空，不能直接拿现成估算溢价。
+- 参考指数估算法可行，但只适合部分 high 质量标的。
+- 一期 high 标的：`510900` / `159920` / `159941` / `513500` / `161125`。
+- 商品/区域类暂不正式接入：`162411` / `160216` / `501018` / `513870` / `513520` / `164824`。
+
+### 6.2 PRD 1.6 字段口径
+| 字段 | 数据源/算法 | 本期返回 |
+| --- | --- | --- |
+| `qdii_estimate_nav` | `nav_official × (1 + qdii_reference_index_change_pct) × (1 + qdii_fx_change_pct)` | high 且输入完整时真实计算；否则 `null` |
+| `qdii_estimate_premium` | `price / qdii_estimate_nav - 1` | high 且输入完整时真实计算；否则 `null` |
+| `qdii_reference_index_code` | dev-004 按基金合同/公开资料固化映射 | high 标的尽量返回；缺映射时 `null` |
+| `qdii_reference_index_name` | 同上 | high 标的尽量返回；缺映射时 `null` |
+| `qdii_reference_index_change_pct` | 参考指数行情源 | 可得时返回小数；缺源时 `null` |
+| `qdii_fx_change_pct` | 汇率行情源；无需修正时为 `0` | 可得时返回小数或 `0`；缺源时 `null` |
+| `qdii_estimate_quality` | 后端质量判定 | `high` / `low` / `unsupported` / `missing_nav` / `missing_index` / `missing_fx` |
+| `qdii_estimate_source` | 后端来源标识 | 如 `reference_index_fx_v1`；无估算时 `null` |
+| `qdii_nav_date` | 官方净值源 | `YYYY-MM-DD`；缺 T-1 净值时 `null` |
+
+### 6.3 CCR 判断
+- **触发 CCR**。PRD 1.6 正式新增 QDII `qdii_*` 字段与独立 QDII 展示模块，属于 §6 结构性新增字段/模块。
+- 普通 LOF 既有 `iopv` / `premium` 字段不改名、不删除；QDII 估算不得写成“真实 IOPV”，必须展示“非交易所 IOPV，存在跟踪误差”。
+- 缺 T-1 净值、缺参考指数、低质量标的必须返回 `null`；不使用 fallback 合成估算；验收不打线上 uniCloud。
