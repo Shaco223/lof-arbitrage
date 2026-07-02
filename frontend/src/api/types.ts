@@ -1,29 +1,30 @@
 ﻿// PRD §5 / §6 字段契约（前后端联调基线）
 // PRD 1.2 字段对齐升级：新增字段为可选，null/unknown 时前端不渲染（AC-P5）
 
-export type FundType = 'index' | 'industry' | 'active' | 'qdii'
+export type FundType = 'index' | 'industry' | 'active'
 export type SourceQuality = 'ok' | 'degraded' | 'stale'
 export type AlertDirection = 'premium' | 'discount'
-/** PRD 1.2 申赎状态：unknown 视为不渲染 */
+export type QdiiEstimateQuality = 'high' | 'medium' | 'low' | 'unknown'
+/** PRD 1.2 subscribe/redeem status: unknown is hidden */
 export type SubscribeRedeemStatus = 'open' | 'suspended' | 'limited' | 'closed' | 'unknown'
-/** PRD 1.2 LOF 状态：active / 低流动性 active_low_liquidity */
+/** PRD 1.2 LOF status */
 export type LofStatus = 'active' | 'active_low_liquidity'
-
+/** PRD 1.6 QDII estimate fields */
 export interface QdiiEstimateFields {
-  /** PRD 1.6?QDII/????????????????? IOPV */
+  /** Reference-index estimated NAV, not ordinary LOF IOPV */
   qdii_estimate_nav?: number | null
-  /** PRD 1.6?QDII/???????????? */
+  /** Reference-index estimated premium, not ordinary LOF premium */
   qdii_estimate_premium?: number | null
   qdii_reference_index_code?: string | null
   qdii_reference_index_name?: string | null
   qdii_reference_index_change_pct?: number | null
   qdii_fx_change_pct?: number | null
-  qdii_estimate_quality?: 'high' | 'medium' | 'low' | 'unavailable' | null
+  qdii_estimate_quality?: QdiiEstimateQuality | null
   qdii_estimate_source?: string | null
   qdii_nav_date?: string | null
 }
 
-/** 列表项（api-lof-list -> data.items[i]） */
+/** List item (api-lof-list -> data.items[i]) */
 export interface LofListItem extends QdiiEstimateFields {
   code: string
   name: string
@@ -118,7 +119,7 @@ export interface LofDetailData extends QdiiEstimateFields {
   benchmark_raw: string
   benchmark_components: BenchmarkComponent[]
   holdings_top10: HoldingTop[]
-  realtime: QdiiEstimateFields & {
+  realtime: {
     ts: string
     price: number
     iopv: number
@@ -127,7 +128,8 @@ export interface LofDetailData extends QdiiEstimateFields {
     source_quality: SourceQuality
     // === PRD 1.2 新增字段（可选） ===
     price_change_pct?: number | null
-    volume_amount?: number | null  }
+    volume_amount?: number | null
+  }
   pctile_30d: number
   // === PRD 1.2 新增详情字段（可选；null/unknown 时前端不渲染） ===
   status?: LofStatus
@@ -191,7 +193,7 @@ export interface ApiResponse<T> {
 /** 列表请求参数 */
 export interface ListParams {
   sort?: 'premium_desc' | 'premium_asc' | 'code'
-  type?: 'all' | FundType
+  type?: 'all' | FundType | 'qdii'
 }
 
 export interface DetailParams {

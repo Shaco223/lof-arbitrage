@@ -81,7 +81,8 @@ import type {
   LofDetailData,
   LofHistoryData,
   LofListData,
-  ListParams
+  ListParams,
+  QdiiEstimateFields
 } from '@/api/types'
 
 interface MockMeta {
@@ -95,9 +96,131 @@ interface MockMeta {
   benchmark_assigned_weight: number
   cash_weight: number
   benchmark_components: BenchmarkComponent[]
+  qdii?: QdiiEstimateFields
 }
 
 const META: MockMeta[] = ${tsArray}
+
+
+const QDII_HIGH_MOCKS: MockMeta[] = [
+  {
+    code: '510900',
+    name: '易方达恒生国企(QDII-ETF)',
+    type: 'index',
+    scale_yi: 85,
+    benchmark_raw: '恒生中国企业指数收益率（经汇率调整）',
+    status: 'active',
+    coverage_top10: 1,
+    benchmark_assigned_weight: 1,
+    cash_weight: 0,
+    benchmark_components: [{ index_code: 'HSCEI.HI', name: '恒生中国企业指数', weight: 1 }],
+    qdii: {
+      qdii_estimate_nav: 1.142,
+      qdii_estimate_premium: 0.0321,
+      qdii_reference_index_code: 'HSCEI.HI',
+      qdii_reference_index_name: '恒生中国企业指数',
+      qdii_reference_index_change_pct: 0.0112,
+      qdii_fx_change_pct: -0.0018,
+      qdii_estimate_quality: 'high',
+      qdii_estimate_source: '参考指数+汇率估算',
+      qdii_nav_date: '2026-07-01'
+    }
+  },
+  {
+    code: '159920',
+    name: '华夏恒生ETF(QDII)',
+    type: 'index',
+    scale_yi: 120,
+    benchmark_raw: '恒生指数收益率（经汇率调整）',
+    status: 'active',
+    coverage_top10: 1,
+    benchmark_assigned_weight: 1,
+    cash_weight: 0,
+    benchmark_components: [{ index_code: 'HSI.HI', name: '恒生指数', weight: 1 }],
+    qdii: {
+      qdii_estimate_nav: 1.058,
+      qdii_estimate_premium: 0.0245,
+      qdii_reference_index_code: 'HSI.HI',
+      qdii_reference_index_name: '恒生指数',
+      qdii_reference_index_change_pct: 0.0096,
+      qdii_fx_change_pct: -0.0018,
+      qdii_estimate_quality: 'high',
+      qdii_estimate_source: '参考指数+汇率估算',
+      qdii_nav_date: '2026-07-01'
+    }
+  },
+  {
+    code: '159941',
+    name: '广发纳指100ETF(QDII)',
+    type: 'index',
+    scale_yi: 95,
+    benchmark_raw: '纳斯达克100指数收益率（经汇率调整）',
+    status: 'active',
+    coverage_top10: 1,
+    benchmark_assigned_weight: 1,
+    cash_weight: 0,
+    benchmark_components: [{ index_code: 'NDX.GI', name: '纳斯达克100指数', weight: 1 }],
+    qdii: {
+      qdii_estimate_nav: 1.318,
+      qdii_estimate_premium: 0.0418,
+      qdii_reference_index_code: 'NDX.GI',
+      qdii_reference_index_name: '纳斯达克100指数',
+      qdii_reference_index_change_pct: 0.0068,
+      qdii_fx_change_pct: 0.0021,
+      qdii_estimate_quality: 'high',
+      qdii_estimate_source: '参考指数+汇率估算',
+      qdii_nav_date: '2026-07-01'
+    }
+  },
+  {
+    code: '513500',
+    name: '博时标普500ETF(QDII)',
+    type: 'index',
+    scale_yi: 70,
+    benchmark_raw: '标普500指数收益率（经汇率调整）',
+    status: 'active',
+    coverage_top10: 1,
+    benchmark_assigned_weight: 1,
+    cash_weight: 0,
+    benchmark_components: [{ index_code: 'SPX.GI', name: '标普500指数', weight: 1 }],
+    qdii: {
+      qdii_estimate_nav: 2.426,
+      qdii_estimate_premium: 0.0189,
+      qdii_reference_index_code: 'SPX.GI',
+      qdii_reference_index_name: '标普500指数',
+      qdii_reference_index_change_pct: 0.0042,
+      qdii_fx_change_pct: 0.0021,
+      qdii_estimate_quality: 'high',
+      qdii_estimate_source: '参考指数+汇率估算',
+      qdii_nav_date: '2026-07-01'
+    }
+  },
+  {
+    code: '161125',
+    name: '易方达标普500指数(QDII-LOF)',
+    type: 'index',
+    scale_yi: 45,
+    benchmark_raw: '标普500指数收益率（经汇率调整）',
+    status: 'active',
+    coverage_top10: 1,
+    benchmark_assigned_weight: 1,
+    cash_weight: 0,
+    benchmark_components: [{ index_code: 'SPX.GI', name: '标普500指数', weight: 1 }],
+    qdii: {
+      qdii_estimate_nav: null,
+      qdii_estimate_premium: null,
+      qdii_reference_index_code: 'SPX.GI',
+      qdii_reference_index_name: '标普500指数',
+      qdii_reference_index_change_pct: null,
+      qdii_fx_change_pct: null,
+      qdii_estimate_quality: 'high',
+      qdii_estimate_source: '参考指数+汇率估算',
+      qdii_nav_date: null
+    }
+  }
+]
+
+META.push(...QDII_HIGH_MOCKS)
 
 function pseudoRand(seed: string, salt = 0): number {
   let hash = 2166136261 ^ salt
@@ -139,7 +262,8 @@ export function mockListResponse(params: ListParams = {}): LofListData {
       premium: quote.premium,
       coverage: quote.coverage,
       pctile_30d: quote.pctile,
-      source_quality: meta.status === 'active_low_liquidity' ? 'degraded' as const : 'ok' as const
+      source_quality: meta.status === 'active_low_liquidity' ? 'degraded' as const : 'ok' as const,
+      ...meta.qdii
     }
   })
 
@@ -187,7 +311,8 @@ export function mockDetailResponse(code: string): LofDetailData {
       coverage: quote.coverage,
       source_quality: meta.status === 'active_low_liquidity' ? 'degraded' : 'ok'
     },
-    pctile_30d: quote.pctile
+    pctile_30d: quote.pctile,
+    ...meta.qdii
   }
 }
 

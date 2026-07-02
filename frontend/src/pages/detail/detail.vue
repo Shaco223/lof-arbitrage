@@ -21,6 +21,7 @@ import {
   shouldRender
 } from '@/utils/format'
 import { isLowLiquidity, LOW_LIQUIDITY_LABEL } from '@/utils/low-liquidity'
+import { displayFundName, displayQdiiReferenceIndexName } from '@/utils/qdii-display'
 
 const detail = ref<LofDetailData | null>(null)
 const history = ref<LofHistoryData | null>(null)
@@ -28,7 +29,9 @@ const loading = ref(false)
 const error = ref('')
 const showBreakdown = ref(false)
 const code = ref('161725')
+const qdiiRiskText = '非交易所 IOPV，存在跟踪误差'
 
+const displayDetailName = computed(() => detail.value ? displayFundName(detail.value.code, detail.value.name) : '--')
 const coverage = computed(() => detail.value?.realtime.coverage ?? 0)
 const coverageClass = computed(() => `coverage-${coverageLevel(coverage.value)}`)
 const coverageText = computed(() => coverageLevelLabel(coverageLevel(coverage.value)))
@@ -67,6 +70,21 @@ const showHoldingContrib = computed(() =>
   (detail.value?.holdings_top10 || []).some((h) => shouldRender(h.contribution_pct))
 )
 
+const showQdiiEstimateCard = computed(() => {
+  const d = detail.value
+  if (!d) return false
+  return [
+    d.qdii_estimate_nav,
+    d.qdii_estimate_premium,
+    d.qdii_reference_index_code,
+    d.qdii_reference_index_name,
+    d.qdii_reference_index_change_pct,
+    d.qdii_fx_change_pct,
+    d.qdii_estimate_source,
+    d.qdii_nav_date
+  ].some((value) => shouldRender(value))
+})
+
 // PRD 1.3 限额周期文案
 function periodText(p?: string | null): string {
   if (p === 'day') return '单日'
@@ -95,31 +113,6 @@ function redeemLabel(d: LofDetailData): string {
   if (st === 'suspended') return '暂停赎回'
   if (st === 'closed') return '停止赎回'
   return ''
-}
-
-
-function subscribeDisplay(d: LofDetailData): string {
-  return subscribeLabel(d) || (d.type === 'qdii' ? '申购状态未覆盖' : '')
-}
-
-function qdiiReferenceLabel(d: LofDetailData): string {
-  return d.qdii_reference_index_name || d.qdii_reference_index_code || '参考指数'
-}
-
-function estimateNavLabel(d: LofDetailData): string {
-  return d.type === 'qdii' ? '参考指数估算净值' : '估算净值 IOPV'
-}
-
-function estimatePremiumLabel(d: LofDetailData): string {
-  return d.type === 'qdii' ? '参考指数估算溢价' : '估算溢价'
-}
-
-function estimateNavValue(d: LofDetailData): number | null | undefined {
-  return d.type === 'qdii' ? d.qdii_estimate_nav : d.realtime.iopv
-}
-
-function estimatePremiumValue(d: LofDetailData): number | null | undefined {
-  return d.type === 'qdii' ? d.qdii_estimate_premium : d.realtime.premium
 }
 
 function statusPillClass(value?: SubscribeRedeemStatus): string {
@@ -189,7 +182,7 @@ onLoad((q: Record<string, string> | undefined) => {
     <view v-if="detail" class="card header-card">
       <view class="title-row">
         <view>
-          <view class="fund-name">{{ detail.name }}</view>
+          <view class="fund-name">{{ displayDetailName }}</view>
           <view class="fund-meta">{{ detail.code }} · {{ detail.type }} · 规模 {{ fmtNum(detail.scale_yi, 1) }} 亿</view>
         </view>
         <view class="coverage-tag" :class="coverageClass" @tap="toggleBreakdown">
@@ -235,13 +228,13 @@ onLoad((q: Record<string, string> | undefined) => {
             <text class="label">成交额</text>
             <text class="value">{{ fmtVolumeWan(volumeAmount) }}</text>
           </view>
-          <view v-if="detail.type === 'qdii' || shouldRender(detail.shares_onexchange)" class="dual-row">
+          <view v-if="shouldRender(detail.shares_onexchange)" class="dual-row">
             <text class="label">场内份额(万份)</text>
-            <text class="value">{{ shouldRender(detail.shares_onexchange) ? fmtSharesWan(detail.shares_onexchange) : '未覆盖' }}</text>
+            <text class="value">{{ fmtSharesWan(detail.shares_onexchange) }}</text>
           </view>
-          <view v-if="detail.type === 'qdii' || shouldRender(detail.shares_incr_daily)" class="dual-row">
+          <view v-if="shouldRender(detail.shares_incr_daily)" class="dual-row">
             <text class="label">当日新增份额</text>
-            <text class="value" :class="shouldRender(detail.shares_incr_daily) && (detail.shares_incr_daily ?? 0) >= 0 ? 'text-up' : 'text-down'">{{ shouldRender(detail.shares_incr_daily) ? fmtSharesIncrWan(detail.shares_incr_daily) : '未覆盖' }}</text>
+            <text class="value" :class="(detail.shares_incr_daily ?? 0) >= 0 ? 'text-up' : 'text-down'">{{ fmtSharesIncrWan(detail.shares_incr_daily) }}</text>
           </view>
           <view v-if="shouldRender(detail.circulating_shares)" class="dual-row">
             <text class="label">场内份额(亿份)</text>
@@ -260,12 +253,8 @@ onLoad((q: Record<string, string> | undefined) => {
             </text>
           </view>
           <view class="dual-row">
-            <text class="label">{{ estimateNavLabel(detail) }}</text>
-            <text class="value">{{ fmtNum(estimateNavValue(detail), 4) }}</text>
-          </view>
-          <view v-if="detail.type === 'qdii'" class="dual-row">
-            <text class="label">参考指数</text>
-            <text class="value">{{ qdiiReferenceLabel(detail) }}</text>
+            <text class="label">估算净值 IOPV</text>
+            <text class="value">{{ fmtNum(detail.realtime.iopv, 4) }}</text>
           </view>
           <view v-if="shouldRender(detail.premium_error)" class="dual-row">
             <text class="label">估算误差（盘后）</text>
@@ -275,8 +264,8 @@ onLoad((q: Record<string, string> | undefined) => {
             </text>
           </view>
           <view class="dual-row">
-            <text class="label">{{ estimatePremiumLabel(detail) }}</text>
-            <text class="value" :class="(estimatePremiumValue(detail) ?? 0) >= 0 ? 'text-up' : 'text-down'">{{ fmtPctSigned(estimatePremiumValue(detail), 2) }}</text>
+            <text class="label">估算溢价</text>
+            <text class="value" :class="(detail.realtime.premium ?? 0) >= 0 ? 'text-up' : 'text-down'">{{ fmtPctSigned(detail.realtime.premium, 2) }}</text>
           </view>
           <view v-if="shouldRender(detail.premium_nav)" class="dual-row">
             <text class="label">净值溢价</text>
@@ -288,10 +277,10 @@ onLoad((q: Record<string, string> | undefined) => {
       <!-- 中部状态标签栏 -->
       <view class="status-bar">
         <text
-          v-if="subscribeDisplay(detail)"
+          v-if="subscribeLabel(detail)"
           class="status-pill"
           :class="statusPillClass(detail.subscribe_status)"
-        >{{ subscribeDisplay(detail) }}</text>
+        >{{ subscribeLabel(detail) }}</text>
         <text
           v-if="redeemLabel(detail)"
           class="status-pill"
@@ -308,7 +297,6 @@ onLoad((q: Record<string, string> | undefined) => {
       <view class="fresh-line">
         估值时间：{{ fmtDateTime(detail.realtime.ts) }}（{{ freshnessLabel(detail.realtime.ts) }}）
         <text v-if="shouldRender(detail.nav_official_date)" class="sub">· 披露净值日期 {{ detail.nav_official_date }}</text>
-        <text v-if="detail.type === 'qdii'" class="sub">&middot; 非交易所 IOPV, 存在跟踪误差</text>
       </view>
 
       <!-- PRD 1.4 规则区：申赎确认日（参考）；严禁标“到账可卖日”（§11 R10 红线） -->
@@ -316,6 +304,54 @@ onLoad((q: Record<string, string> | undefined) => {
         <text class="rule-title">申赎确认日（参考）</text>
         <text v-if="shouldRender(detail.purchase_confirm_day)" class="rule-item">申购 {{ detail.purchase_confirm_day }}</text>
         <text v-if="shouldRender(detail.redeem_confirm_day)" class="rule-item">赎回 {{ detail.redeem_confirm_day }}</text>
+      </view>
+    </view>
+
+
+    <view v-if="detail && showQdiiEstimateCard" class="card qdii-card">
+      <view class="section-title">QDII 估算</view>
+      <view class="qdii-warning">{{ qdiiRiskText }}</view>
+      <view class="qdii-grid">
+        <view class="qdii-item wide">
+          <text class="label">参考指数</text>
+          <text class="value">
+            {{ displayQdiiReferenceIndexName(detail) }}
+            <text v-if="shouldRender(detail.qdii_reference_index_code)" class="sub">{{ detail.qdii_reference_index_code }}</text>
+          </text>
+        </view>
+        <view class="qdii-item">
+          <text class="label">参考指数估算溢价</text>
+          <text
+            class="value"
+            :class="shouldRender(detail.qdii_estimate_premium) ? ((detail.qdii_estimate_premium ?? 0) >= 0 ? 'text-up' : 'text-down') : ''"
+          >{{ shouldRender(detail.qdii_estimate_premium) ? fmtPctSigned(detail.qdii_estimate_premium, 2) : '--' }}</text>
+        </view>
+        <view class="qdii-item">
+          <text class="label">估算净值</text>
+          <text class="value">{{ fmtNum(detail.qdii_estimate_nav, 4) }}</text>
+        </view>
+        <view class="qdii-item">
+          <text class="label">指数涨跌</text>
+          <text
+            class="value"
+            :class="shouldRender(detail.qdii_reference_index_change_pct) ? ((detail.qdii_reference_index_change_pct ?? 0) >= 0 ? 'text-up' : 'text-down') : ''"
+          >{{ shouldRender(detail.qdii_reference_index_change_pct) ? fmtPctSigned(detail.qdii_reference_index_change_pct, 2) : '--' }}</text>
+        </view>
+        <view class="qdii-item">
+          <text class="label">汇率变动</text>
+          <text
+            class="value"
+            :class="shouldRender(detail.qdii_fx_change_pct) ? ((detail.qdii_fx_change_pct ?? 0) >= 0 ? 'text-up' : 'text-down') : ''"
+          >{{ shouldRender(detail.qdii_fx_change_pct) ? fmtPctSigned(detail.qdii_fx_change_pct, 2) : '--' }}</text>
+        </view>
+        <view class="qdii-item">
+          <text class="label">净值日期</text>
+          <text class="value">{{ shouldRender(detail.qdii_nav_date) ? detail.qdii_nav_date : '--' }}</text>
+        </view>
+        <view class="qdii-item">
+          <text class="label">估算来源</text>
+          <text class="value">{{ shouldRender(detail.qdii_estimate_source) ? detail.qdii_estimate_source : '--' }}</text>
+        </view>
       </view>
     </view>
 
@@ -435,6 +471,12 @@ onLoad((q: Record<string, string> | undefined) => {
 .rule-line { display: flex; flex-wrap: wrap; align-items: center; gap: 12rpx; margin-top: 12rpx; font-size: 24rpx; color: #606266; }
 .rule-title { color: #909399; }
 .rule-item { background: #f5f7fa; color: #606266; padding: 4rpx 12rpx; border-radius: 6rpx; font-size: 22rpx; }
+
+.qdii-card { padding: 20rpx; border: 1rpx solid #d8e7ff; background: #fbfdff; }
+.qdii-warning { margin: 8rpx 0 16rpx; padding: 12rpx 16rpx; border-radius: 10rpx; background: #fff7e6; color: #b26a00; font-size: 24rpx; }
+.qdii-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14rpx; }
+.qdii-item { display: flex; flex-direction: column; gap: 6rpx; padding: 14rpx 16rpx; border-radius: 12rpx; background: #f4f8ff; }
+.qdii-item.wide { grid-column: span 2; }
 
 .section-head { display: flex; align-items: center; justify-content: space-between; }
 .section-title { font-size: 30rpx; font-weight: 600; color: #1f2d3d; margin-bottom: 8rpx; }
