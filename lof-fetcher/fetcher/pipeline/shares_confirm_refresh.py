@@ -29,6 +29,34 @@ SHARES_CONFIRM_META_KEYS = (
 )
 
 
+def ensure_dataset_metas(dataset: dict[str, Any], watchlist_path: Path = DEFAULT_WATCHLIST_PATH) -> None:
+    existing = {str(row.get("code")) for row in dataset.get("lof_meta", [])}
+    dataset.setdefault("lof_meta", [])
+    for meta in load_watchlist(watchlist_path):
+        if meta.code in existing:
+            continue
+        dataset["lof_meta"].append({
+            "code": meta.code,
+            "name": meta.name,
+            "type": meta.type,
+            "scale_yi": meta.scale_yi,
+            "status": meta.status,
+            "coverage_top10": None,
+            "coverage_breakdown": {"top10_weight": 0, "benchmark_assigned_weight": 0, "cash_weight": 0},
+            "benchmark_raw": meta.benchmark_raw,
+            "benchmark_components": [],
+            "subscribe_status": "unknown",
+            "redeem_status": "unknown",
+            "subscribe_limit_amount": None,
+            "subscribe_limit_period": None,
+            "shares_onexchange": None,
+            "shares_incr_daily": None,
+            "purchase_confirm_day": None,
+            "redeem_confirm_day": None,
+        })
+        existing.add(meta.code)
+
+
 def update_sample_dataset_shares_confirm(
     shares_map: dict[str, dict[str, Any]],
     dataset_path: Path = DEFAULT_SAMPLE_DATASET,
@@ -42,6 +70,7 @@ def update_sample_dataset_shares_confirm(
     if not dataset_path.exists():
         return 0
     dataset = json.loads(dataset_path.read_text(encoding="utf-8"))
+    ensure_dataset_metas(dataset)
     updated = 0
     for meta in dataset.get("lof_meta", []):
         info = shares_map.get(meta.get("code"))

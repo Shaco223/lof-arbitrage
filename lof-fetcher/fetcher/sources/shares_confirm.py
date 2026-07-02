@@ -36,7 +36,9 @@ import httpx
 # rows; full coverage needs a login Cookie via JISILU_COOKIE.
 JISILU_INDEX_URL = "https://www.jisilu.cn/data/lof/index_lof_list/"
 JISILU_STOCK_URL = "https://www.jisilu.cn/data/lof/stock_lof_list/"
+JISILU_QDII_URL = "https://www.jisilu.cn/data/qdii/qdii_list/"
 JISILU_REFERER = "https://www.jisilu.cn/data/lof/"
+JISILU_QDII_REFERER = "https://www.jisilu.cn/data/qdii/"
 
 F10_JJFL_URL = "https://fundf10.eastmoney.com/jjfl_{code}.html"
 F10_REFERER = {"Referer": "https://fundf10.eastmoney.com/"}
@@ -73,6 +75,16 @@ def _normalize_tplusn(value: Any) -> str | None:
         return None
     m = _TPLUSN.search(str(value))
     return f"T+{m.group(1)}" if m else None
+
+
+def _shares_row(code: str, cell: dict[str, Any], source: str) -> dict[str, Any]:
+    return {
+        "code": code,
+        "shares_onexchange": _to_float(cell.get("amount")),
+        "shares_incr_daily": _to_float(cell.get("amount_incr")),
+        "shares_dt": cell.get("amount_dt"),
+        "source": source,
+    }
 
 
 class SharesConfirmClient:
@@ -132,14 +144,37 @@ class SharesConfirmClient:
                 continue
         result: dict[str, dict[str, Any]] = {}
         for code, cell in merged.items():
-            result[code] = {
-                "code": code,
-                "shares_onexchange": _to_float(cell.get("amount")),
-                "shares_incr_daily": _to_float(cell.get("amount_incr")),
-                "shares_dt": cell.get("amount_dt"),
-                "source": "jisilu_lof",
-            }
+            result[code] = _shares_row(code, cell, "jisilu_lof")
         return result
+
+    def fetch_qdii_shares_map(self) -> dict[str, dict[str, Any]]:
+        """Return QDII on-exchange shares from jisilu's QDII list.
+
+        Guests may only receive the first 20 rows; callers still merge whatever
+        is available and leave missing QDII codes as null. Login Cookie, if any,
+        is read only from JISILU_COOKIE by __init__.
+        """
+        try:
+            cells = self._fetch_jisilu_qdii()
+        except Exception:  # noqa: BLE001 - source down -> skip, fields null
+            return {}
+        return {code: _shares_row(code, cell, "jisilu_qdii") for code, cell in cells.items()}
+
+    def _fetch_jisilu_qdii(self) -> dict[str, dict[str, Any]]:
+        headers = {"Referer": JISILU_QDII_REFERER}
+        if self._cookie:
+            headers["Cookie"] = self._cookie
+        params = {"___jsl": "LST___t", "rp": "300", "page": "1"}
+        resp = self._client.get(JISILU_QDII_URL, headers=headers, params=params)
+        resp.raise_for_status()
+        rows = (resp.json() or {}).get("rows") or []
+        out: dict[str, dict[str, Any]] = {}
+        for row in rows:
+            cell = row.get("cell") or {}
+            code = cell.get("fund_id") or row.get("id")
+            if code:
+                out[str(code)] = cell
+        return out
 
     # -- eastmoney jjfl confirm days -----------------------------------------
     def fetch_confirm_days(self, code: str) -> dict[str, Any]:
@@ -182,6 +217,9 @@ def fetch_shares_confirm_map(
     results: dict[str, dict[str, Any]] = {}
     try:
         shares_map = client.fetch_shares_map()
+        fetch_qdii = getattr(client, "fetch_qdii_shares_map", None)
+        if callable(fetch_qdii):
+            shares_map.update(fetch_qdii())
 
         def _confirm(code: str) -> dict[str, Any]:
             try:

@@ -91,3 +91,25 @@ def test_no_cookie_no_source_all_null(monkeypatch):
     for code in ("161725", "501203"):
         assert res[code]["shares_onexchange"] is None
         assert res[code]["shares_incr_daily"] is None
+
+
+
+def test_qdii_shares_are_merged_from_qdii_list():
+    class _QdiiStub(_StubClient):
+        def fetch_qdii_shares_map(self):
+            return {
+                "159920": {
+                    "code": "159920",
+                    "shares_onexchange": 640756.0,
+                    "shares_incr_daily": 12.0,
+                    "shares_dt": "2026-07-02",
+                    "source": "jisilu_qdii",
+                }
+            }
+
+    client = _QdiiStub({}, {})
+    res = fetch_shares_confirm_map(["159920"], client=client)
+
+    assert res["159920"]["shares_onexchange"] == 640756.0
+    assert res["159920"]["shares_incr_daily"] == 12.0
+    assert res["159920"]["shares_source"] == "jisilu_qdii"

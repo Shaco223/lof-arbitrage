@@ -93,6 +93,9 @@ async function run() {
     const qdiiList = await requestJson(`${baseUrl}/lof-list?sort=code&type=qdii`);
     assert.strictEqual(qdiiList.data.items.length, 1);
     assert.strictEqual(qdiiList.data.items[0].code, '510900');
+    assert.strictEqual(qdiiList.data.items[0].subscribe_status, 'unknown');
+    assert.strictEqual(qdiiList.data.items[0].shares_onexchange, null);
+    assert.strictEqual(qdiiList.data.items[0].shares_incr_daily, null);
 
     const detail = await requestJson(`${baseUrl}/lof-detail?code=510900`);
     for (const field of QDII_FIELDS) assert.ok(field in detail.data, `detail missing ${field}`);

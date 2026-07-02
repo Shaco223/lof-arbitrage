@@ -52,7 +52,15 @@ function loadWatchlistMetas(watchlistFile) {
     coverage_top10: null,
     coverage_breakdown: { top10_weight: 0, benchmark_assigned_weight: 0, cash_weight: 0 },
     benchmark_raw: cols[4] || '',
-    benchmark_components: []
+    benchmark_components: [],
+    subscribe_status: 'unknown',
+    redeem_status: 'unknown',
+    subscribe_limit_amount: null,
+    subscribe_limit_period: null,
+    shares_onexchange: null,
+    shares_incr_daily: null,
+    purchase_confirm_day: null,
+    redeem_confirm_day: null
   }));
 }
 
