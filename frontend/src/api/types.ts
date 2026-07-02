@@ -193,7 +193,7 @@ export interface ApiResponse<T> {
 /** 列表请求参数 */
 export interface ListParams {
   sort?: 'premium_desc' | 'premium_asc' | 'code'
-  type?: 'all' | FundType
+  type?: 'all' | FundType | 'qdii'
 }
 
 export interface DetailParams {

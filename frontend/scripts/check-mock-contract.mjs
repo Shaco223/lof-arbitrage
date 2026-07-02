@@ -3,6 +3,8 @@ import path from 'node:path'
 
 const mockPath = path.resolve('src/mock/index.ts')
 const source = fs.readFileSync(mockPath, 'utf8')
+const typeSource = fs.readFileSync(path.resolve('src/api/types.ts'), 'utf8')
+const indexSource = fs.readFileSync(path.resolve('src/pages/index/index.vue'), 'utf8')
 
 const requiredExports = [
   'mockListResponse',
@@ -19,10 +21,13 @@ const requiredFields = {
 }
 
 const missingExports = requiredExports.filter((name) => !source.includes(`export function ${name}`))
+const missingQdiiRouting = []
+if (!typeSource.includes("type?: 'all' | FundType | 'qdii'")) missingQdiiRouting.push('types.ListParams.type=qdii')
+if (!indexSource.includes("type: activeMarketTab.value === 'qdii' ? 'qdii' : type.value")) missingQdiiRouting.push('index.loadList type=qdii')
 const missingFields = Object.entries(requiredFields)
   .flatMap(([group, fields]) => fields.filter((field) => !source.includes(field)).map((field) => `${group}.${field}`))
 
-if (missingExports.length || missingFields.length) {
+if (missingExports.length || missingFields.length || missingQdiiRouting.length) {
   console.error('Mock 契约检查失败')
   if (missingExports.length) console.error('缺少导出:', missingExports.join(', '))
   if (missingFields.length) console.error('缺少字段:', missingFields.join(', '))

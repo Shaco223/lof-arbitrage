@@ -134,7 +134,10 @@ async function loadList(showToast = false) {
   loading.value = true
   error.value = ''
   try {
-    const data = await getLofList({ sort: sort.value, type: type.value })
+    const data = await getLofList({
+      sort: sort.value,
+      type: activeMarketTab.value === 'qdii' ? 'qdii' : type.value
+    })
     list.value = data.items
     lastTs.value = data.ts
     if (showToast) uni.showToast({ title: '已刷新', icon: 'success' })
@@ -149,6 +152,7 @@ async function loadList(showToast = false) {
 function changeMarketTab(value: 'lof' | 'qdii') {
   activeMarketTab.value = value
   currentPage.value = 1
+  loadList()
 }
 
 function changeType(value: ListParams['type']) {
@@ -258,11 +262,19 @@ onUnmounted(() => {
 
     <!-- 列表 -->
     <view class="list">
-      <view class="list-head">
+      <view v-if="activeMarketTab === 'lof'" class="list-head">
         <text class="col-name">基金</text>
         <text class="col-num">现价</text>
         <text class="col-num">IOPV</text>
         <text class="col-rate">溢价</text>
+      </view>
+      <view v-else class="list-head qdii-head">
+        <text class="col-name">基金</text>
+        <text class="col-num">现价</text>
+        <text class="col-rate">参考指数估算溢价</text>
+        <text class="col-num">估算净值</text>
+        <text class="col-rate">指数/汇率</text>
+        <text class="col-num">净值日期</text>
       </view>
 
       <view
