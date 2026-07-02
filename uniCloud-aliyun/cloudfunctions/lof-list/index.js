@@ -10,6 +10,7 @@ const STATUS_FALLBACK = { active: 'active', active_low_liquidity: 'active_low_li
 const SUBSCRIBE_DEFAULT = 'unknown';
 const REDEEM_DEFAULT = 'unknown';
 
+
 exports.main = async (event) => {
   const db = uniCloud.database();
   const query = normalizeQuery(event);
@@ -91,11 +92,27 @@ function buildListItem(meta, rt, hist) {
     circulating_shares: numberOrNull(meta.circulating_shares),
     subscribe_limit_amount: numberOrNull(meta.subscribe_limit_amount),
     subscribe_limit_period: meta.subscribe_limit_period || null,
+    ...qdiiFieldsFrom(rt),
     // PRD 1.4: daily on-exchange shares (万份) + open-end confirm days (T+N参考)
     shares_onexchange: numberOrNull(meta.shares_onexchange),
     shares_incr_daily: numberOrNull(meta.shares_incr_daily),
     purchase_confirm_day: meta.purchase_confirm_day || null,
     redeem_confirm_day: meta.redeem_confirm_day || null
+  };
+}
+
+
+function qdiiFieldsFrom(row) {
+  return {
+    qdii_estimate_nav: numberOrNull(row.qdii_estimate_nav),
+    qdii_estimate_premium: numberOrNull(row.qdii_estimate_premium),
+    qdii_reference_index_code: row.qdii_reference_index_code || null,
+    qdii_reference_index_name: row.qdii_reference_index_name || null,
+    qdii_reference_index_change_pct: numberOrNull(row.qdii_reference_index_change_pct),
+    qdii_fx_change_pct: numberOrNull(row.qdii_fx_change_pct),
+    qdii_estimate_quality: row.qdii_estimate_quality || 'unavailable',
+    qdii_estimate_source: row.qdii_estimate_source || null,
+    qdii_nav_date: row.qdii_nav_date || null
   };
 }
 
@@ -120,7 +137,8 @@ function fillListItemDefaults(item) {
     shares_onexchange: null,
     shares_incr_daily: null,
     purchase_confirm_day: null,
-    redeem_confirm_day: null
+    redeem_confirm_day: null,
+    ...qdiiFieldsFrom(item)
   };
   for (const key of Object.keys(defaults)) {
     if (item[key] === undefined) item[key] = defaults[key];

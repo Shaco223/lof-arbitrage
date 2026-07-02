@@ -23,7 +23,17 @@ const LIST_REQUIRED_FIELDS = [
   "subscribe_status",
   "redeem_status",
   "fund_scale",
-  "circulating_shares"
+  "circulating_shares",
+
+  "qdii_estimate_nav",
+  "qdii_estimate_premium",
+  "qdii_reference_index_code",
+  "qdii_reference_index_name",
+  "qdii_reference_index_change_pct",
+  "qdii_fx_change_pct",
+  "qdii_estimate_quality",
+  "qdii_estimate_source",
+  "qdii_nav_date",
 ];
 
 const DETAIL_REQUIRED_FIELDS = LIST_REQUIRED_FIELDS.concat([

@@ -48,6 +48,18 @@ const DEFAULT_PORT = 8787;
 const DEFAULT_TOKEN = 'local-dev-token';
 const STATE_CACHE_TTL_MS = 1000;
 
+const QDII_FIELDS = [
+  'qdii_estimate_nav',
+  'qdii_estimate_premium',
+  'qdii_reference_index_code',
+  'qdii_reference_index_name',
+  'qdii_reference_index_change_pct',
+  'qdii_fx_change_pct',
+  'qdii_estimate_quality',
+  'qdii_estimate_source',
+  'qdii_nav_date'
+];
+
 const HANDLER_PATHS = {
   '/lof-list': require.resolve('./cloudfunctions/lof-list/index'),
   '/lof-detail': require.resolve('./cloudfunctions/lof-detail/index'),
@@ -197,6 +209,9 @@ function applyMinuteSnapshot(state, explicitSnapshotFile) {
     }
     if (item.nav_official_date !== undefined && item.nav_official_date !== null) {
       merged.nav_official_date = item.nav_official_date;
+    }
+    for (const field of QDII_FIELDS) {
+      if (field in item) merged[field] = item[field];
     }
     return merged;
   });
