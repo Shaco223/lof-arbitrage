@@ -16,6 +16,7 @@ import {
   shouldRender
 } from '@/utils/format'
 import { isLowLiquidity } from '@/utils/low-liquidity'
+import { displayFundName } from '@/utils/qdii-display'
 import { useSettingsStore } from '@/store/settings'
 
 const settings = useSettingsStore()
@@ -72,7 +73,7 @@ const filteredList = computed(() => {
   if (!q) return source
   return source.filter(item =>
     item.code.toLowerCase().includes(q) ||
-    item.name.toLowerCase().includes(q)
+    displayFundName(item.code, item.name).toLowerCase().includes(q)
   )
 })
 
@@ -291,7 +292,7 @@ onUnmounted(() => {
             <text v-if="subscribeBadge(item)" class="sub-badge">{{ subscribeBadge(item) }}</text>
             <text v-if="showLowLiquidity(item)" class="low-liquidity-dot" title="低流动性"></text>
           </view>
-          <view class="row-line2">{{ item.name }}</view>
+          <view class="row-line2">{{ displayFundName(item.code, item.name) }}</view>
           <view class="row-line3">
             <text v-if="shouldRender(item.price_change_pct)" :class="(item.price_change_pct ?? 0) >= 0 ? 'text-up' : 'text-down'">
               {{ fmtPctSigned(item.price_change_pct, 2) }}

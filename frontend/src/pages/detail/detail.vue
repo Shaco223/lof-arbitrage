@@ -21,6 +21,7 @@ import {
   shouldRender
 } from '@/utils/format'
 import { isLowLiquidity, LOW_LIQUIDITY_LABEL } from '@/utils/low-liquidity'
+import { displayFundName, displayQdiiReferenceIndexName } from '@/utils/qdii-display'
 
 const detail = ref<LofDetailData | null>(null)
 const history = ref<LofHistoryData | null>(null)
@@ -30,6 +31,7 @@ const showBreakdown = ref(false)
 const code = ref('161725')
 const qdiiRiskText = '非交易所 IOPV，存在跟踪误差'
 
+const displayDetailName = computed(() => detail.value ? displayFundName(detail.value.code, detail.value.name) : '--')
 const coverage = computed(() => detail.value?.realtime.coverage ?? 0)
 const coverageClass = computed(() => `coverage-${coverageLevel(coverage.value)}`)
 const coverageText = computed(() => coverageLevelLabel(coverageLevel(coverage.value)))
@@ -180,7 +182,7 @@ onLoad((q: Record<string, string> | undefined) => {
     <view v-if="detail" class="card header-card">
       <view class="title-row">
         <view>
-          <view class="fund-name">{{ detail.name }}</view>
+          <view class="fund-name">{{ displayDetailName }}</view>
           <view class="fund-meta">{{ detail.code }} · {{ detail.type }} · 规模 {{ fmtNum(detail.scale_yi, 1) }} 亿</view>
         </view>
         <view class="coverage-tag" :class="coverageClass" @tap="toggleBreakdown">
@@ -313,7 +315,7 @@ onLoad((q: Record<string, string> | undefined) => {
         <view class="qdii-item wide">
           <text class="label">参考指数</text>
           <text class="value">
-            {{ shouldRender(detail.qdii_reference_index_name) ? detail.qdii_reference_index_name : '--' }}
+            {{ displayQdiiReferenceIndexName(detail) }}
             <text v-if="shouldRender(detail.qdii_reference_index_code)" class="sub">{{ detail.qdii_reference_index_code }}</text>
           </text>
         </view>
