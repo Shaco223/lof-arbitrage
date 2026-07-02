@@ -262,27 +262,19 @@ onUnmounted(() => {
     <view v-if="error" class="state state-error">列表加载失败：{{ error }}</view>
 
     <!-- 列表 -->
-    <view class="list">
-      <view v-if="activeMarketTab === 'lof'" class="list-head">
+    <view v-if="activeMarketTab === 'lof'" class="list">
+      <view class="list-head">
         <text class="col-name">基金</text>
         <text class="col-num">现价</text>
         <text class="col-num">IOPV</text>
         <text class="col-rate">溢价</text>
-      </view>
-      <view v-else class="list-head qdii-head">
-        <text class="col-name">基金</text>
-        <text class="col-num">现价</text>
-        <text class="col-rate">参考指数估算溢价</text>
-        <text class="col-num">估算净值</text>
-        <text class="col-rate">指数/汇率</text>
-        <text class="col-num">净值日期</text>
       </view>
 
       <view
         v-for="item in pagedList"
         :key="item.code"
         class="row"
-        :class="activeMarketTab === 'qdii' ? 'qdii-row' : `signal-${signalType(item)}`"
+        :class="[`signal-${signalType(item)}`]"
         @tap="goDetail(item.code)"
       >
         <view class="row-main">
@@ -303,46 +295,69 @@ onUnmounted(() => {
             </text>
           </view>
         </view>
-        <template v-if="activeMarketTab === 'lof'">
-          <text class="cell-num">{{ fmtNum(item.price, 3) }}</text>
-          <text class="cell-num">{{ fmtNum(item.iopv, 3) }}</text>
-          <view class="cell-premium">
-            <text class="p-main" :class="item.premium >= 0 ? 'text-up' : 'text-down'">{{ fmtPct(item.premium, 2) }}</text>
-            <text
-              v-if="shouldRender(item.premium_nav)"
-              class="p-sub"
-              :class="(item.premium_nav ?? 0) >= 0 ? 'text-up' : 'text-down'"
-            >净 {{ fmtPct(item.premium_nav, 2) }}</text>
-          </view>
-        </template>
-        <template v-else>
-          <text class="cell-num">{{ fmtNum(item.price, 3) }}</text>
-          <view class="cell-premium">
-            <text
-              class="p-main"
-              :class="shouldRender(item.qdii_estimate_premium) ? ((item.qdii_estimate_premium ?? 0) >= 0 ? 'text-up' : 'text-down') : ''"
-            >{{ shouldRender(item.qdii_estimate_premium) ? fmtPctSigned(item.qdii_estimate_premium, 2) : '--' }}</text>
-            <text class="p-sub">参考指数估算溢价</text>
-          </view>
-          <text class="cell-num">{{ fmtNum(item.qdii_estimate_nav, 3) }}</text>
-          <view class="cell-premium">
-            <text
-              class="p-sub"
-              :class="shouldRender(item.qdii_reference_index_change_pct) ? ((item.qdii_reference_index_change_pct ?? 0) >= 0 ? 'text-up' : 'text-down') : ''"
-            >指数 {{ shouldRender(item.qdii_reference_index_change_pct) ? fmtPctSigned(item.qdii_reference_index_change_pct, 2) : '--' }}</text>
-            <text
-              class="p-sub"
-              :class="shouldRender(item.qdii_fx_change_pct) ? ((item.qdii_fx_change_pct ?? 0) >= 0 ? 'text-up' : 'text-down') : ''"
-            >汇率 {{ shouldRender(item.qdii_fx_change_pct) ? fmtPctSigned(item.qdii_fx_change_pct, 2) : '--' }}</text>
-          </view>
-          <text class="cell-num small-date">{{ shouldRender(item.qdii_nav_date) ? item.qdii_nav_date : '--' }}</text>
-        </template>
+        <text class="cell-num">{{ fmtNum(item.price, 3) }}</text>
+        <text class="cell-num">{{ fmtNum(item.iopv, 3) }}</text>
+        <view class="cell-premium">
+          <text class="p-main" :class="item.premium >= 0 ? 'text-up' : 'text-down'">{{ fmtPct(item.premium, 2) }}</text>
+          <text
+            v-if="shouldRender(item.premium_nav)"
+            class="p-sub"
+            :class="(item.premium_nav ?? 0) >= 0 ? 'text-up' : 'text-down'"
+          >净 {{ fmtPct(item.premium_nav, 2) }}</text>
+        </view>
       </view>
 
       <view v-if="!loading && !error && filteredList.length === 0" class="empty">暂无数据，请确认本地真实 API 已启动。</view>
     </view>
 
-    <!-- 分页 -->
+    <view v-else class="qdii-card-list">
+      <view
+        v-for="item in pagedList"
+        :key="item.code"
+        class="qdii-card-row"
+        @tap="goDetail(item.code)"
+      >
+        <view class="qdii-card-top">
+          <view class="qdii-title-block">
+            <view class="row-line1">
+              <text class="code">{{ item.code }}</text>
+              <text class="type-tag type-index">QDII</text>
+            </view>
+            <view class="qdii-fund-name">{{ displayFundName(item.code, item.name) }}</view>
+          </view>
+          <view class="qdii-price-block">
+            <text class="qdii-price-label">现价</text>
+            <text class="qdii-price-value">{{ fmtNum(item.price, 3) }}</text>
+          </view>
+        </view>
+
+        <view class="qdii-metrics">
+          <view class="qdii-metric primary">
+            <text class="metric-label">参考指数估算溢价</text>
+            <text
+              class="metric-value"
+              :class="shouldRender(item.qdii_estimate_premium) ? ((item.qdii_estimate_premium ?? 0) >= 0 ? 'text-up' : 'text-down') : ''"
+            >{{ shouldRender(item.qdii_estimate_premium) ? fmtPctSigned(item.qdii_estimate_premium, 2) : '--' }}</text>
+          </view>
+          <view class="qdii-metric">
+            <text class="metric-label">估算净值</text>
+            <text class="metric-value neutral">{{ fmtNum(item.qdii_estimate_nav, 3) }}</text>
+          </view>
+        </view>
+
+        <view class="qdii-foot">
+          <text
+            :class="shouldRender(item.qdii_reference_index_change_pct) ? ((item.qdii_reference_index_change_pct ?? 0) >= 0 ? 'text-up' : 'text-down') : ''"
+          >指数 {{ shouldRender(item.qdii_reference_index_change_pct) ? fmtPctSigned(item.qdii_reference_index_change_pct, 2) : '--' }}</text>
+          <text
+            :class="shouldRender(item.qdii_fx_change_pct) ? ((item.qdii_fx_change_pct ?? 0) >= 0 ? 'text-up' : 'text-down') : ''"
+          >汇率 {{ shouldRender(item.qdii_fx_change_pct) ? fmtPctSigned(item.qdii_fx_change_pct, 2) : '--' }}</text>
+          <text>净值日期 {{ shouldRender(item.qdii_nav_date) ? item.qdii_nav_date : '--' }}</text>
+        </view>
+      </view>
+
+      <view v-if="!loading && !error && filteredList.length === 0" class="empty">暂无 QDII 估算数据，请确认本地真实 API 已启动。</view>
+    </view>
     <view class="pagination" v-if="!loading && filteredList.length > 0">
       <button class="page-btn" :class="{ disabled: currentPage <= 1 }" @tap="prevPage()">上一页</button>
       <text class="page-info">{{ currentPage }} / {{ totalPages }}</text>
@@ -391,8 +406,6 @@ onUnmounted(() => {
 .row:last-child { border-bottom: 0; }
 .row.signal-premium { background: linear-gradient(90deg, rgba(245,108,108,0.06), transparent 60%); margin: 0 -12rpx; padding-left: 12rpx; padding-right: 12rpx; border-radius: 10rpx; }
 .row.signal-discount { background: linear-gradient(90deg, rgba(103,194,58,0.06), transparent 60%); margin: 0 -12rpx; padding-left: 12rpx; padding-right: 12rpx; border-radius: 10rpx; }
-.qdii-head, .row.qdii-row { grid-template-columns: 1fr 92rpx 150rpx 110rpx 130rpx 132rpx; }
-.row.qdii-row { background: linear-gradient(90deg, rgba(31,111,235,0.07), transparent 62%); margin: 0 -12rpx; padding-left: 12rpx; padding-right: 12rpx; border-radius: 10rpx; }
 
 .row-main { display: flex; flex-direction: column; gap: 8rpx; min-width: 0; }
 .row-line1 { display: flex; align-items: center; gap: 10rpx; }
@@ -413,6 +426,20 @@ onUnmounted(() => {
 .p-main { font-size: 30rpx; font-weight: 700; }
 .p-sub { font-size: 20rpx; opacity: 0.85; }
 .small-date { font-size: 22rpx; color: #606266; }
+.qdii-card-list { display: flex; flex-direction: column; gap: 18rpx; }
+.qdii-card-row { padding: 22rpx; border-radius: 16rpx; background: #fff; box-shadow: 0 2rpx 8rpx rgba(0, 21, 41, 0.04); border: 1rpx solid #edf3ff; }
+.qdii-card-top { display: flex; justify-content: space-between; gap: 18rpx; align-items: flex-start; }
+.qdii-title-block { min-width: 0; flex: 1; display: flex; flex-direction: column; gap: 8rpx; }
+.qdii-fund-name { font-size: 28rpx; color: #1f2d3d; font-weight: 600; line-height: 1.35; }
+.qdii-price-block { min-width: 110rpx; display: flex; flex-direction: column; align-items: flex-end; gap: 4rpx; }
+.qdii-price-label, .metric-label { color: #909399; font-size: 22rpx; }
+.qdii-price-value { color: #303133; font-size: 30rpx; font-weight: 700; }
+.qdii-metrics { display: grid; grid-template-columns: 1.25fr 1fr; gap: 16rpx; margin-top: 20rpx; }
+.qdii-metric { padding: 16rpx; border-radius: 14rpx; background: #f8fafc; display: flex; flex-direction: column; gap: 8rpx; }
+.qdii-metric.primary { background: #fff7f7; }
+.metric-value { font-size: 34rpx; font-weight: 800; line-height: 1; }
+.metric-value.neutral { color: #1f2d3d; }
+.qdii-foot { display: flex; flex-wrap: wrap; gap: 12rpx 20rpx; margin-top: 18rpx; color: #909399; font-size: 23rpx; }
 
 .empty { padding: 64rpx 24rpx; text-align: center; color: #909399; font-size: 24rpx; }
 

@@ -24,14 +24,17 @@ const requiredFields = {
 const missingExports = requiredExports.filter((name) => !source.includes(`export function ${name}`))
 const missingQdiiRouting = []
 const missingQdiiNameFallback = []
+const missingQdiiCardLayout = []
 if (!typeSource.includes("type?: 'all' | FundType | 'qdii'")) missingQdiiRouting.push('types.ListParams.type=qdii')
 if (!indexSource.includes("type: activeMarketTab.value === 'qdii' ? 'qdii' : type.value")) missingQdiiRouting.push('index.loadList type=qdii')
 if (!indexSource.includes('displayFundName(')) missingQdiiNameFallback.push('index.displayFundName')
 if (!detailSource.includes('displayDetailName')) missingQdiiNameFallback.push('detail.displayDetailName')
+if (!indexSource.includes('qdii-card-row')) missingQdiiCardLayout.push('index.qdii-card-row')
+if (indexSource.includes('class="list-head qdii-head"')) missingQdiiCardLayout.push('remove qdii table header')
 const missingFields = Object.entries(requiredFields)
   .flatMap(([group, fields]) => fields.filter((field) => !source.includes(field)).map((field) => `${group}.${field}`))
 
-if (missingExports.length || missingFields.length || missingQdiiRouting.length || missingQdiiNameFallback.length) {
+if (missingExports.length || missingFields.length || missingQdiiRouting.length || missingQdiiNameFallback.length || missingQdiiCardLayout.length) {
   console.error('Mock 契约检查失败')
   if (missingExports.length) console.error('缺少导出:', missingExports.join(', '))
   if (missingFields.length) console.error('缺少字段:', missingFields.join(', '))
