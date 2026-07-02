@@ -10,6 +10,8 @@ import {
   fmtPct,
   fmtPctSigned,
   fmtVolumeWan,
+  fmtLimitAmount,
+  fmtSharesIncrWan,
   freshnessLabel,
   coverageLevel,
   isMarketOpen,
@@ -39,7 +41,8 @@ const typeTabs: Array<{ label: string; value: ListParams['type'] }> = [
   { label: '全部', value: 'all' },
   { label: '指数', value: 'index' },
   { label: '行业', value: 'industry' },
-  { label: '主动', value: 'active' }
+  { label: '主动', value: 'active' },
+  { label: 'QDII', value: 'qdii' }
 ]
 
 const sortTabs: Array<{ label: string; value: ListParams['sort'] }> = [
@@ -84,12 +87,17 @@ const marketOpen = computed(() => {
 })
 
 function typeLabel(value: FundType) {
-  return value === 'index' ? '指数' : value === 'industry' ? '行业' : '主动'
+  if (value === 'qdii') return 'QDII'
+  if (value === 'index') return '指数'
+  if (value === 'industry') return '行业'
+  return '主动'
 }
 
 function signalType(item: LofListItem): 'premium' | 'discount' | 'none' {
-  if (item.premium >= settings.premiumThreshold) return 'premium'
-  if (item.premium <= -settings.discountThreshold) return 'discount'
+  const premium = item.type === 'qdii' ? item.qdii_estimate_premium : item.premium
+  if (!shouldRender(premium)) return 'none'
+  if ((premium ?? 0) >= settings.premiumThreshold) return 'premium'
+  if ((premium ?? 0) <= -settings.discountThreshold) return 'discount'
   return 'none'
 }
 
@@ -108,6 +116,29 @@ function subscribeBadge(item: LofListItem): string {
   if (st === 'closed') return '停售'
   return ''
 }
+
+function qdiiMetaLine(item: LofListItem): string {
+  const parts: string[] = []
+  if (item.subscribe_status === 'limited' && shouldRender(item.subscribe_limit_amount)) {
+    parts.push('限购 ' + fmtLimitAmount(item.subscribe_limit_amount))
+  } else if (subscribeBadge(item)) {
+    parts.push(subscribeBadge(item))
+  } else {
+    parts.push('申购未知')
+  }
+  if (shouldRender(item.shares_incr_daily)) {
+    parts.push('新增 ' + fmtSharesIncrWan(item.shares_incr_daily))
+  } else {
+    parts.push('新增未覆盖')
+  }
+  return parts.join(' · ')
+}
+
+function qdiiEstimateNote(item: LofListItem): string {
+  const name = item.qdii_reference_index_name || item.qdii_reference_index_code
+  return name ? '参考 ' + name : '参考指数估算'
+}
+
 
 async function loadList(showToast = false) {
   loading.value = true
@@ -240,6 +271,7 @@ onUnmounted(() => {
             <text v-if="showLowLiquidity(item)" class="low-liquidity-dot" title="低流动性"></text>
           </view>
           <view class="row-line2">{{ item.name }}</view>
+          <view v-if="item.type === 'qdii' && qdiiMetaLine(item)" class="row-line3">{{ qdiiMetaLine(item) }}</view>
           <view class="row-line3">
             <text v-if="shouldRender(item.price_change_pct)" :class="(item.price_change_pct ?? 0) >= 0 ? 'text-up' : 'text-down'">
               {{ fmtPctSigned(item.price_change_pct, 2) }}
@@ -251,11 +283,12 @@ onUnmounted(() => {
           </view>
         </view>
         <text class="cell-num">{{ fmtNum(item.price, 3) }}</text>
-        <text class="cell-num">{{ fmtNum(item.iopv, 3) }}</text>
+        <text class="cell-num">{{ fmtNum(item.type === 'qdii' ? item.qdii_estimate_nav : item.iopv, 3) }}</text>
         <view class="cell-premium">
-          <text class="p-main" :class="item.premium >= 0 ? 'text-up' : 'text-down'">{{ fmtPct(item.premium, 2) }}</text>
+          <text class="p-main" :class="((item.type === 'qdii' ? item.qdii_estimate_premium : item.premium) ?? 0) >= 0 ? 'text-up' : 'text-down'">{{ fmtPct(item.type === 'qdii' ? item.qdii_estimate_premium : item.premium, 2) }}</text>
+          <text v-if="item.type === 'qdii'" class="p-sub">{{ qdiiEstimateNote(item) }}</text>
           <text
-            v-if="shouldRender(item.premium_nav)"
+            v-else-if="shouldRender(item.premium_nav)"
             class="p-sub"
             :class="(item.premium_nav ?? 0) >= 0 ? 'text-up' : 'text-down'"
           >净 {{ fmtPct(item.premium_nav, 2) }}</text>
@@ -316,6 +349,7 @@ onUnmounted(() => {
 .code { font-size: 26rpx; font-weight: 700; color: #1f2d3d; letter-spacing: 0.5rpx; }
 .type-tag { padding: 2rpx 10rpx; border-radius: 4rpx; font-size: 20rpx; }
 .type-index { background: #ecf5ff; color: #409eff; }
+.type-qdii { background: #f0f7ff; color: #1f6feb; }
 .type-industry { background: #fdf6ec; color: #e6a23c; }
 .type-active { background: #f0f9eb; color: #67c23a; }
 .sub-badge { padding: 2rpx 10rpx; border-radius: 4rpx; font-size: 20rpx; background: #fef0f0; color: #f56c6c; }

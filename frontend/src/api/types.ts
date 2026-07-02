@@ -1,7 +1,7 @@
 ﻿// PRD §5 / §6 字段契约（前后端联调基线）
 // PRD 1.2 字段对齐升级：新增字段为可选，null/unknown 时前端不渲染（AC-P5）
 
-export type FundType = 'index' | 'industry' | 'active'
+export type FundType = 'index' | 'industry' | 'active' | 'qdii'
 export type SourceQuality = 'ok' | 'degraded' | 'stale'
 export type AlertDirection = 'premium' | 'discount'
 /** PRD 1.2 申赎状态：unknown 视为不渲染 */
@@ -9,8 +9,22 @@ export type SubscribeRedeemStatus = 'open' | 'suspended' | 'limited' | 'closed' 
 /** PRD 1.2 LOF 状态：active / 低流动性 active_low_liquidity */
 export type LofStatus = 'active' | 'active_low_liquidity'
 
+export interface QdiiEstimateFields {
+  /** PRD 1.6?QDII/????????????????? IOPV */
+  qdii_estimate_nav?: number | null
+  /** PRD 1.6?QDII/???????????? */
+  qdii_estimate_premium?: number | null
+  qdii_reference_index_code?: string | null
+  qdii_reference_index_name?: string | null
+  qdii_reference_index_change_pct?: number | null
+  qdii_fx_change_pct?: number | null
+  qdii_estimate_quality?: 'high' | 'medium' | 'low' | 'unavailable' | null
+  qdii_estimate_source?: string | null
+  qdii_nav_date?: string | null
+}
+
 /** 列表项（api-lof-list -> data.items[i]） */
-export interface LofListItem {
+export interface LofListItem extends QdiiEstimateFields {
   code: string
   name: string
   type: FundType
@@ -94,7 +108,7 @@ export interface HoldingTop {
 }
 
 /** 详情响应 */
-export interface LofDetailData {
+export interface LofDetailData extends QdiiEstimateFields {
   code: string
   name: string
   type: FundType
@@ -104,7 +118,7 @@ export interface LofDetailData {
   benchmark_raw: string
   benchmark_components: BenchmarkComponent[]
   holdings_top10: HoldingTop[]
-  realtime: {
+  realtime: QdiiEstimateFields & {
     ts: string
     price: number
     iopv: number
@@ -113,8 +127,7 @@ export interface LofDetailData {
     source_quality: SourceQuality
     // === PRD 1.2 新增字段（可选） ===
     price_change_pct?: number | null
-    volume_amount?: number | null
-  }
+    volume_amount?: number | null  }
   pctile_30d: number
   // === PRD 1.2 新增详情字段（可选；null/unknown 时前端不渲染） ===
   status?: LofStatus

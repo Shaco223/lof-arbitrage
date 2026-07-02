@@ -97,6 +97,31 @@ function redeemLabel(d: LofDetailData): string {
   return ''
 }
 
+
+function subscribeDisplay(d: LofDetailData): string {
+  return subscribeLabel(d) || (d.type === 'qdii' ? '申购状态未覆盖' : '')
+}
+
+function qdiiReferenceLabel(d: LofDetailData): string {
+  return d.qdii_reference_index_name || d.qdii_reference_index_code || '参考指数'
+}
+
+function estimateNavLabel(d: LofDetailData): string {
+  return d.type === 'qdii' ? '参考指数估算净值' : '估算净值 IOPV'
+}
+
+function estimatePremiumLabel(d: LofDetailData): string {
+  return d.type === 'qdii' ? '参考指数估算溢价' : '估算溢价'
+}
+
+function estimateNavValue(d: LofDetailData): number | null | undefined {
+  return d.type === 'qdii' ? d.qdii_estimate_nav : d.realtime.iopv
+}
+
+function estimatePremiumValue(d: LofDetailData): number | null | undefined {
+  return d.type === 'qdii' ? d.qdii_estimate_premium : d.realtime.premium
+}
+
 function statusPillClass(value?: SubscribeRedeemStatus): string {
   if (value === 'open') return 'status-open'
   if (value === 'suspended' || value === 'closed') return 'status-suspended'
@@ -210,13 +235,13 @@ onLoad((q: Record<string, string> | undefined) => {
             <text class="label">成交额</text>
             <text class="value">{{ fmtVolumeWan(volumeAmount) }}</text>
           </view>
-          <view v-if="shouldRender(detail.shares_onexchange)" class="dual-row">
+          <view v-if="detail.type === 'qdii' || shouldRender(detail.shares_onexchange)" class="dual-row">
             <text class="label">场内份额(万份)</text>
-            <text class="value">{{ fmtSharesWan(detail.shares_onexchange) }}</text>
+            <text class="value">{{ shouldRender(detail.shares_onexchange) ? fmtSharesWan(detail.shares_onexchange) : '未覆盖' }}</text>
           </view>
-          <view v-if="shouldRender(detail.shares_incr_daily)" class="dual-row">
+          <view v-if="detail.type === 'qdii' || shouldRender(detail.shares_incr_daily)" class="dual-row">
             <text class="label">当日新增份额</text>
-            <text class="value" :class="(detail.shares_incr_daily ?? 0) >= 0 ? 'text-up' : 'text-down'">{{ fmtSharesIncrWan(detail.shares_incr_daily) }}</text>
+            <text class="value" :class="shouldRender(detail.shares_incr_daily) && (detail.shares_incr_daily ?? 0) >= 0 ? 'text-up' : 'text-down'">{{ shouldRender(detail.shares_incr_daily) ? fmtSharesIncrWan(detail.shares_incr_daily) : '未覆盖' }}</text>
           </view>
           <view v-if="shouldRender(detail.circulating_shares)" class="dual-row">
             <text class="label">场内份额(亿份)</text>
@@ -235,8 +260,12 @@ onLoad((q: Record<string, string> | undefined) => {
             </text>
           </view>
           <view class="dual-row">
-            <text class="label">估算净值 IOPV</text>
-            <text class="value">{{ fmtNum(detail.realtime.iopv, 4) }}</text>
+            <text class="label">{{ estimateNavLabel(detail) }}</text>
+            <text class="value">{{ fmtNum(estimateNavValue(detail), 4) }}</text>
+          </view>
+          <view v-if="detail.type === 'qdii'" class="dual-row">
+            <text class="label">参考指数</text>
+            <text class="value">{{ qdiiReferenceLabel(detail) }}</text>
           </view>
           <view v-if="shouldRender(detail.premium_error)" class="dual-row">
             <text class="label">估算误差（盘后）</text>
@@ -246,8 +275,8 @@ onLoad((q: Record<string, string> | undefined) => {
             </text>
           </view>
           <view class="dual-row">
-            <text class="label">估算溢价</text>
-            <text class="value" :class="(detail.realtime.premium ?? 0) >= 0 ? 'text-up' : 'text-down'">{{ fmtPctSigned(detail.realtime.premium, 2) }}</text>
+            <text class="label">{{ estimatePremiumLabel(detail) }}</text>
+            <text class="value" :class="(estimatePremiumValue(detail) ?? 0) >= 0 ? 'text-up' : 'text-down'">{{ fmtPctSigned(estimatePremiumValue(detail), 2) }}</text>
           </view>
           <view v-if="shouldRender(detail.premium_nav)" class="dual-row">
             <text class="label">净值溢价</text>
@@ -259,10 +288,10 @@ onLoad((q: Record<string, string> | undefined) => {
       <!-- 中部状态标签栏 -->
       <view class="status-bar">
         <text
-          v-if="subscribeLabel(detail)"
+          v-if="subscribeDisplay(detail)"
           class="status-pill"
           :class="statusPillClass(detail.subscribe_status)"
-        >{{ subscribeLabel(detail) }}</text>
+        >{{ subscribeDisplay(detail) }}</text>
         <text
           v-if="redeemLabel(detail)"
           class="status-pill"
@@ -279,6 +308,7 @@ onLoad((q: Record<string, string> | undefined) => {
       <view class="fresh-line">
         估值时间：{{ fmtDateTime(detail.realtime.ts) }}（{{ freshnessLabel(detail.realtime.ts) }}）
         <text v-if="shouldRender(detail.nav_official_date)" class="sub">· 披露净值日期 {{ detail.nav_official_date }}</text>
+        <text v-if="detail.type === 'qdii'" class="sub">&middot; 非交易所 IOPV, 存在跟踪误差</text>
       </view>
 
       <!-- PRD 1.4 规则区：申赎确认日（参考）；严禁标“到账可卖日”（§11 R10 红线） -->

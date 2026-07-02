@@ -1,6 +1,6 @@
-"""PRD §6 static API contract definitions (PRD 1.2 alignment).
+﻿"""PRD 搂6 static API contract definitions (PRD 1.2 alignment).
 
-These contracts encode the field structure declared in PRD §6 (1.2).
+These contracts encode the field structure declared in PRD 搂6 (1.2).
 They run without a live backend and are reused by tests/contract and
 tests/e2e/test_real_api_acceptance.py.
 """
@@ -28,11 +28,12 @@ COMMON_RESPONSE = {
 
 COMMON_ERROR_CODES = {0, 4001, 4010, 4040, 4290, 5000}
 SOURCE_QUALITY = {"ok", "degraded", "stale"}
-LOF_TYPES = {"index", "industry", "active"}
+LOF_TYPES = {"index", "industry", "active", "qdii"}
 LOF_STATUS = {"active", "active_low_liquidity"}
 SUBSCRIBE_STATUS = {"open", "limited", "suspended", "closed", "unknown"}
 REDEEM_STATUS = {"open", "suspended", "closed", "unknown"}
 SUBSCRIBE_LIMIT_PERIOD = {"day"}
+QDII_ESTIMATE_QUALITY = {"high", "medium", "low", "unavailable"}
 
 
 API_LOF_LIST_ITEM = {
@@ -58,6 +59,15 @@ API_LOF_LIST_ITEM = {
     "circulating_shares": FieldSpec("number", required=False, nullable=True),
     "subscribe_limit_amount": FieldSpec("number", required=False, nullable=True),
     "subscribe_limit_period": FieldSpec("string", required=False, enum=tuple(sorted(SUBSCRIBE_LIMIT_PERIOD)), nullable=True),
+    "qdii_estimate_nav": FieldSpec("number", required=False, nullable=True),
+    "qdii_estimate_premium": FieldSpec("number", required=False, nullable=True),
+    "qdii_reference_index_code": FieldSpec("string", required=False, nullable=True),
+    "qdii_reference_index_name": FieldSpec("string", required=False, nullable=True),
+    "qdii_reference_index_change_pct": FieldSpec("number", required=False, nullable=True),
+    "qdii_fx_change_pct": FieldSpec("number", required=False, nullable=True),
+    "qdii_estimate_quality": FieldSpec("string", required=False, enum=tuple(sorted(QDII_ESTIMATE_QUALITY)), nullable=True),
+    "qdii_estimate_source": FieldSpec("string", required=False, nullable=True),
+    "qdii_nav_date": FieldSpec("string", required=False, nullable=True),
 }
 API_LOF_LIST_ITEM_LEGACY_REQUIRED = {
     "code", "name", "type", "price", "iopv", "premium",
@@ -92,11 +102,20 @@ REALTIME_BLOCK = {
     "premium": FieldSpec("number", nullable=True),
     "coverage": FieldSpec("number", nullable=True),
     "source_quality": FieldSpec("string", enum=tuple(sorted(SOURCE_QUALITY))),
+    "qdii_estimate_nav": FieldSpec("number", required=False, nullable=True),
+    "qdii_estimate_premium": FieldSpec("number", required=False, nullable=True),
+    "qdii_reference_index_code": FieldSpec("string", required=False, nullable=True),
+    "qdii_reference_index_name": FieldSpec("string", required=False, nullable=True),
+    "qdii_reference_index_change_pct": FieldSpec("number", required=False, nullable=True),
+    "qdii_fx_change_pct": FieldSpec("number", required=False, nullable=True),
+    "qdii_estimate_quality": FieldSpec("string", required=False, enum=tuple(sorted(QDII_ESTIMATE_QUALITY)), nullable=True),
+    "qdii_estimate_source": FieldSpec("string", required=False, nullable=True),
+    "qdii_nav_date": FieldSpec("string", required=False, nullable=True),
 }
 
 
 API_LOF_DETAIL_DATA = {
-    # PRD 1.2: list 全部字段 + 详情专属字段
+    # PRD 1.2: list 鍏ㄩ儴瀛楁 + 璇︽儏涓撳睘瀛楁
     "code": FieldSpec("string"),
     "name": FieldSpec("string"),
     "type": FieldSpec("string", enum=tuple(sorted(LOF_TYPES))),
@@ -121,6 +140,15 @@ API_LOF_DETAIL_DATA = {
     "redeem_status": FieldSpec("string", required=False, enum=tuple(sorted(REDEEM_STATUS)), nullable=True),
     "subscribe_limit_amount": FieldSpec("number", required=False, nullable=True),
     "subscribe_limit_period": FieldSpec("string", required=False, enum=tuple(sorted(SUBSCRIBE_LIMIT_PERIOD)), nullable=True),
+    "qdii_estimate_nav": FieldSpec("number", required=False, nullable=True),
+    "qdii_estimate_premium": FieldSpec("number", required=False, nullable=True),
+    "qdii_reference_index_code": FieldSpec("string", required=False, nullable=True),
+    "qdii_reference_index_name": FieldSpec("string", required=False, nullable=True),
+    "qdii_reference_index_change_pct": FieldSpec("number", required=False, nullable=True),
+    "qdii_fx_change_pct": FieldSpec("number", required=False, nullable=True),
+    "qdii_estimate_quality": FieldSpec("string", required=False, enum=tuple(sorted(QDII_ESTIMATE_QUALITY)), nullable=True),
+    "qdii_estimate_source": FieldSpec("string", required=False, nullable=True),
+    "qdii_nav_date": FieldSpec("string", required=False, nullable=True),
     "coverage_top10": FieldSpec("number", nullable=True),
     "coverage_breakdown": FieldSpec("object"),
     "benchmark_raw": FieldSpec("string", nullable=True),
@@ -165,12 +193,12 @@ API_LOF_DETAIL_DATA_LEGACY = pick(API_LOF_DETAIL_DATA, API_LOF_DETAIL_DATA_LEGAC
 HISTORY_ITEM = {
     "date": FieldSpec("string"),
     "close_price": FieldSpec("number", nullable=True),
-    # 最新交易日净值 T+1 未披露时合法为 null（AC-H4：缺 official_nav 时 premium_close=null）
+    # 鏈€鏂颁氦鏄撴棩鍑€鍊?T+1 鏈姭闇叉椂鍚堟硶涓?null锛圓C-H4锛氱己 official_nav 鏃?premium_close=null锛?
     "official_nav": FieldSpec("number", nullable=True),
     "premium_close": FieldSpec("number", nullable=True),
-    # AC-H5：不足 30 个有效日时分位返回 null（禁合成凑满）
+    # AC-H5锛氫笉瓒?30 涓湁鏁堟棩鏃跺垎浣嶈繑鍥?null锛堢鍚堟垚鍑戞弧锛?
     "premium_pctile_30d": FieldSpec("number", nullable=True),
-    # PRD 1.2.3 选填：预估收盘溢价 / 溢价偏差，可为 null
+    # PRD 1.2.3 閫夊～锛氶浼版敹鐩樻孩浠?/ 婧环鍋忓樊锛屽彲涓?null
     "premium_estimate_close": FieldSpec("number", required=False, nullable=True),
     "premium_deviation": FieldSpec("number", required=False, nullable=True),
 }
@@ -247,7 +275,7 @@ API_LOF_LIST_SAMPLE = {
         "items": [
             {
                 "code": "161725",
-                "name": "招商中证白酒(LOF)A",
+                "name": "鎷涘晢涓瘉鐧介厭(LOF)A",
                 "type": "index",
                 "status": "active",
                 "price": 0.823,
@@ -268,6 +296,15 @@ API_LOF_LIST_SAMPLE = {
                 "circulating_shares": 12.5,
                 "subscribe_limit_amount": 500000.0,
                 "subscribe_limit_period": "day",
+                "qdii_estimate_nav": None,
+                "qdii_estimate_premium": None,
+                "qdii_reference_index_code": None,
+                "qdii_reference_index_name": None,
+                "qdii_reference_index_change_pct": None,
+                "qdii_fx_change_pct": None,
+                "qdii_estimate_quality": "unavailable",
+                "qdii_estimate_source": None,
+                "qdii_nav_date": None,
             }
         ],
     },
@@ -278,7 +315,7 @@ API_LOF_DETAIL_SAMPLE = {
     "message": "ok",
     "data": {
         "code": "161725",
-        "name": "招商中证白酒(LOF)A",
+        "name": "鎷涘晢涓瘉鐧介厭(LOF)A",
         "type": "index",
         "status": "active",
         "scale_yi": 300,
@@ -301,21 +338,30 @@ API_LOF_DETAIL_SAMPLE = {
         "redeem_status": "open",
         "subscribe_limit_amount": 500000.0,
         "subscribe_limit_period": "day",
+                "qdii_estimate_nav": None,
+                "qdii_estimate_premium": None,
+                "qdii_reference_index_code": None,
+                "qdii_reference_index_name": None,
+                "qdii_reference_index_change_pct": None,
+                "qdii_fx_change_pct": None,
+                "qdii_estimate_quality": "unavailable",
+                "qdii_estimate_source": None,
+                "qdii_nav_date": None,
         "coverage_top10": 0.93,
         "coverage_breakdown": {
             "top10_weight": 0.93,
             "benchmark_assigned_weight": 0.95,
             "cash_weight": 0.05,
         },
-        "benchmark_raw": "中证白酒指数收益率×95%+银行活期存款利率(税后)×5%",
+        "benchmark_raw": "涓瘉鐧介厭鎸囨暟鏀剁泭鐜嚸?5%+閾惰娲绘湡瀛樻鍒╃巼(绋庡悗)脳5%",
         "benchmark_components": [
-            {"index_code": "399997.SZ", "name": "中证白酒指数", "weight": 0.95},
-            {"index_code": "CASH", "name": "银行活期", "weight": 0.05},
+            {"index_code": "399997.SZ", "name": "涓瘉鐧介厭鎸囨暟", "weight": 0.95},
+            {"index_code": "CASH", "name": "閾惰娲绘湡", "weight": 0.05},
         ],
         "holdings_top10": [
             {
                 "stock_code": "600519.SH",
-                "stock_name": "贵州茅台",
+                "stock_name": "璐靛窞鑼呭彴",
                 "weight": 0.15,
                 "price_change_pct": 0.0152,
                 "contribution_pct": 0.00228,
@@ -328,6 +374,15 @@ API_LOF_DETAIL_SAMPLE = {
             "premium": 0.0224,
             "coverage": 1.00,
             "source_quality": "ok",
+            "qdii_estimate_nav": None,
+            "qdii_estimate_premium": None,
+            "qdii_reference_index_code": None,
+            "qdii_reference_index_name": None,
+            "qdii_reference_index_change_pct": None,
+            "qdii_fx_change_pct": None,
+            "qdii_estimate_quality": "unavailable",
+            "qdii_estimate_source": None,
+            "qdii_nav_date": None,
         },
     },
 }

@@ -23,7 +23,7 @@ auto-start on boot is still out of scope (documented in the runbook).
 from __future__ import annotations
 
 import time as _time
-from datetime import datetime
+from datetime import datetime, time
 from pathlib import Path
 from typing import Any, Callable
 
@@ -62,6 +62,11 @@ DEFAULT_LOG_FILE = Path("logs/daemon.log")
 DEFAULT_LOG_ROTATION = "10 MB"
 DEFAULT_LOG_RETENTION = 7
 DEFAULT_STOP_POLL_SECONDS = 1.0
+
+
+def _is_after_market_close(moment: datetime) -> bool:
+    local = moment.astimezone(CN_TZ)
+    return local.time() > time(15, 0)
 
 
 def _now() -> datetime:
@@ -192,7 +197,8 @@ def run_daemon(
     shares_confirm_refresh_date: str | None = None
     history_path = Path(history_file) if history_file else output_root / DEFAULT_HISTORY_FILE
     # PRD 1.2.3: sediment the day's close-time premium_estimate_close exactly once,
-    # on the trading -> non-trading transition (i.e. just after 15:00 close).
+    # only after the 15:00 close. The 11:30-13:00 lunch break is also
+    # non-trading, so a plain trading -> non-trading transition is not enough.
     last_report: dict[str, Any] | None = None
     last_report_date: str | None = None
     was_trading = False
@@ -240,12 +246,14 @@ def run_daemon(
         moment = now_fn()
         trading = trading_fn(moment)
         if not trading:
-            # Trading -> non-trading transition == market close: sediment the day's
-            # close-time premium_estimate_close exactly once (PRD 1.2.3, append-only,
-            # no backfill). premium_deviation stays null until T+1 official nav.
+            # After-close transition: sediment the day's close-time
+            # premium_estimate_close exactly once (PRD 1.2.3, append-only, no
+            # backfill). Lunch break must not sediment; premium_deviation stays
+            # null until T+1 official nav.
             if (
                 sediment_close_history
                 and was_trading
+                and _is_after_market_close(moment)
                 and last_report is not None
                 and last_report_date is not None
                 and close_sediment_date != last_report_date

@@ -9,6 +9,11 @@ from typing import Any, Callable
 from fetcher.engine.premium import calculate_premium
 from fetcher.sources.csv_assets import LofMeta, load_watchlist
 from fetcher.sources.realtime_poc import RealTimePocClient
+from fetcher.sources.qdii_estimate import (
+    QDII_FIELD_NAMES,
+    build_qdii_fields_from_payload,
+    fetch_qdii_reference_payloads,
+)
 
 DEFAULT_WATCHLIST_PATH = Path(__file__).resolve().parents[3] / "assets" / "lof-watchlist-v2.csv"
 DEFAULT_OUTPUT_DIR = Path(__file__).resolve().parents[3] / "outputs"
@@ -23,11 +28,22 @@ DEFAULT_SAMPLE_DATASET = (
 # Fields refreshed back into sample-dataset.lof_realtime so the local API computes
 # premium_nav with a NAV in the same time-frame as the live price (BUG fix:
 # previously nav_official stayed at the 6/18 static placeholder).
-REALTIME_REFRESH_KEYS = ("price", "price_change_pct", "volume_amount", "iopv", "premium", "coverage", "source_quality", "nav_official", "nav_official_date")
+REALTIME_REFRESH_KEYS = (
+    "price",
+    "price_change_pct",
+    "volume_amount",
+    "iopv",
+    "premium",
+    "coverage",
+    "source_quality",
+    "nav_official",
+    "nav_official_date",
+    *QDII_FIELD_NAMES,
+)
 # Live market fields that MUST reflect the real source on every refresh: when the
 # source has no value we write explicit null (no stale placeholder), so the
 # front-end can hide them per AC-P5 instead of showing a frozen sample value.
-REALTIME_OVERWRITE_NULL_KEYS = ("price_change_pct", "volume_amount")
+REALTIME_OVERWRITE_NULL_KEYS = ("price_change_pct", "volume_amount", *QDII_FIELD_NAMES)
 # Snapshot JSONL must carry nav_official/nav_official_date alongside price so the
 # local API computes premium_nav = (price - nav_official)/nav_official in the SAME
 # time-frame even on the pure-JSONL read path (daemon not running). Without these
@@ -38,9 +54,19 @@ REALTIME_OVERWRITE_NULL_KEYS = ("price_change_pct", "volume_amount")
 # placeholders. No-source values are written as explicit null (AC-P5), same as
 # REALTIME_OVERWRITE_NULL_KEYS, so the front-end hides them rather than showing
 # a frozen value.
-SECTION6_SNAPSHOT_KEYS = ("code", "price", "price_change_pct", "volume_amount",
-                          "iopv", "premium", "coverage", "source_quality",
-                          "nav_official", "nav_official_date")
+SECTION6_SNAPSHOT_KEYS = (
+    "code",
+    "price",
+    "price_change_pct",
+    "volume_amount",
+    "iopv",
+    "premium",
+    "coverage",
+    "source_quality",
+    "nav_official",
+    "nav_official_date",
+    *QDII_FIELD_NAMES,
+)
 # DEPRECATED (PRD 1.2.1): intraday IOPV-vs-(T-1) NAV drift no longer triggers
 # source_quality degradation. Kept only as a reference constant for callers/
 # tests that still import it; NOT used in degradation logic anymore.
@@ -62,6 +88,10 @@ def fetch_watchlist_payloads(metas: list[LofMeta]) -> dict[str, dict[str, Any]]:
             }
     finally:
         client.close()
+
+    qdii_payloads = fetch_qdii_reference_payloads([meta.code for meta in metas])
+    for code, qdii_payload in qdii_payloads.items():
+        payloads.setdefault(code, {})["qdii"] = qdii_payload
     return payloads
 
 
@@ -95,6 +125,14 @@ def build_watchlist_report(
         volume_amount = _number_or_none(price_payload.get("volume_amount"))
         iopv = _number_or_none(nav_payload.get("iopv"))
         nav_official = _number_or_none(nav_payload.get("nav"))
+        nav_official_date = nav_payload.get("nav_date") or ""
+        qdii_fields = build_qdii_fields_from_payload(
+            code=meta.code,
+            price=price,
+            nav_official=nav_official,
+            nav_official_date=nav_official_date,
+            payload=payload,
+        )
         premium = (
             calculate_premium(price, iopv)
             if price is not None and iopv is not None and iopv > 0
@@ -131,8 +169,9 @@ def build_watchlist_report(
                 "volume_amount": volume_amount,
                 "iopv": iopv,
                 "nav_official": nav_official,
-                "nav_official_date": nav_payload.get("nav_date") or "",
+                "nav_official_date": nav_official_date,
                 "nav_drift_pct": nav_drift_pct,
+                **qdii_fields,
                 "premium": premium,
                 "coverage": 1.0 if source_quality == "ok" else 0.0,
                 "source_quality": source_quality,

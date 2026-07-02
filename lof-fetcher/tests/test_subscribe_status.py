@@ -80,3 +80,14 @@ def test_status_and_amount_are_independent_open_never_parses():
     res = parse_subscribe_limit("open", None, [], "300000")
     assert res["amount"] is None
     assert res["period"] is None
+
+
+
+def test_normal_chinese_status_wording_for_qdii():
+    on_exchange_trade = "".join(chr(x) for x in [0x573A, 0x5185, 0x4EA4, 0x6613])
+    subscribe_suspended = "".join(chr(x) for x in [0x6682, 0x505C, 0x7533, 0x8D2D])
+    redeem_suspended = "".join(chr(x) for x in [0x6682, 0x505C, 0x8D4E, 0x56DE])
+
+    assert map_subscribe_status(on_exchange_trade) == "unknown"
+    assert map_subscribe_status(subscribe_suspended) == "suspended"
+    assert map_redeem_status(redeem_suspended) == "suspended"

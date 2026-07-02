@@ -62,11 +62,12 @@ def test_daemon_collects_every_tick_during_trading_hours(tmp_path):
     assert summary["error_iterations"] == 0
     rows = [json.loads(l) for l in snap.read_text(encoding="utf-8").strip().splitlines()]
     assert len(rows) == 3
-    assert all(set(r["items"][0].keys()) == {
+    expected_keys = {
         "code", "price", "price_change_pct", "volume_amount",
         "iopv", "premium", "coverage", "source_quality",
         "nav_official", "nav_official_date",
-    } for r in rows)
+    }
+    assert all(expected_keys.issubset(set(r["items"][0].keys())) for r in rows)
 
 
 def test_daemon_sleeps_and_does_not_collect_outside_trading_hours(tmp_path):
@@ -197,7 +198,7 @@ def test_daemon_iteration_exception_is_caught_and_loop_continues(tmp_path):
 
 
 def test_daemon_sediments_close_estimate_on_trading_to_idle_transition(tmp_path):
-    # PRD 1.2.3: on the trading -> non-trading transition (market close), the
+    # PRD 1.2.3: on the after-15:00 trading -> non-trading transition, the
     # daemon appends the day's premium (close-time price/IOPV-1) as
     # premium_estimate_close into the history JSONL exactly once.
     metas = [_meta("161725")]
@@ -221,7 +222,7 @@ def test_daemon_sediments_close_estimate_on_trading_to_idle_transition(tmp_path)
         trading_interval_seconds=0,
         idle_interval_seconds=0,
         sleeper=lambda _s: None,
-        now=lambda: datetime(2026, 6, 22, 15, 0, 0, tzinfo=CN),
+        now=lambda: datetime(2026, 6, 22, 15, 1, 0, tzinfo=CN),
         trading_check=lambda _m: next(states),
         payload_provider=provider,
         pid_file=None,
@@ -238,3 +239,175 @@ def test_daemon_sediments_close_estimate_on_trading_to_idle_transition(tmp_path)
     # official_nav not backfilled yet -> premium_close + deviation null (T+1 pending)
     assert row["premium_close"] is None
     assert row["premium_deviation"] is None
+
+
+def _sequence_now(*moments: datetime):
+    calls = {"n": 0}
+
+    def _now():
+        index = min(calls["n"], len(moments) - 1)
+        calls["n"] += 1
+        return moments[index]
+
+    return _now
+
+
+def _history_rows(path):
+    if not path.exists():
+        return []
+    return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
+
+
+def test_daemon_does_not_sediment_during_lunch_break_1131(tmp_path):
+    metas = [_meta("501085")]
+    hist = tmp_path / "hist.jsonl"
+
+    def provider(_metas):
+        return {m.code: _payload(price=3.55, iopv=3.50, nav=3.50) for m in _metas}
+
+    dmod.run_daemon(
+        metas=metas,
+        output_dir=tmp_path,
+        snapshot_file=tmp_path / "snap.jsonl",
+        dataset_path=tmp_path / "ds.json",
+        history_file=hist,
+        with_holdings=False,
+        with_subscribe_status=False,
+        with_shares_confirm=False,
+        max_iterations=2,
+        trading_interval_seconds=0,
+        idle_interval_seconds=0,
+        sleeper=lambda _s: None,
+        now=_sequence_now(
+            datetime(2026, 7, 2, 11, 29, 0, tzinfo=CN),
+            datetime(2026, 7, 2, 11, 29, 0, tzinfo=CN),
+            datetime(2026, 7, 2, 11, 31, 0, tzinfo=CN),
+        ),
+        payload_provider=provider,
+        pid_file=None,
+        stop_file=None,
+        log_file=None,
+        enforce_singleton=False,
+    )
+    assert _history_rows(hist) == []
+
+
+def test_daemon_resumes_collection_after_1300_without_lunch_sediment(tmp_path):
+    metas = [_meta("501085")]
+    hist = tmp_path / "hist.jsonl"
+    premiums = iter([(3.55, 3.50), (3.551, 3.5058)])
+
+    def provider(_metas):
+        price, iopv = next(premiums)
+        return {m.code: _payload(price=price, iopv=iopv, nav=iopv) for m in _metas}
+
+    summary = dmod.run_daemon(
+        metas=metas,
+        output_dir=tmp_path,
+        snapshot_file=tmp_path / "snap.jsonl",
+        dataset_path=tmp_path / "ds.json",
+        history_file=hist,
+        with_holdings=False,
+        with_subscribe_status=False,
+        with_shares_confirm=False,
+        max_iterations=3,
+        trading_interval_seconds=0,
+        idle_interval_seconds=0,
+        sleeper=lambda _s: None,
+        now=_sequence_now(
+            datetime(2026, 7, 2, 11, 29, 0, tzinfo=CN),
+            datetime(2026, 7, 2, 11, 29, 0, tzinfo=CN),
+            datetime(2026, 7, 2, 11, 31, 0, tzinfo=CN),
+            datetime(2026, 7, 2, 13, 0, 0, tzinfo=CN),
+        ),
+        payload_provider=provider,
+        pid_file=None,
+        stop_file=None,
+        log_file=None,
+        enforce_singleton=False,
+    )
+    assert summary["collect_iterations"] == 2
+    assert _history_rows(hist) == []
+
+
+def test_daemon_sediments_at_1501_using_last_afternoon_report(tmp_path):
+    metas = [_meta("501085")]
+    hist = tmp_path / "hist.jsonl"
+
+    def provider(_metas):
+        return {m.code: _payload(price=3.551, iopv=3.5058, nav=3.5058) for m in _metas}
+
+    dmod.run_daemon(
+        metas=metas,
+        output_dir=tmp_path,
+        snapshot_file=tmp_path / "snap.jsonl",
+        dataset_path=tmp_path / "ds.json",
+        history_file=hist,
+        with_holdings=False,
+        with_subscribe_status=False,
+        with_shares_confirm=False,
+        max_iterations=2,
+        trading_interval_seconds=0,
+        idle_interval_seconds=0,
+        sleeper=lambda _s: None,
+        now=_sequence_now(
+            datetime(2026, 7, 2, 14, 59, 0, tzinfo=CN),
+            datetime(2026, 7, 2, 14, 59, 0, tzinfo=CN),
+            datetime(2026, 7, 2, 15, 1, 0, tzinfo=CN),
+        ),
+        payload_provider=provider,
+        pid_file=None,
+        stop_file=None,
+        log_file=None,
+        enforce_singleton=False,
+    )
+    rows = _history_rows(hist)
+    assert len(rows) == 1
+    assert rows[0]["date"] == "2026-07-02"
+    assert rows[0]["premium_estimate_close"] == round(3.551 / 3.5058 - 1, 6)
+
+
+def test_daemon_1501_overwrites_same_day_lunch_error(tmp_path):
+    metas = [_meta("501085")]
+    hist = tmp_path / "hist.jsonl"
+    hist.write_text(json.dumps({
+        "code": "501085",
+        "date": "2026-07-02",
+        "close_price": None,
+        "official_nav": None,
+        "premium_close": None,
+        "premium_pctile_30d": None,
+        "premium_estimate_close": 0.019144,
+        "premium_deviation": None,
+        "shares_incr_daily": None,
+    }, ensure_ascii=False) + "\n", encoding="utf-8")
+
+    def provider(_metas):
+        return {m.code: _payload(price=3.551, iopv=3.5058, nav=3.5058) for m in _metas}
+
+    dmod.run_daemon(
+        metas=metas,
+        output_dir=tmp_path,
+        snapshot_file=tmp_path / "snap.jsonl",
+        dataset_path=tmp_path / "ds.json",
+        history_file=hist,
+        with_holdings=False,
+        with_subscribe_status=False,
+        with_shares_confirm=False,
+        max_iterations=2,
+        trading_interval_seconds=0,
+        idle_interval_seconds=0,
+        sleeper=lambda _s: None,
+        now=_sequence_now(
+            datetime(2026, 7, 2, 14, 59, 0, tzinfo=CN),
+            datetime(2026, 7, 2, 14, 59, 0, tzinfo=CN),
+            datetime(2026, 7, 2, 15, 1, 0, tzinfo=CN),
+        ),
+        payload_provider=provider,
+        pid_file=None,
+        stop_file=None,
+        log_file=None,
+        enforce_singleton=False,
+    )
+    row = _history_rows(hist)[0]
+    assert row["premium_estimate_close"] == round(3.551 / 3.5058 - 1, 6)

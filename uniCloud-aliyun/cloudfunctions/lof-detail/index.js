@@ -7,6 +7,7 @@ let fallbackDetails = null;
 const SUBSCRIBE_DEFAULT = 'unknown';
 const REDEEM_DEFAULT = 'unknown';
 
+
 exports.main = async (event) => {
   const db = uniCloud.database();
   const query = normalizeQuery(event);
@@ -38,6 +39,7 @@ exports.main = async (event) => {
 
     const fundScale = numberOrNull(meta.fund_scale != null ? meta.fund_scale : meta.scale_yi);
     const status = meta.status || 'active';
+    const qdiiFields = qdiiFieldsFrom(realtime);
 
     return ok({
       code: meta.code,
@@ -64,6 +66,7 @@ exports.main = async (event) => {
       redeem_status: meta.redeem_status || REDEEM_DEFAULT,
       subscribe_limit_amount: numberOrNull(meta.subscribe_limit_amount),
       subscribe_limit_period: meta.subscribe_limit_period || null,
+      ...qdiiFields,
       // PRD 1.4: daily on-exchange shares (万份) + open-end confirm days (T+N参考)
       shares_onexchange: numberOrNull(meta.shares_onexchange),
       shares_incr_daily: numberOrNull(meta.shares_incr_daily),
@@ -80,7 +83,8 @@ exports.main = async (event) => {
         iopv,
         premium: numberOrNull(realtime.premium),
         coverage: numberOrNull(realtime.coverage),
-        source_quality: realtime.source_quality || 'stale'
+        source_quality: realtime.source_quality || 'stale',
+        ...qdiiFields
       } : null
     });
   } catch (error) {
@@ -88,6 +92,21 @@ exports.main = async (event) => {
     return fallbackDetail(code);
   }
 };
+
+
+function qdiiFieldsFrom(row) {
+  return {
+    qdii_estimate_nav: numberOrNull(row.qdii_estimate_nav),
+    qdii_estimate_premium: numberOrNull(row.qdii_estimate_premium),
+    qdii_reference_index_code: row.qdii_reference_index_code || null,
+    qdii_reference_index_name: row.qdii_reference_index_name || null,
+    qdii_reference_index_change_pct: numberOrNull(row.qdii_reference_index_change_pct),
+    qdii_fx_change_pct: numberOrNull(row.qdii_fx_change_pct),
+    qdii_estimate_quality: row.qdii_estimate_quality || 'unavailable',
+    qdii_estimate_source: row.qdii_estimate_source || null,
+    qdii_nav_date: row.qdii_nav_date || null
+  };
+}
 
 function buildHolding(item) {
   const weight = numberOrNull(item.weight);
@@ -147,5 +166,10 @@ function fallbackDetail(code) {
   if (!fallbackDetails) fallbackDetails = require('./fallback-detail.json');
   const detail = fallbackDetails[code];
   if (!detail) return fail(4040, 'not found');
-  return ok(detail);
+  const qdiiFields = qdiiFieldsFrom(detail);
+  return ok({
+    ...detail,
+    ...qdiiFields,
+    realtime: detail.realtime ? { ...detail.realtime, ...qdiiFieldsFrom(detail.realtime) } : detail.realtime
+  });
 }

@@ -21,6 +21,7 @@ keeps status='limited' but amount/period=null (status and amount are independent
 """
 from __future__ import annotations
 
+import os
 import re
 import time
 from concurrent.futures import ThreadPoolExecutor
@@ -34,6 +35,8 @@ FUNDMOB_URL = (
     "?FCODE={code}&" + FUNDMOB_QS
 )
 F10_HTML_URL = "https://fundf10.eastmoney.com/jbgk_{code}.html"
+JISILU_QDII_URL = "https://www.jisilu.cn/data/qdii/qdii_list/"
+JISILU_QDII_REFERER = "https://www.jisilu.cn/data/qdii/"
 
 # Open-subscription sentinel: a MAXSG at/above this magnitude means "no real cap"
 # (eastmoney returns 100000000000 == 1000亿 for open funds). Must map to null.
@@ -47,6 +50,11 @@ _PERIOD_DAY_HINT = "日"  # day (single-day cumulative cap wording)
 
 def _has(value: Any) -> bool:
     return value not in (None, "", "-", "--", " ")
+
+
+def get_jisilu_cookie() -> str | None:
+    cookie = os.environ.get("JISILU_COOKIE")
+    return cookie.strip() if cookie and cookie.strip() else None
 
 
 def _to_yuan(num: float, unit: str | None) -> float:
@@ -74,6 +82,24 @@ REDEEM_ENUM_MAP = {
     "封闭期": "closed",
     "封闭": "closed",
 }
+
+
+SUBSCRIBE_ENUM_MAP.update({
+    "开放申购": "open",
+    "场内买入": "open",
+    "限大额": "limited",
+    "暂停申购": "suspended",
+    "停止申购": "closed",
+    "封闭期": "closed",
+    "封闭": "closed",
+})
+REDEEM_ENUM_MAP.update({
+    "开放赎回": "open",
+    "暂停赎回": "suspended",
+    "停止赎回": "closed",
+    "封闭期": "closed",
+    "封闭": "closed",
+})
 
 
 def map_subscribe_status(raw: Any) -> str:
@@ -292,7 +318,54 @@ def fetch_subscribe_status_map(
                 results[code] = _one(code)
                 if pause_seconds:
                     time.sleep(pause_seconds)
+        qdii_results = fetch_qdii_status_map(codes)
+        results.update(qdii_results)
     finally:
         if own_client:
             client.close()
     return results
+
+
+
+def fetch_qdii_status_map(codes: list[str], *, timeout: float = 15.0) -> dict[str, dict[str, Any]]:
+    """Fetch subscribe/redeem status for QDII codes from jisilu QDII list.
+
+    This complements Eastmoney fundmob, which reports ETF-style QDII as "\u573a\u5185\u4ea4\u6613"
+    and therefore cannot answer subscription suspension/limit status. Cookie is
+    read only from JISILU_COOKIE and is never logged or persisted.
+    """
+    wanted = {str(code).zfill(6) for code in codes}
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+        "Referer": JISILU_QDII_REFERER,
+    }
+    cookie = get_jisilu_cookie()
+    if cookie:
+        headers["Cookie"] = cookie
+    out: dict[str, dict[str, Any]] = {}
+    try:
+        with httpx.Client(timeout=timeout, trust_env=False, headers=headers) as client:
+            resp = client.get(JISILU_QDII_URL, params={"___jsl": "LST___t", "rp": "300", "page": "1"})
+            resp.raise_for_status()
+            rows = (resp.json() or {}).get("rows") or []
+    except Exception:  # noqa: BLE001 - source down -> no override
+        return out
+    for row in rows:
+        cell = row.get("cell") or {}
+        code = str(cell.get("fund_id") or row.get("id") or "").zfill(6)
+        if code not in wanted:
+            continue
+        subscribe_status = map_subscribe_status(cell.get("apply_status"))
+        redeem_status = map_redeem_status(cell.get("redeem_status"))
+        out[code] = {
+            "code": code,
+            "subscribe_status": subscribe_status,
+            "redeem_status": redeem_status,
+            "subscribe_limit_amount": None,
+            "subscribe_limit_period": None,
+            "source": "jisilu_qdii",
+            "subscribe_status_raw": cell.get("apply_status"),
+            "redeem_status_raw": cell.get("redeem_status"),
+            "subscribe_limit_raw": cell.get("min_amt") or cell.get("apply_fee_tips"),
+        }
+    return out

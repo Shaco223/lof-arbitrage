@@ -1,4 +1,4 @@
-﻿code,name,type,scale_yi,benchmark_raw,status
+code,name,type,scale_yi,benchmark_raw,status
 161226,国投白银LOF,指数,36.5,白银期货,active
 161725,白酒基金LOF,指数,36.1,中证白酒,active
 163417,兴全合宜LOF,主动,10.9,,active
@@ -121,3 +121,8 @@
 501202,华泰创新先锋LOF,主动,0.2,,active
 501073,华安智联LOF,主动,0.2,,active
 502013,一带一路LOF,指数,0.2,CSSW丝路,active
+510900,H股ETF,qdii,100.0,恒生中国企业指数,active
+159920,恒生ETF,qdii,100.0,恒生指数,active
+159941,纳指ETF,qdii,100.0,纳斯达克综合指数,active
+513500,标普500ETF,qdii,100.0,标普500指数,active
+161125,标普500LOF,qdii,100.0,标普500指数,active

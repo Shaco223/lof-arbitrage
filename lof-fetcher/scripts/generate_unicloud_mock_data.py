@@ -10,6 +10,7 @@ if str(FETCHER_ROOT) not in sys.path:
 
 from fetcher.pipeline.snapshot import build_realtime_snapshot, build_sample_api_outputs, default_asset_paths
 from fetcher.sources.csv_assets import load_benchmark_mapping, load_watchlist
+from fetcher.sources.qdii_estimate import QDII_FIELD_NAMES
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -69,6 +70,7 @@ def main() -> None:
                 "premium": item["premium"],
                 "coverage": item["coverage"],
                 "source_quality": item["source_quality"],
+                **{key: item.get(key) for key in QDII_FIELD_NAMES},
             }
             for item in snapshot["items"]
         ],

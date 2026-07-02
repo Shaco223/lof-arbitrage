@@ -46,7 +46,7 @@ def test_api_lof_detail_has_prd_1_2_new_fields():
     for key in API_LOF_DETAIL_NEW_FIELDS_PRD_1_2:
         assert key in API_LOF_DETAIL_DATA, f"PRD 1.2 detail field {key} missing in contract"
         assert key in data, f"PRD 1.2 detail field {key} missing in sample"
-    assert len(API_LOF_DETAIL_DATA) == 30
+    assert len(API_LOF_DETAIL_DATA) == 39
 
 
 @pytest.mark.contract
