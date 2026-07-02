@@ -12,8 +12,8 @@ const requiredExports = [
 ]
 
 const requiredFields = {
-  list: ['ts', 'items', 'code', 'name', 'type', 'price', 'iopv', 'premium', 'coverage', 'pctile_30d', 'source_quality'],
-  detail: ['coverage_top10', 'coverage_breakdown', 'benchmark_components', 'holdings_top10', 'realtime', 'pctile_30d', 'top10_weight', 'benchmark_assigned_weight', 'cash_weight'],
+  list: ['ts', 'items', 'code', 'name', 'type', 'price', 'iopv', 'premium', 'coverage', 'pctile_30d', 'source_quality', 'qdii_estimate_nav', 'qdii_estimate_premium', 'qdii_reference_index_code', 'qdii_reference_index_name', 'qdii_reference_index_change_pct', 'qdii_fx_change_pct', 'qdii_estimate_quality', 'qdii_estimate_source', 'qdii_nav_date'],
+  detail: ['coverage_top10', 'coverage_breakdown', 'benchmark_components', 'holdings_top10', 'realtime', 'pctile_30d', 'top10_weight', 'benchmark_assigned_weight', 'cash_weight', 'qdii_estimate_nav', 'qdii_estimate_premium', 'qdii_reference_index_code', 'qdii_reference_index_name', 'qdii_reference_index_change_pct', 'qdii_fx_change_pct', 'qdii_estimate_quality', 'qdii_estimate_source', 'qdii_nav_date'],
   history: ['granularity', 'close_price', 'official_nav', 'premium_close', 'premium_pctile_30d'],
   ingest: ['accepted', 'rejected']
 }

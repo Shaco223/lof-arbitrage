@@ -4,13 +4,28 @@
 export type FundType = 'index' | 'industry' | 'active'
 export type SourceQuality = 'ok' | 'degraded' | 'stale'
 export type AlertDirection = 'premium' | 'discount'
-/** PRD 1.2 申赎状态：unknown 视为不渲染 */
+export type QdiiEstimateQuality = 'high' | 'medium' | 'low' | 'unknown'
+/** PRD 1.2 subscribe/redeem status: unknown is hidden */
 export type SubscribeRedeemStatus = 'open' | 'suspended' | 'limited' | 'closed' | 'unknown'
-/** PRD 1.2 LOF 状态：active / 低流动性 active_low_liquidity */
+/** PRD 1.2 LOF status */
 export type LofStatus = 'active' | 'active_low_liquidity'
+/** PRD 1.6 QDII estimate fields */
+export interface QdiiEstimateFields {
+  /** Reference-index estimated NAV, not ordinary LOF IOPV */
+  qdii_estimate_nav?: number | null
+  /** Reference-index estimated premium, not ordinary LOF premium */
+  qdii_estimate_premium?: number | null
+  qdii_reference_index_code?: string | null
+  qdii_reference_index_name?: string | null
+  qdii_reference_index_change_pct?: number | null
+  qdii_fx_change_pct?: number | null
+  qdii_estimate_quality?: QdiiEstimateQuality | null
+  qdii_estimate_source?: string | null
+  qdii_nav_date?: string | null
+}
 
-/** 列表项（api-lof-list -> data.items[i]） */
-export interface LofListItem {
+/** List item (api-lof-list -> data.items[i]) */
+export interface LofListItem extends QdiiEstimateFields {
   code: string
   name: string
   type: FundType
@@ -94,7 +109,7 @@ export interface HoldingTop {
 }
 
 /** 详情响应 */
-export interface LofDetailData {
+export interface LofDetailData extends QdiiEstimateFields {
   code: string
   name: string
   type: FundType

@@ -29,8 +29,10 @@ const nowTick = ref(Date.now())
 const sort = ref<ListParams['sort']>('premium_desc')
 const type = ref<ListParams['type']>('all')
 const searchQuery = ref('')
+const activeMarketTab = ref<'lof' | 'qdii'>('lof')
 const currentPage = ref(1)
 const pageSize = 20
+const qdiiRiskText = '非交易所 IOPV，存在跟踪误差'
 
 let pollTimer: ReturnType<typeof setInterval> | undefined
 let clockTimer: ReturnType<typeof setInterval> | undefined
@@ -48,14 +50,27 @@ const sortTabs: Array<{ label: string; value: ListParams['sort'] }> = [
   { label: '代码', value: 'code' }
 ]
 
+const marketTabs = [
+  { label: '普通 LOF', value: 'lof' as const },
+  { label: 'QDII估算', value: 'qdii' as const }
+]
+
 const highSignalCount = computed(() =>
-  filteredList.value.filter((item) => signalType(item) !== 'none').length
+  filteredList.value.filter((item) => activeMarketTab.value === 'qdii' ? isQdiiHighCandidate(item) : signalType(item) !== 'none').length
 )
+
+const baseList = computed(() => {
+  if (activeMarketTab.value === 'qdii') {
+    return list.value.filter((item) => isQdiiHighCandidate(item))
+  }
+  return list.value.filter((item) => !isQdiiHighCandidate(item))
+})
 
 const filteredList = computed(() => {
   const q = searchQuery.value.trim().toLowerCase()
-  if (!q) return list.value
-  return list.value.filter(item =>
+  const source = baseList.value
+  if (!q) return source
+  return source.filter(item =>
     item.code.toLowerCase().includes(q) ||
     item.name.toLowerCase().includes(q)
   )
@@ -83,8 +98,14 @@ const marketOpen = computed(() => {
   return isMarketOpen()
 })
 
+const signalLabel = computed(() => activeMarketTab.value === 'qdii' ? 'QDII高质量估算' : '信号')
+
 function typeLabel(value: FundType) {
   return value === 'index' ? '指数' : value === 'industry' ? '行业' : '主动'
+}
+
+function isQdiiHighCandidate(item: LofListItem): boolean {
+  return item.qdii_estimate_quality === 'high' && shouldRender(item.qdii_estimate_premium)
 }
 
 function signalType(item: LofListItem): 'premium' | 'discount' | 'none' {
@@ -125,13 +146,20 @@ async function loadList(showToast = false) {
   }
 }
 
+function changeMarketTab(value: 'lof' | 'qdii') {
+  activeMarketTab.value = value
+  currentPage.value = 1
+}
+
 function changeType(value: ListParams['type']) {
   type.value = value
+  currentPage.value = 1
   loadList()
 }
 
 function changeSort(value: ListParams['sort']) {
   sort.value = value
+  currentPage.value = 1
   loadList()
 }
 
@@ -174,7 +202,7 @@ onUnmounted(() => {
     <view class="topbar">
       <view class="topbar-left">
         <text class="signal-num">{{ highSignalCount }}</text>
-        <text class="signal-label">信号</text>
+        <text class="signal-label">{{ signalLabel }}</text>
       </view>
       <view class="topbar-right">
         <text class="meta-pill" :class="marketOpen ? 'pill-open' : 'pill-closed'">{{ marketOpen ? '交易中' : '休市' }}</text>
@@ -185,6 +213,18 @@ onUnmounted(() => {
     </view>
 
     <!-- 筛选 + 排序：合并为单行可滚动 -->
+    <view class="market-tabs">
+      <view
+        v-for="tab in marketTabs"
+        :key="tab.value"
+        class="market-tab"
+        :class="{ active: activeMarketTab === tab.value }"
+        @tap="changeMarketTab(tab.value)"
+      >{{ tab.label }}</view>
+    </view>
+
+    <view v-if="activeMarketTab === 'qdii'" class="qdii-risk">{{ qdiiRiskText }}</view>
+
     <view class="filter">
       <scroll-view class="chips" scroll-x>
         <view
@@ -229,7 +269,7 @@ onUnmounted(() => {
         v-for="item in pagedList"
         :key="item.code"
         class="row"
-        :class="[`signal-${signalType(item)}`]"
+        :class="activeMarketTab === 'qdii' ? 'qdii-row' : `signal-${signalType(item)}`"
         @tap="goDetail(item.code)"
       >
         <view class="row-main">
@@ -250,22 +290,46 @@ onUnmounted(() => {
             </text>
           </view>
         </view>
-        <text class="cell-num">{{ fmtNum(item.price, 3) }}</text>
-        <text class="cell-num">{{ fmtNum(item.iopv, 3) }}</text>
-        <view class="cell-premium">
-          <text class="p-main" :class="item.premium >= 0 ? 'text-up' : 'text-down'">{{ fmtPct(item.premium, 2) }}</text>
-          <text
-            v-if="shouldRender(item.premium_nav)"
-            class="p-sub"
-            :class="(item.premium_nav ?? 0) >= 0 ? 'text-up' : 'text-down'"
-          >净 {{ fmtPct(item.premium_nav, 2) }}</text>
-        </view>
+        <template v-if="activeMarketTab === 'lof'">
+          <text class="cell-num">{{ fmtNum(item.price, 3) }}</text>
+          <text class="cell-num">{{ fmtNum(item.iopv, 3) }}</text>
+          <view class="cell-premium">
+            <text class="p-main" :class="item.premium >= 0 ? 'text-up' : 'text-down'">{{ fmtPct(item.premium, 2) }}</text>
+            <text
+              v-if="shouldRender(item.premium_nav)"
+              class="p-sub"
+              :class="(item.premium_nav ?? 0) >= 0 ? 'text-up' : 'text-down'"
+            >净 {{ fmtPct(item.premium_nav, 2) }}</text>
+          </view>
+        </template>
+        <template v-else>
+          <text class="cell-num">{{ fmtNum(item.price, 3) }}</text>
+          <view class="cell-premium">
+            <text
+              class="p-main"
+              :class="shouldRender(item.qdii_estimate_premium) ? ((item.qdii_estimate_premium ?? 0) >= 0 ? 'text-up' : 'text-down') : ''"
+            >{{ shouldRender(item.qdii_estimate_premium) ? fmtPctSigned(item.qdii_estimate_premium, 2) : '--' }}</text>
+            <text class="p-sub">参考指数估算溢价</text>
+          </view>
+          <text class="cell-num">{{ fmtNum(item.qdii_estimate_nav, 3) }}</text>
+          <view class="cell-premium">
+            <text
+              class="p-sub"
+              :class="shouldRender(item.qdii_reference_index_change_pct) ? ((item.qdii_reference_index_change_pct ?? 0) >= 0 ? 'text-up' : 'text-down') : ''"
+            >指数 {{ shouldRender(item.qdii_reference_index_change_pct) ? fmtPctSigned(item.qdii_reference_index_change_pct, 2) : '--' }}</text>
+            <text
+              class="p-sub"
+              :class="shouldRender(item.qdii_fx_change_pct) ? ((item.qdii_fx_change_pct ?? 0) >= 0 ? 'text-up' : 'text-down') : ''"
+            >汇率 {{ shouldRender(item.qdii_fx_change_pct) ? fmtPctSigned(item.qdii_fx_change_pct, 2) : '--' }}</text>
+          </view>
+          <text class="cell-num small-date">{{ shouldRender(item.qdii_nav_date) ? item.qdii_nav_date : '--' }}</text>
+        </template>
       </view>
 
       <view v-if="!loading && !error && filteredList.length === 0" class="empty">暂无数据，请确认本地真实 API 已启动。</view>
     </view>
 
-    <!-- ?? -->
+    <!-- 分页 -->
     <view class="pagination" v-if="!loading && filteredList.length > 0">
       <button class="page-btn" :class="{ disabled: currentPage <= 1 }" @tap="prevPage()">上一页</button>
       <text class="page-info">{{ currentPage }} / {{ totalPages }}</text>
@@ -291,6 +355,10 @@ onUnmounted(() => {
 .refresh-btn { margin: 0; padding: 0 22rpx; height: 56rpx; line-height: 56rpx; font-size: 22rpx; color: #fff; background: #1f2d3d; border-radius: 28rpx; }
 
 /* 筛选条 */
+.market-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 12rpx; margin-bottom: 16rpx; padding: 6rpx; border-radius: 16rpx; background: #eaf0f7; }
+.market-tab { text-align: center; padding: 16rpx 0; border-radius: 12rpx; color: #606266; font-size: 26rpx; font-weight: 600; }
+.market-tab.active { color: #fff; background: #1f2d3d; box-shadow: 0 4rpx 12rpx rgba(31,45,61,0.16); }
+.qdii-risk { margin-bottom: 16rpx; padding: 14rpx 18rpx; border-radius: 12rpx; background: #fff7e6; color: #b26a00; font-size: 24rpx; border: 1rpx solid #ffe1a6; }
 .filter { margin-bottom: 16rpx; }
 .chips { white-space: nowrap; padding: 6rpx 0; }
 .chip { display: inline-block; padding: 10rpx 22rpx; margin-right: 12rpx; border-radius: 999rpx; background: #fff; color: #606266; font-size: 24rpx; border: 1rpx solid #ebeef5; }
@@ -310,6 +378,8 @@ onUnmounted(() => {
 .row:last-child { border-bottom: 0; }
 .row.signal-premium { background: linear-gradient(90deg, rgba(245,108,108,0.06), transparent 60%); margin: 0 -12rpx; padding-left: 12rpx; padding-right: 12rpx; border-radius: 10rpx; }
 .row.signal-discount { background: linear-gradient(90deg, rgba(103,194,58,0.06), transparent 60%); margin: 0 -12rpx; padding-left: 12rpx; padding-right: 12rpx; border-radius: 10rpx; }
+.qdii-head, .row.qdii-row { grid-template-columns: 1fr 92rpx 150rpx 110rpx 130rpx 132rpx; }
+.row.qdii-row { background: linear-gradient(90deg, rgba(31,111,235,0.07), transparent 62%); margin: 0 -12rpx; padding-left: 12rpx; padding-right: 12rpx; border-radius: 10rpx; }
 
 .row-main { display: flex; flex-direction: column; gap: 8rpx; min-width: 0; }
 .row-line1 { display: flex; align-items: center; gap: 10rpx; }
@@ -329,6 +399,7 @@ onUnmounted(() => {
 .cell-premium { display: flex; flex-direction: column; align-items: flex-end; gap: 4rpx; }
 .p-main { font-size: 30rpx; font-weight: 700; }
 .p-sub { font-size: 20rpx; opacity: 0.85; }
+.small-date { font-size: 22rpx; color: #606266; }
 
 .empty { padding: 64rpx 24rpx; text-align: center; color: #909399; font-size: 24rpx; }
 
