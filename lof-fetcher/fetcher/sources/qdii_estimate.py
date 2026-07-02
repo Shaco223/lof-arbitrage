@@ -19,11 +19,11 @@ class QdiiReferenceMapping:
 
 
 QDII_REFERENCE_MAPPINGS: dict[str, QdiiReferenceMapping] = {
-    "510900": QdiiReferenceMapping("510900", "hkHSCEI", "????????", "hong_kong", "HKD"),
-    "159920": QdiiReferenceMapping("159920", "hkHSI", "????", "hong_kong", "HKD"),
-    "159941": QdiiReferenceMapping("159941", "usIXIC", "????????", "us", "USD"),
-    "513500": QdiiReferenceMapping("513500", "usINX", "??500??", "us", "USD"),
-    "161125": QdiiReferenceMapping("161125", "usINX", "??500??", "us", "USD"),
+    "510900": QdiiReferenceMapping("510900", "hkHSCEI", "恒生中国企业指数", "hong_kong", "HKD"),
+    "159920": QdiiReferenceMapping("159920", "hkHSI", "恒生指数", "hong_kong", "HKD"),
+    "159941": QdiiReferenceMapping("159941", "usIXIC", "纳斯达克综合指数", "us", "USD"),
+    "513500": QdiiReferenceMapping("513500", "usINX", "标普500指数", "us", "USD"),
+    "161125": QdiiReferenceMapping("161125", "usINX", "标普500指数", "us", "USD"),
 }
 QDII_HIGH_CODES = set(QDII_REFERENCE_MAPPINGS)
 QDII_FX_SYMBOLS = {

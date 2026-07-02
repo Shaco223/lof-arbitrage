@@ -121,8 +121,8 @@ code,name,type,scale_yi,benchmark_raw,status
 501202,华泰创新先锋LOF,主动,0.2,,active
 501073,华安智联LOF,主动,0.2,,active
 502013,一带一路LOF,指数,0.2,CSSW丝路,active
-510900,H?ETF,qdii,100.0,????????,active
-159920,??ETF,qdii,100.0,????,active
-159941,??ETF,qdii,100.0,????????,active
-513500,??500ETF,qdii,100.0,??500??,active
-161125,??500LOF,qdii,100.0,??500??,active
+510900,H股ETF,qdii,100.0,恒生中国企业指数,active
+159920,恒生ETF,qdii,100.0,恒生指数,active
+159941,纳指ETF,qdii,100.0,纳斯达克综合指数,active
+513500,标普500ETF,qdii,100.0,标普500指数,active
+161125,标普500LOF,qdii,100.0,标普500指数,active

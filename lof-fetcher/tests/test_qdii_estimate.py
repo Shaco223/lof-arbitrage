@@ -71,3 +71,17 @@ def test_qdii_high_codes_are_present_in_default_watchlist():
 
     assert QDII_HIGH_CODES <= set(by_code)
     assert {by_code[code].type for code in QDII_HIGH_CODES} == {"qdii"}
+
+
+
+def test_qdii_high_names_are_not_mojibake_question_marks():
+    from fetcher.pipeline.real_watchlist import DEFAULT_WATCHLIST_PATH
+    from fetcher.sources.csv_assets import load_watchlist
+    from fetcher.sources.qdii_estimate import QDII_REFERENCE_MAPPINGS
+
+    metas = {meta.code: meta for meta in load_watchlist(DEFAULT_WATCHLIST_PATH)}
+    for code in QDII_HIGH_CODES:
+        assert code in metas
+        assert "?" not in metas[code].name
+        assert "?" not in metas[code].benchmark_raw
+        assert "?" not in QDII_REFERENCE_MAPPINGS[code].reference_index_name
