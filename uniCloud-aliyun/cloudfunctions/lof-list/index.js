@@ -20,7 +20,7 @@ exports.main = async (event) => {
   if (!['premium_desc', 'premium_asc', 'code'].includes(sort)) {
     return fail(4001, 'invalid params');
   }
-  if (!['all', 'index', 'industry', 'active'].includes(fundType)) {
+  if (!['all', 'index', 'industry', 'active', 'qdii'].includes(fundType)) {
     return fail(4001, 'invalid params');
   }
 

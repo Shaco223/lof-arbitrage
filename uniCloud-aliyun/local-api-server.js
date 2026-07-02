@@ -14,10 +14,85 @@ const DEFAULT_MINUTE_SNAPSHOT_FILE = path.join(__dirname, '..', 'outputs', 'loca
 // Real daily history sedimentation (PRD M3.9). When present, lof-history
 // reads these real rows from the mock DB instead of buildFallbackHistory.
 const DEFAULT_HISTORY_FILE = path.join(__dirname, '..', 'outputs', 'local-history-daily-v2.jsonl');
+const DEFAULT_WATCHLIST_FILE = path.join(__dirname, '..', 'assets', 'lof-watchlist-v2.csv');
 
 function readSampleDatasetSync() {
   const text = fs.readFileSync(SAMPLE_DATASET_PATH, 'utf8');
   return JSON.parse(text);
+}
+
+
+function enrichDatasetFromWatchlist(state, watchlistFile = DEFAULT_WATCHLIST_FILE) {
+  const metas = loadWatchlistMetas(watchlistFile);
+  if (!metas.length) return state;
+  const existing = new Set((state.lof_meta || []).map((row) => String(row.code)));
+  for (const meta of metas) {
+    if (existing.has(meta.code)) continue;
+    state.lof_meta = state.lof_meta || [];
+    state.lof_meta.push(meta);
+  }
+  return state;
+}
+
+function loadWatchlistMetas(watchlistFile) {
+  let text;
+  try {
+    text = fs.readFileSync(watchlistFile, 'utf8');
+  } catch (_) {
+    return [];
+  }
+  const lines = text.split(/\r?\n/).filter((line) => line.trim());
+  if (lines.length <= 1) return [];
+  return lines.slice(1).map(parseCsvLine).filter((cols) => cols.length >= 6).map((cols) => ({
+    code: String(cols[0]).padStart(6, '0'),
+    name: cols[1],
+    type: normalizeFundType(cols[2]),
+    scale_yi: numberOrNull(cols[3]),
+    status: cols[5] || 'active',
+    coverage_top10: null,
+    coverage_breakdown: { top10_weight: 0, benchmark_assigned_weight: 0, cash_weight: 0 },
+    benchmark_raw: cols[4] || '',
+    benchmark_components: []
+  }));
+}
+
+function parseCsvLine(line) {
+  const cols = [];
+  let current = '';
+  let quoted = false;
+  for (let index = 0; index < line.length; index += 1) {
+    const ch = line[index];
+    if (ch === '"') {
+      if (quoted && line[index + 1] === '"') {
+        current += '"';
+        index += 1;
+      } else {
+        quoted = !quoted;
+      }
+    } else if (ch === ',' && !quoted) {
+      cols.push(current);
+      current = '';
+    } else {
+      current += ch;
+    }
+  }
+  cols.push(current);
+  return cols;
+}
+
+function normalizeFundType(value) {
+  const raw = String(value || '').trim();
+  if (raw === '??') return 'index';
+  if (raw === '??') return 'industry';
+  if (raw === '??') return 'active';
+  if (raw.toLowerCase() === 'qdii') return 'qdii';
+  return raw || 'active';
+}
+
+function numberOrNull(value) {
+  if (value === null || value === undefined || value === '') return null;
+  const number = Number(value);
+  return Number.isFinite(number) ? number : null;
 }
 
 function loadRealHistoryRows(historyFile) {
@@ -124,7 +199,8 @@ function createLocalApiServer(options = {}) {
       return { state: cache.state, fresh: false };
     }
     const baseDataset = explicitDataset || readSampleDatasetSync();
-    const state = applyMinuteSnapshot(clone(baseDataset), snapshotFile);
+    const preparedDataset = explicitDataset ? clone(baseDataset) : enrichDatasetFromWatchlist(clone(baseDataset));
+    const state = applyMinuteSnapshot(preparedDataset, snapshotFile);
     const realHistory = loadRealHistoryRows(historyFile);
     if (realHistory.length) state.lof_history = realHistory;
     cache = { datasetMtimeMs, snapshotMtimeMs, snapshotFile, historyMtimeMs, historyFile, t: now, state };
@@ -180,8 +256,18 @@ function applyMinuteSnapshot(state, explicitSnapshotFile) {
   }
   if (!snapshot || !Array.isArray(snapshot.items) || !snapshot.items.length) return state;
 
+  const realtimeRows = state.lof_realtime || [];
+  const byExistingCode = new Map(realtimeRows.map((row) => [String(row.code), row]));
+  for (const item of snapshot.items) {
+    const code = String(item.code);
+    if (!byExistingCode.has(code)) {
+      const row = { code };
+      realtimeRows.push(row);
+      byExistingCode.set(code, row);
+    }
+  }
   const byCode = new Map(snapshot.items.map((item) => [String(item.code), item]));
-  state.lof_realtime = (state.lof_realtime || []).map((row) => {
+  state.lof_realtime = realtimeRows.map((row) => {
     const item = byCode.get(String(row.code));
     if (!item) return row;
     const merged = {

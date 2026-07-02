@@ -1,6 +1,7 @@
 'use strict';
 
 const assert = require('assert');
+const path = require('path');
 
 const { createLocalApiServer } = require('../local-api-server');
 
@@ -20,7 +21,7 @@ async function run() {
   const dataset = {
     ts: '2026-07-02T10:31:00+08:00',
     lof_meta: [
-      { code: '510900', name: 'H股ETF', type: 'index', status: 'active', scale_yi: 1, benchmark_raw: '' },
+      { code: '510900', name: 'H?ETF', type: 'qdii', status: 'active', scale_yi: 1, benchmark_raw: '' },
       { code: '162411', name: '华宝油气LOF', type: 'industry', status: 'active', scale_yi: 1, benchmark_raw: '' }
     ],
     lof_realtime: [
@@ -72,7 +73,7 @@ async function run() {
     lof_holdings: []
   };
 
-  const server = createLocalApiServer({ dataset });
+  const server = createLocalApiServer({ dataset, minuteSnapshotFile: path.join(__dirname, 'missing-qdiitest-snapshot.jsonl') });
   await listen(server);
   const baseUrl = `http://127.0.0.1:${server.address().port}`;
 
@@ -88,6 +89,10 @@ async function run() {
     assert.strictEqual(high.premium, null, 'qdii estimate must not pollute premium');
     assert.strictEqual(nonHigh.qdii_estimate_nav, null);
     assert.strictEqual(nonHigh.qdii_estimate_premium, null);
+
+    const qdiiList = await requestJson(`${baseUrl}/lof-list?sort=code&type=qdii`);
+    assert.strictEqual(qdiiList.data.items.length, 1);
+    assert.strictEqual(qdiiList.data.items[0].code, '510900');
 
     const detail = await requestJson(`${baseUrl}/lof-detail?code=510900`);
     for (const field of QDII_FIELDS) assert.ok(field in detail.data, `detail missing ${field}`);

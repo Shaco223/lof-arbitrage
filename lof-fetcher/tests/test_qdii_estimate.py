@@ -59,3 +59,15 @@ def test_reference_index_and_fx_parsers_extract_change_pct():
         "usINX": -0.002151,
     }
     assert parse_sina_fx_payload(fx_payload) == {"fx_susdcny": -0.000324}
+
+
+
+def test_qdii_high_codes_are_present_in_default_watchlist():
+    from fetcher.pipeline.real_watchlist import DEFAULT_WATCHLIST_PATH
+    from fetcher.sources.csv_assets import load_watchlist
+
+    metas = load_watchlist(DEFAULT_WATCHLIST_PATH)
+    by_code = {meta.code: meta for meta in metas}
+
+    assert QDII_HIGH_CODES <= set(by_code)
+    assert {by_code[code].type for code in QDII_HIGH_CODES} == {"qdii"}

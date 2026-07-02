@@ -28,7 +28,7 @@ COMMON_RESPONSE = {
 
 COMMON_ERROR_CODES = {0, 4001, 4010, 4040, 4290, 5000}
 SOURCE_QUALITY = {"ok", "degraded", "stale"}
-LOF_TYPES = {"index", "industry", "active"}
+LOF_TYPES = {"index", "industry", "active", "qdii"}
 LOF_STATUS = {"active", "active_low_liquidity"}
 SUBSCRIBE_STATUS = {"open", "limited", "suspended", "closed", "unknown"}
 REDEEM_STATUS = {"open", "suspended", "closed", "unknown"}

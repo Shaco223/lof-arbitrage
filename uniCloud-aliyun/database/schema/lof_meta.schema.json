@@ -5,7 +5,7 @@
   "properties": {
     "code": { "bsonType": "string", "description": "6 位场内代码" },
     "name": { "bsonType": "string", "description": "基金名称" },
-    "type": { "bsonType": "string", "enum": ["index", "industry", "active"], "description": "基金类型" },
+    "type": { "bsonType": "string", "enum": ["index", "industry", "active", "qdii"], "description": "基金类型" },
     "scale_yi": { "bsonType": "number", "description": "最新规模（亿元）" },
     "benchmark_raw": { "bsonType": "string", "description": "业绩比较基准原文" },
     "status": { "bsonType": "string", "enum": ["active", "pending_verify"], "description": "清单状态" },

@@ -3,7 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Literal
 
-FundType = Literal["index", "industry", "active"]
+FundType = Literal["index", "industry", "active", "qdii"]
 SourceQuality = Literal["ok", "degraded", "stale"]
 
 
@@ -17,6 +17,8 @@ _TYPE_MAP = {
     "主动": "active",
     "主动型": "active",
     "active": "active",
+    "QDII": "qdii",
+    "qdii": "qdii",
 }
 
 
@@ -69,7 +71,7 @@ def calculate_coverage(inputs: CoverageInputs) -> CoverageResult:
     cash_weight = _clamp_weight(inputs.cash_weight)
     benchmark_plus_cash = _clamp_weight(benchmark_assigned_weight + cash_weight)
 
-    if fund_type == "index":
+    if fund_type in ("index", "qdii"):
         coverage = benchmark_plus_cash
         formula = "index"
     else:

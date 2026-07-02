@@ -7,6 +7,7 @@ from typing import Any
 from fetcher.engine.coverage import CoverageInputs, calculate_coverage
 from fetcher.engine.premium import calculate_premium
 from fetcher.sources.csv_assets import BenchmarkComponent, benchmark_weights, load_benchmark_mapping, load_watchlist
+from fetcher.sources.qdii_estimate import QDII_FIELD_NAMES, qdii_null_fields
 
 DEFAULT_TS = "2026-06-18T10:31:00+08:00"
 
@@ -46,6 +47,7 @@ def build_realtime_snapshot(
         # PRD 1.2.1: premium_error / nav_estimate_error_pct are POST-CLOSE accuracy
         # metrics (prior trading day reference), not live IOPV-vs-T-1 drift.
         premium_error = _synthetic_premium_error(index)
+        qdii_fields = qdii_null_fields()
         items.append(
             {
                 "code": meta.code,
@@ -60,6 +62,7 @@ def build_realtime_snapshot(
                 "nav_official_date": nav_official_date,
                 "premium_nav": premium_nav,
                 "premium_error": premium_error,
+                **qdii_fields,
                 "coverage": coverage_result.coverage,
                 "coverage_breakdown": {
                     "top10_weight": coverage_result.breakdown.top10_weight,
@@ -156,6 +159,7 @@ def _build_list_item(meta: Any, realtime: dict[str, Any]) -> dict[str, Any]:
         "circulating_shares": None,
         "subscribe_limit_amount": None,
         "subscribe_limit_period": None,
+        **{key: realtime.get(key) for key in QDII_FIELD_NAMES},
     }
 
 
@@ -187,6 +191,7 @@ def _build_detail(meta: Any, realtime: dict[str, Any], components: list[Benchmar
         "redeem_status": "unknown",
         "subscribe_limit_amount": None,
         "subscribe_limit_period": None,
+        **{key: realtime.get(key) for key in QDII_FIELD_NAMES},
         "coverage_top10": realtime["coverage_breakdown"]["top10_weight"],
         "coverage_breakdown": realtime["coverage_breakdown"],
         "benchmark_raw": meta.benchmark_raw,
@@ -202,6 +207,7 @@ def _build_detail(meta: Any, realtime: dict[str, Any], components: list[Benchmar
             "premium": realtime["premium"],
             "coverage": realtime["coverage"],
             "source_quality": realtime["source_quality"],
+            **{key: realtime.get(key) for key in QDII_FIELD_NAMES},
         },
     }
     return detail

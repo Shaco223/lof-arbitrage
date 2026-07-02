@@ -69,8 +69,10 @@ function typeLabel(value: FundType) {
 }
 
 function signalType(item: LofListItem): 'premium' | 'discount' | 'none' {
-  if (item.premium >= settings.premiumThreshold) return 'premium'
-  if (item.premium <= -settings.discountThreshold) return 'discount'
+  const premium = item.type === 'qdii' ? item.qdii_estimate_premium : item.premium
+  if (!shouldRender(premium)) return 'none'
+  if ((premium ?? 0) >= settings.premiumThreshold) return 'premium'
+  if ((premium ?? 0) <= -settings.discountThreshold) return 'discount'
   return 'none'
 }
 
@@ -212,14 +214,15 @@ onUnmounted(() => {
           </view>
         </view>
         <text class="cell-num">{{ fmtNum(item.price, 3) }}</text>
-        <text class="cell-num">{{ fmtNum(item.iopv, 3) }}</text>
+        <text class="cell-num">{{ fmtNum(item.type === 'qdii' ? item.qdii_estimate_nav : item.iopv, 3) }}</text>
         <view class="cell-premium">
-          <text class="p-main" :class="item.premium >= 0 ? 'text-up' : 'text-down'">{{ fmtPct(item.premium, 2) }}</text>
+          <text class="p-main" :class="((item.type === 'qdii' ? item.qdii_estimate_premium : item.premium) ?? 0) >= 0 ? 'text-up' : 'text-down'">{{ fmtPct(item.type === 'qdii' ? item.qdii_estimate_premium : item.premium, 2) }}</text>
+          <text v-if="item.type === 'qdii'" class="p-sub">??????</text>
           <text
-            v-if="shouldRender(item.premium_nav)"
+            v-else-if="shouldRender(item.premium_nav)"
             class="p-sub"
             :class="(item.premium_nav ?? 0) >= 0 ? 'text-up' : 'text-down'"
-          >净 {{ fmtPct(item.premium_nav, 2) }}</text>
+          >? {{ fmtPct(item.premium_nav, 2) }}</text>
         </view>
       </view>
 
@@ -270,6 +273,7 @@ onUnmounted(() => {
 .code { font-size: 26rpx; font-weight: 700; color: #1f2d3d; letter-spacing: 0.5rpx; }
 .type-tag { padding: 2rpx 10rpx; border-radius: 4rpx; font-size: 20rpx; }
 .type-index { background: #ecf5ff; color: #409eff; }
+.type-qdii { background: #f0f7ff; color: #1f6feb; }
 .type-industry { background: #fdf6ec; color: #e6a23c; }
 .type-active { background: #f0f9eb; color: #67c23a; }
 .sub-badge { padding: 2rpx 10rpx; border-radius: 4rpx; font-size: 20rpx; background: #fef0f0; color: #f56c6c; }
