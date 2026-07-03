@@ -7,6 +7,8 @@ let listCache = null;
 let fallbackList = null;
 
 const STATUS_FALLBACK = { active: 'active', active_low_liquidity: 'active_low_liquidity' };
+// PRD 1.6.1: QDII 观察池后端不产出 qdii_* 估算, 无论 rt 数据如何, 一律返回 not_supported
+const QDII_OBSERVATION_CODES = new Set(['164824', '160140', '162415', '164906', '160644']);
 const SUBSCRIBE_DEFAULT = 'unknown';
 const REDEEM_DEFAULT = 'unknown';
 
@@ -92,7 +94,7 @@ function buildListItem(meta, rt, hist) {
     circulating_shares: numberOrNull(meta.circulating_shares),
     subscribe_limit_amount: numberOrNull(meta.subscribe_limit_amount),
     subscribe_limit_period: meta.subscribe_limit_period || null,
-    ...qdiiFieldsFrom(rt),
+    ...qdiiFieldsFrom(rt, meta.code),
     // PRD 1.4: daily on-exchange shares (万份) + open-end confirm days (T+N参考)
     shares_onexchange: numberOrNull(meta.shares_onexchange),
     shares_incr_daily: numberOrNull(meta.shares_incr_daily),
@@ -102,7 +104,21 @@ function buildListItem(meta, rt, hist) {
 }
 
 
-function qdiiFieldsFrom(row) {
+function qdiiFieldsFrom(row, code) {
+  const codeStr = code || row.code || '';
+  if (QDII_OBSERVATION_CODES.has(String(codeStr))) {
+    return {
+      qdii_estimate_nav: null,
+      qdii_estimate_premium: null,
+      qdii_reference_index_code: null,
+      qdii_reference_index_name: null,
+      qdii_reference_index_change_pct: null,
+      qdii_fx_change_pct: null,
+      qdii_estimate_quality: 'not_supported',
+      qdii_estimate_source: null,
+      qdii_nav_date: null
+    };
+  }
   return {
     qdii_estimate_nav: numberOrNull(row.qdii_estimate_nav),
     qdii_estimate_premium: numberOrNull(row.qdii_estimate_premium),
@@ -138,7 +154,7 @@ function fillListItemDefaults(item) {
     shares_incr_daily: null,
     purchase_confirm_day: null,
     redeem_confirm_day: null,
-    ...qdiiFieldsFrom(item)
+    ...qdiiFieldsFrom(item, item.code)
   };
   for (const key of Object.keys(defaults)) {
     if (item[key] === undefined) item[key] = defaults[key];

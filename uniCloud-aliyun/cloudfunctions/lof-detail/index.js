@@ -1,5 +1,8 @@
 ﻿'use strict';
 
+// PRD 1.6.1: QDII 观察池后端不产出估算, 强制 not_supported
+const QDII_OBSERVATION_CODES = new Set(['164824', '160140', '162415', '164906', '160644']);
+
 const { ok, fail, normalizeQuery } = require('./response');
 
 let fallbackDetails = null;
@@ -39,7 +42,7 @@ exports.main = async (event) => {
 
     const fundScale = numberOrNull(meta.fund_scale != null ? meta.fund_scale : meta.scale_yi);
     const status = meta.status || 'active';
-    const qdiiFields = qdiiFieldsFrom(realtime);
+    const qdiiFields = qdiiFieldsFrom(realtime, meta.code);
 
     return ok({
       code: meta.code,
@@ -94,7 +97,21 @@ exports.main = async (event) => {
 };
 
 
-function qdiiFieldsFrom(row) {
+function qdiiFieldsFrom(row, code) {
+  const codeStr = code || (row && row.code) || '';
+  if (QDII_OBSERVATION_CODES.has(String(codeStr))) {
+    return {
+      qdii_estimate_nav: null,
+      qdii_estimate_premium: null,
+      qdii_reference_index_code: null,
+      qdii_reference_index_name: null,
+      qdii_reference_index_change_pct: null,
+      qdii_fx_change_pct: null,
+      qdii_estimate_quality: 'not_supported',
+      qdii_estimate_source: null,
+      qdii_nav_date: null
+    };
+  }
   return {
     qdii_estimate_nav: numberOrNull(row.qdii_estimate_nav),
     qdii_estimate_premium: numberOrNull(row.qdii_estimate_premium),
@@ -166,10 +183,10 @@ function fallbackDetail(code) {
   if (!fallbackDetails) fallbackDetails = require('./fallback-detail.json');
   const detail = fallbackDetails[code];
   if (!detail) return fail(4040, 'not found');
-  const qdiiFields = qdiiFieldsFrom(detail);
+  const qdiiFields = qdiiFieldsFrom(detail, detail.code);
   return ok({
     ...detail,
     ...qdiiFields,
-    realtime: detail.realtime ? { ...detail.realtime, ...qdiiFieldsFrom(detail.realtime) } : detail.realtime
+    realtime: detail.realtime ? { ...detail.realtime, ...qdiiFieldsFrom(detail.realtime, detail.code) } : detail.realtime
   });
 }
