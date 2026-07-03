@@ -1,4 +1,4 @@
-﻿# PRD 1.2 §6 新增字段免费源评估（dev-004）
+# PRD 1.2 §6 新增字段免费源评估（dev-004）
 
 > 本文档评估 PRD 1.2 §6 新增 list/detail 字段在免费数据源上的可得性、稳定性，
 > 以及本期是否在本地 API 返回真实值。仅评估免费源（不引入付费 API、不消耗 RU/WU）。
@@ -100,3 +100,43 @@ node tests/normalize-query.test.js
 - **触发 CCR**。PRD 1.6 正式新增 QDII `qdii_*` 字段与独立 QDII 展示模块，属于 §6 结构性新增字段/模块。
 - 普通 LOF 既有 `iopv` / `premium` 字段不改名、不删除；QDII 估算不得写成“真实 IOPV”，必须展示“非交易所 IOPV，存在跟踪误差”。
 - 缺 T-1 净值、缺参考指数、低质量标的必须返回 `null`；不使用 fallback 合成估算；验收不打线上 uniCloud。
+## 七、PRD 1.6.1 §M6 QDII high 名单扩至 12 只（PM 补充）
+
+> 来源：dev-004 batch13 POC v2，commit `6c7b287`。本节只记录 PRD 1.6.1 §M6 名单增补与代理关系口径，不代表已实装线上链路。
+
+### 7.1 batch13 POC v2 结论
+- 修正集思录 E 类接口后，`501225` 全球芯片LOF 由 unavailable 升 high。
+- 新增 6 只（美股行业/港股/纳指 100）用 ETF 代理均达 high：`161126` / `161127` / `161128` / `161130` / `160125` / `501312`。
+- `161125` 作为 POC 回归对照，探测结论一致，予以保留。
+- 观察池 5 只（`164824` / `160140` / `162415` / `164906` / `160644`）暂不进 high；其中 `164906` / `160644` 因复合指数结构挂起 PRD 1.6.2。
+
+### 7.2 PRD 1.6.1 `QDII_REFERENCE_MAPPINGS` 定档
+| code | 一期处理 | 质量 | qdii_reference_index_code | 参考指数/代理 | 备注 |
+| --- | --- | --- | --- | --- | --- |
+| `510900` | 正式接入 | high | `hkHSCEI` | 恒生中国企业指数 | PRD 1.6 保留 |
+| `159920` | 正式接入 | high | `hkHSI` | 恒生指数 | PRD 1.6 保留 |
+| `159941` | 正式接入 | high | `usNDX` | 纳斯达克100指数 | PRD 1.6.1 精确化：原 `usIXIC` 为权宜代理，修正为 `usNDX`，生效需通过 §7.3 RMSE 门槛 |
+| `513500` | 正式接入 | high | `usINX` | 标普500指数（新浪 `.INX`） | PRD 1.6 保留；对齐 dev-004 生效版本（原文档 `usSPX` 为笔误） |
+| `161125` | 正式接入 | high | `usINX` | 标普500指数（新浪 `.INX`） | POC 回归对照；对齐 dev-004 生效版本（原文档 `usSPX` 为笔误） |
+| `501225` | 正式接入 | high | `usSOXX` | iShares 半导体 ETF | 代理费城半导体指数 SOX |
+| `161126` | 正式接入 | high | `usXLV` | SPDR 医疗保健精选 ETF | 代理 S5HLTH |
+| `161127` | 正式接入 | high | `usXBI` | SPDR 生物科技 ETF | 代理 SPSIBI |
+| `161128` | 正式接入 | high | `usXLK` | SPDR 信息科技精选 ETF | 代理 S5INFT |
+| `161130` | 正式接入 | high | `usNDX` | 纳斯达克100指数 | 与 `159941` 共享 |
+| `160125` | 正式接入 | high | `hkHSI` | 恒生指数 | 与 `159920` 共享 |
+| `501312` | 正式接入 | high | `usXLK` | SPDR 信息科技精选 ETF | 与 `161128` 共享代理 |
+
+### 7.3 代理关系与文案红线
+- 因免费实时指数（`S5HLTH` / `S5INFT` / `SPSIBI`）缺失，`161126` / `161127` / `161128` / `501312` 使用同类 SPDR/iShares ETF 作为参考指数代理。
+- `501225` 参考指数为 `usSOXX`（iShares 半导体 ETF）而非官方费城半导体指数 `SOX`，PRD 1.6.1 明确注明代理关系。
+- 前端展示文案保持 PRD 1.6 口径不变——「参考指数估算溢价 / 非交易所 IOPV，存在跟踪误差」；不得改写成「真实 IOPV」或隐去代理关系。
+- 后端 `qdii_reference_index_code` / `qdii_reference_index_name` 必须与 §M6.2 表一致；代理 ETF 出现异常（停牌、下市、跟踪误差飙升）时该只 LOF 降级为 `low` 并输出 `null`。
+
+- **PRD 1.6.1 返修（2026-07-03）**：
+  - 符号笔误返修：`513500` / `161125` 由 `usSPX` 改回 `usINX`（新浪 `.INX`），对齐 dev-004 生效版本 `QDII_REFERENCE_MAPPINGS`（`.worktrees/dev-004-backend/lof-fetcher/fetcher/sources/qdii_estimate.py`）；未确认 `usSPX` 免费源可得前禁止再次出现。
+  - `159941` 精确化 `usIXIC` → `usNDX`：PRD 1.6 原 `usIXIC`（纳指综合）为权宜代理，1.6.1 修正为 `usNDX` 精确跟踪；生效必须通过 RMSE 门槛（`usNDX` 相对 `nav_official` 的 RMSE 严格低于 `usIXIC`），未达门槛前继续以 `usIXIC` 运行；详见 §01-需求.md R12.2、R12.3。
+  - 其余 5 只映射（`510900→hkHSCEI` / `159920→hkHSI`）与新增 7 只映射均与 dev-004 batch13 POC v2 探测输出一致，无第 3 处不一致。
+
+### 7.4 CCR 判断
+- **触发 CCR**。§6 字段名/类型/接口名不变；§M6 QDII high 名单由 5 只扩至 12 只、`QDII_REFERENCE_MAPPINGS` 映射表结构性新增、代理关系口径新增，属于 §M6 结构性变更 → 触发 CCR，走 PRD 1.6.1 小版本。
+- 复合指数结构（`qdii_reference_index_weights`）挂起，另立 PRD 1.6.2 单独讨论。
