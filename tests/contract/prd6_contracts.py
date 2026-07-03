@@ -33,7 +33,7 @@ LOF_STATUS = {"active", "active_low_liquidity"}
 SUBSCRIBE_STATUS = {"open", "limited", "suspended", "closed", "unknown"}
 REDEEM_STATUS = {"open", "suspended", "closed", "unknown"}
 SUBSCRIBE_LIMIT_PERIOD = {"day"}
-QDII_ESTIMATE_QUALITY = {"high", "medium", "low", "unavailable"}
+QDII_ESTIMATE_QUALITY = {"high", "medium", "low", "unavailable", "not_supported"}
 
 
 API_LOF_LIST_ITEM = {
@@ -68,6 +68,11 @@ API_LOF_LIST_ITEM = {
     "qdii_estimate_quality": FieldSpec("string", required=False, enum=tuple(sorted(QDII_ESTIMATE_QUALITY)), nullable=True),
     "qdii_estimate_source": FieldSpec("string", required=False, nullable=True),
     "qdii_nav_date": FieldSpec("string", required=False, nullable=True),
+    # PRD 1.4 / 1.4.1: shares & confirm-day (all nullable, optional)
+    "shares_onexchange": FieldSpec("number", required=False, nullable=True),
+    "shares_incr_daily": FieldSpec("number", required=False, nullable=True),
+    "purchase_confirm_day": FieldSpec("string", required=False, nullable=True),
+    "redeem_confirm_day": FieldSpec("string", required=False, nullable=True),
 }
 API_LOF_LIST_ITEM_LEGACY_REQUIRED = {
     "code", "name", "type", "price", "iopv", "premium",
@@ -149,6 +154,11 @@ API_LOF_DETAIL_DATA = {
     "qdii_estimate_quality": FieldSpec("string", required=False, enum=tuple(sorted(QDII_ESTIMATE_QUALITY)), nullable=True),
     "qdii_estimate_source": FieldSpec("string", required=False, nullable=True),
     "qdii_nav_date": FieldSpec("string", required=False, nullable=True),
+    # PRD 1.4 / 1.4.1: shares & confirm-day (all nullable, optional)
+    "shares_onexchange": FieldSpec("number", required=False, nullable=True),
+    "shares_incr_daily": FieldSpec("number", required=False, nullable=True),
+    "purchase_confirm_day": FieldSpec("string", required=False, nullable=True),
+    "redeem_confirm_day": FieldSpec("string", required=False, nullable=True),
     "coverage_top10": FieldSpec("number", nullable=True),
     "coverage_breakdown": FieldSpec("object"),
     "benchmark_raw": FieldSpec("string", nullable=True),
@@ -201,6 +211,8 @@ HISTORY_ITEM = {
     # PRD 1.2.3 閫夊～锛氶浼版敹鐩樻孩浠?/ 婧环鍋忓樊锛屽彲涓?null
     "premium_estimate_close": FieldSpec("number", required=False, nullable=True),
     "premium_deviation": FieldSpec("number", required=False, nullable=True),
+    # PRD 1.4.1 §6.3 new optional field: 当日场内新增份额（万份）
+    "shares_incr_daily": FieldSpec("number", required=False, nullable=True),
 }
 API_LOF_HISTORY_DATA = {
     "code": FieldSpec("string"),

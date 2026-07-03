@@ -23,6 +23,7 @@ def pytest_configure(config):
         "ac_i": "AC-I 接口验收",
         "ac_s": "AC-S 架构与配额验收",
         "ac_t": "AC-T 透明度验收",
+        "ac_q": "AC-Q QDII 参考指数估算验收",
         "ac_hard": "硬约束验收",
         "contract": "PRD §6 接口契约测试",
         "pending": "待对应模块交付后填实",

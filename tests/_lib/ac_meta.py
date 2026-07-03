@@ -48,6 +48,9 @@ class AC:
     S2 = _ACDef("AC-S2", "写入仅走 ingest；前端不直连拉取器；HBuilderX 一键 H5", "both")
     S3 = _ACDef("AC-S3", "uniapp 工程不改源码可 build:mp-weixin", "dev-003", hard=True)
     T1 = _ACDef("AC-T1", "详情页头部固定显示三段式覆盖率", "dev-003", hard=True)
+    Q1 = _ACDef("AC-Q1", "PRD 1.6.1: QDII high 12 只 + 观察池 5 只 not_supported", "dev-004")
+    Q2 = _ACDef("AC-Q2", "QDII 估算公式离线重算误差 <= 1e-4", "dev-004")
+    Q3 = _ACDef("AC-Q3", "QDII 缺净值/缺指数/低质量返 null", "dev-004")
 
 
 __all__ = ["AC", "ACStatus", "_ACDef"]

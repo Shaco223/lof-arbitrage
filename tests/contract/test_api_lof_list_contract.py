@@ -59,8 +59,12 @@ def test_api_lof_list_item_contract_has_prd_1_2_fields():
             "qdii_estimate_quality",
             "qdii_estimate_source",
             "qdii_nav_date",
+        "shares_onexchange",
+        "shares_incr_daily",
+        "purchase_confirm_day",
+        "redeem_confirm_day",
     }
-    assert len(API_LOF_LIST_ITEM) == 31
+    assert len(API_LOF_LIST_ITEM) == 35
 
 
 @pytest.mark.contract

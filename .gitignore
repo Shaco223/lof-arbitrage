@@ -63,6 +63,7 @@ outputs/*
 !outputs/test-report-20260618.md
 !outputs/test-report-20260619.md
 !outputs/test-report-20260624.md
+!outputs/test-report-20260703.md
 assets/cache/
 assets/*.cache.json
 
