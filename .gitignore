@@ -102,3 +102,5 @@ data/snapshots/
 # ===== QDII 13 只 LOF 参考指数免费源 POC（dev-004）=====
 !outputs/backend-qdii-batch13-probe-v1.json
 !outputs/backend-qdii-batch13-probe-v1.md
+!outputs/backend-qdii-batch13-probe-v2.json
+!outputs/backend-qdii-batch13-probe-v2.md

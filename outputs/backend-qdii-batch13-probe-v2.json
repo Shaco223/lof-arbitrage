@@ -1,0 +1,1256 @@
+{
+  "ts": "2026-07-03T16:17:10+08:00",
+  "scope": "QDII 13 只 LOF 参考指数免费源批量 POC v2; 只读; 不接主链路; 不改 PRD §6 与 QDII_REFERENCE_MAPPINGS; 不写 uniCloud; v2 补测: E 类接口 + 混合口径复合指数拟合",
+  "disclaimer": "参考指数估算, 非交易所 IOPV",
+  "formula": "estimate_nav = fund_nav_t1 * (1 + index_change_pct) * (1 + fx_change_pct); estimate_premium = price / estimate_nav - 1",
+  "cookie_mode": "with_cookie",
+  "sample_count": 13,
+  "quality_counts": {
+    "high": 8,
+    "medium": 3,
+    "low": 2,
+    "unavailable": 0
+  },
+  "recommended_high_codes": [
+    "501225",
+    "161127",
+    "161126",
+    "161130",
+    "161125",
+    "161128",
+    "160125",
+    "501312"
+  ],
+  "recommendations": [
+    {
+      "code": "501225",
+      "name": "全球芯片LOF",
+      "quality": "high",
+      "recommend_high": true,
+      "reason": "候选指数强相关免费源可得, 指数/汇率/净值三要素齐备"
+    },
+    {
+      "code": "161127",
+      "name": "标普生物科技LOF",
+      "quality": "high",
+      "recommend_high": true,
+      "reason": "候选指数强相关免费源可得, 指数/汇率/净值三要素齐备"
+    },
+    {
+      "code": "161126",
+      "name": "标普医疗保健LOF",
+      "quality": "high",
+      "recommend_high": true,
+      "reason": "候选指数强相关免费源可得, 指数/汇率/净值三要素齐备"
+    },
+    {
+      "code": "161130",
+      "name": "纳指100LOF",
+      "quality": "high",
+      "recommend_high": true,
+      "reason": "候选指数强相关免费源可得, 指数/汇率/净值三要素齐备"
+    },
+    {
+      "code": "161125",
+      "name": "标普500LOF",
+      "quality": "high",
+      "recommend_high": true,
+      "reason": "回归对照: 现有 QDII_REFERENCE_MAPPINGS high 标的"
+    },
+    {
+      "code": "164906",
+      "name": "中概互联网LOF",
+      "quality": "low",
+      "recommend_high": false,
+      "reason": "混合口径: 美股中概 + 港股中概; 单一 KWEB 拟合误差偏大"
+    },
+    {
+      "code": "161128",
+      "name": "标普信息科技LOF",
+      "quality": "high",
+      "recommend_high": true,
+      "reason": "候选指数强相关免费源可得, 指数/汇率/净值三要素齐备"
+    },
+    {
+      "code": "160140",
+      "name": "美国REIT精选LOF",
+      "quality": "medium",
+      "recommend_high": false,
+      "reason": ""
+    },
+    {
+      "code": "164824",
+      "name": "印度基金LOF",
+      "quality": "medium",
+      "recommend_high": false,
+      "reason": "POC v1 曾标 unavailable; 本次复测尝试 usINDA / gb_inda 代理"
+    },
+    {
+      "code": "162415",
+      "name": "美国消费LOF",
+      "quality": "medium",
+      "recommend_high": false,
+      "reason": ""
+    },
+    {
+      "code": "160125",
+      "name": "南方香港LOF",
+      "quality": "high",
+      "recommend_high": true,
+      "reason": "候选指数强相关免费源可得, 指数/汇率/净值三要素齐备"
+    },
+    {
+      "code": "501312",
+      "name": "海外科技LOF",
+      "quality": "high",
+      "recommend_high": true,
+      "reason": "候选指数强相关免费源可得, 指数/汇率/净值三要素齐备"
+    },
+    {
+      "code": "160644",
+      "name": "港美互联网LOF",
+      "quality": "low",
+      "recommend_high": false,
+      "reason": "混合口径: 港股互联网 + 美股中概; 单一指数拟合误差大"
+    }
+  ],
+  "source_stability": {
+    "market_price": "tencent_quote 覆盖所有 13 只 A 股场内 LOF/ETF",
+    "nav_t1": "集思录 qdii_list 需 Cookie 才能覆盖 267 条; 匿名仅前 20 条; fundgz 对 501225 / 164906 / 164824 / 160125 常返回空 jsonpgz()",
+    "reference_index_us_broad": "usINX / usNDX / usIXIC / usDJI 腾讯免费实时可得",
+    "reference_index_us_sector_etf": "美股行业指数(SPSIBI / S5HLTH / S5INFT)免费源不可得; 用 SPDR/iShares ETF 代理: usXBI / usXLV / usXLK / usXLY / usVNQ / usSOXX / usIYW / usKWEB / usINDA",
+    "reference_index_hk": "hkHSI / hkHSCEI / hkHSTECH 腾讯免费实时可得",
+    "fx": "新浪 fx_susdcny / fx_shkdcny 稳定可得; 涨跌幅字段为百分比数"
+  },
+  "ccr": "not_triggered_readonly_poc; 若后续把 qdii_reference_index_weights 或 E 类补测结论并入主链路, 需另立 PRD 1.6.2 CCR",
+  "items": [
+    {
+      "code": "501225",
+      "name": "全球芯片LOF",
+      "asset_region": "us",
+      "currency": "USD",
+      "fx_pair": "USD/CNY",
+      "formula_type": "index",
+      "single_index_correlation": "strong",
+      "price": 4.507,
+      "price_change_pct": 0.001778,
+      "amount": 45710000.0,
+      "price_source": "tencent_quote",
+      "fund_nav_t1": 3.5887,
+      "nav_dt": "2026-07-01",
+      "nav_source": "jisilu_qdii",
+      "jisilu_index_id": "N",
+      "jisilu_index_nm": "全球芯片",
+      "reference_index_symbol": "usSOXX",
+      "reference_index_display": "iShares 费城半导体 ETF (SOXX)",
+      "reference_index_change_pct": -0.055661,
+      "fx_symbol": "fx_susdcny",
+      "fx_change_pct": -0.001531,
+      "estimate_nav": 3.383761,
+      "estimate_premium": 0.33195,
+      "estimate_quality": "high",
+      "candidates_status": [
+        {
+          "symbol": "usSOXX",
+          "source": "tencent",
+          "display_name": "iShares 费城半导体 ETF (SOXX)",
+          "cookie_required": false,
+          "ok": true,
+          "change_pct": -0.055661,
+          "price": 566.32,
+          "quote_time": "2026-07-02 16:00:01",
+          "correlation_note": "半导体宽基代理指数"
+        },
+        {
+          "symbol": "gb_soxx",
+          "source": "sina_gb",
+          "display_name": "费城半导体 ETF (新浪 gb_soxx)",
+          "cookie_required": false,
+          "ok": true,
+          "change_pct": -0.0557,
+          "price": 566.32,
+          "quote_time": "2026-07-03 08:14:29",
+          "correlation_note": ""
+        },
+        {
+          "symbol": "usSMH",
+          "source": "tencent",
+          "display_name": "VanEck 半导体 ETF (SMH)",
+          "cookie_required": false,
+          "ok": true,
+          "change_pct": -0.045402,
+          "price": 592.29,
+          "quote_time": "2026-07-02 16:00:01",
+          "correlation_note": "备用半导体宽基代理"
+        }
+      ],
+      "reasons": ""
+    },
+    {
+      "code": "161127",
+      "name": "标普生物科技LOF",
+      "asset_region": "us",
+      "currency": "USD",
+      "fx_pair": "USD/CNY",
+      "formula_type": "index",
+      "single_index_correlation": "strong",
+      "price": 2.16,
+      "price_change_pct": 0.038462,
+      "amount": 40440000.0,
+      "price_source": "tencent_quote",
+      "fund_nav_t1": 2.0839,
+      "nav_dt": "2026-07-01",
+      "nav_source": "jisilu_qdii",
+      "jisilu_index_id": "Y",
+      "jisilu_index_nm": "标普生物科技精选行业指数",
+      "reference_index_symbol": "usXBI",
+      "reference_index_display": "SPDR 标普生物科技 ETF (XBI)",
+      "reference_index_change_pct": 0.024976,
+      "fx_symbol": "fx_susdcny",
+      "fx_change_pct": -0.001531,
+      "estimate_nav": 2.132677,
+      "estimate_premium": 0.012812,
+      "estimate_quality": "high",
+      "candidates_status": [
+        {
+          "symbol": "usXBI",
+          "source": "tencent",
+          "display_name": "SPDR 标普生物科技 ETF (XBI)",
+          "cookie_required": false,
+          "ok": true,
+          "change_pct": 0.024976,
+          "price": 160.46,
+          "quote_time": "2026-07-02 16:00:01",
+          "correlation_note": "跟踪 SPSIBI 的宽基 ETF 代理"
+        },
+        {
+          "symbol": "gb_xbi",
+          "source": "sina_gb",
+          "display_name": "SPDR 标普生物科技 ETF (新浪 gb_xbi)",
+          "cookie_required": false,
+          "ok": true,
+          "change_pct": 0.025,
+          "price": 160.46,
+          "quote_time": "2026-07-03 09:44:13",
+          "correlation_note": ""
+        },
+        {
+          "symbol": "usIBB",
+          "source": "tencent",
+          "display_name": "iShares 生物技术 ETF (IBB)",
+          "cookie_required": false,
+          "ok": true,
+          "change_pct": 0.02935,
+          "price": 195.7,
+          "quote_time": "2026-07-02 16:00:01",
+          "correlation_note": "纳斯达克生物技术备用代理"
+        }
+      ],
+      "reasons": ""
+    },
+    {
+      "code": "161126",
+      "name": "标普医疗保健LOF",
+      "asset_region": "us",
+      "currency": "USD",
+      "fx_pair": "USD/CNY",
+      "formula_type": "index",
+      "single_index_correlation": "strong",
+      "price": 2.019,
+      "price_change_pct": 0.024353,
+      "amount": 10750000.0,
+      "price_source": "tencent_quote",
+      "fund_nav_t1": 1.9653,
+      "nav_dt": "2026-07-01",
+      "nav_source": "jisilu_qdii",
+      "jisilu_index_id": "Y",
+      "jisilu_index_nm": "标普500医疗保健等权重指数",
+      "reference_index_symbol": "usXLV",
+      "reference_index_display": "SPDR 医疗保健精选 ETF (XLV)",
+      "reference_index_change_pct": 0.026326,
+      "fx_symbol": "fx_susdcny",
+      "fx_change_pct": -0.001531,
+      "estimate_nav": 2.01395,
+      "estimate_premium": 0.002508,
+      "estimate_quality": "high",
+      "candidates_status": [
+        {
+          "symbol": "usXLV",
+          "source": "tencent",
+          "display_name": "SPDR 医疗保健精选 ETF (XLV)",
+          "cookie_required": false,
+          "ok": true,
+          "change_pct": 0.026326,
+          "price": 163.74,
+          "quote_time": "2026-07-02 16:00:01",
+          "correlation_note": "标普医疗保健行业代理指数"
+        },
+        {
+          "symbol": "gb_xlv",
+          "source": "sina_gb",
+          "display_name": "SPDR 医疗保健精选 ETF (新浪 gb_xlv)",
+          "cookie_required": false,
+          "ok": true,
+          "change_pct": 0.0263,
+          "price": 163.74,
+          "quote_time": "2026-07-03 09:44:28",
+          "correlation_note": ""
+        }
+      ],
+      "reasons": ""
+    },
+    {
+      "code": "161130",
+      "name": "纳指100LOF",
+      "asset_region": "us",
+      "currency": "USD",
+      "fx_pair": "USD/CNY",
+      "formula_type": "index",
+      "single_index_correlation": "strong",
+      "price": 4.614,
+      "price_change_pct": 0.003262,
+      "amount": 36300000.0,
+      "price_source": "tencent_quote",
+      "fund_nav_t1": 4.504,
+      "nav_dt": "2026-07-01",
+      "nav_source": "jisilu_qdii",
+      "jisilu_index_id": "Y",
+      "jisilu_index_nm": "纳斯达克100",
+      "reference_index_symbol": "usNDX",
+      "reference_index_display": "纳斯达克100 (NDX)",
+      "reference_index_change_pct": -0.0161,
+      "fx_symbol": "fx_susdcny",
+      "fx_change_pct": -0.001531,
+      "estimate_nav": 4.424701,
+      "estimate_premium": 0.042782,
+      "estimate_quality": "high",
+      "candidates_status": [
+        {
+          "symbol": "usNDX",
+          "source": "tencent",
+          "display_name": "纳斯达克100 (NDX)",
+          "cookie_required": false,
+          "ok": true,
+          "change_pct": -0.0161,
+          "price": 29329.21,
+          "quote_time": "2026-07-02 17:15:59",
+          "correlation_note": "直接跟踪指数"
+        },
+        {
+          "symbol": "gb_ndx",
+          "source": "sina_gb",
+          "display_name": "纳斯达克100 (新浪 gb_ndx)",
+          "cookie_required": false,
+          "ok": true,
+          "change_pct": -0.0161,
+          "price": 29329.2129,
+          "quote_time": "2026-07-03 05:30:00",
+          "correlation_note": ""
+        }
+      ],
+      "reasons": ""
+    },
+    {
+      "code": "161125",
+      "name": "标普500LOF",
+      "asset_region": "us",
+      "currency": "USD",
+      "fx_pair": "USD/CNY",
+      "formula_type": "index",
+      "single_index_correlation": "strong",
+      "price": 3.144,
+      "price_change_pct": 0.010932,
+      "amount": 12030000.0,
+      "price_source": "tencent_quote",
+      "fund_nav_t1": 3.0893,
+      "nav_dt": "2026-07-01",
+      "nav_source": "jisilu_qdii",
+      "jisilu_index_id": "Y",
+      "jisilu_index_nm": "标普500",
+      "reference_index_symbol": "usINX",
+      "reference_index_display": "标普500 (INX)",
+      "reference_index_change_pct": 1e-06,
+      "fx_symbol": "fx_susdcny",
+      "fx_change_pct": -0.001531,
+      "estimate_nav": 3.084573,
+      "estimate_premium": 0.019266,
+      "estimate_quality": "high",
+      "candidates_status": [
+        {
+          "symbol": "usINX",
+          "source": "tencent",
+          "display_name": "标普500 (INX)",
+          "cookie_required": false,
+          "ok": true,
+          "change_pct": 1e-06,
+          "price": 7483.24,
+          "quote_time": "2026-07-02 16:42:15",
+          "correlation_note": "直接跟踪指数; 回归对照"
+        },
+        {
+          "symbol": "gb_inx",
+          "source": "sina_gb",
+          "display_name": "标普500 (新浪 gb_inx)",
+          "cookie_required": false,
+          "ok": true,
+          "change_pct": 0.0,
+          "price": 7483.2402,
+          "quote_time": "2026-07-03 04:42:23",
+          "correlation_note": ""
+        }
+      ],
+      "reasons": "回归对照: 现有 QDII_REFERENCE_MAPPINGS high 标的"
+    },
+    {
+      "code": "164906",
+      "name": "中概互联网LOF",
+      "asset_region": "us_hk_mixed",
+      "currency": "USD",
+      "fx_pair": "USD/CNY",
+      "formula_type": "mixed",
+      "single_index_correlation": "weak",
+      "price": 0.9,
+      "price_change_pct": 0.007839,
+      "amount": 9940000.0,
+      "price_source": "tencent_quote",
+      "fund_nav_t1": 0.8884,
+      "nav_dt": "2026-07-01",
+      "nav_source": "jisilu_qdii",
+      "jisilu_index_id": "Y",
+      "jisilu_index_nm": "中证海外中国互联网指数",
+      "reference_index_symbol": "usKWEB",
+      "reference_index_display": "KraneShares 中概互联网 ETF (KWEB)",
+      "reference_index_change_pct": -0.005175,
+      "fx_symbol": "fx_susdcny",
+      "fx_change_pct": -0.001531,
+      "estimate_nav": 0.882449,
+      "estimate_premium": 0.019889,
+      "estimate_quality": "low",
+      "candidates_status": [
+        {
+          "symbol": "usKWEB",
+          "source": "tencent",
+          "display_name": "KraneShares 中概互联网 ETF (KWEB)",
+          "cookie_required": false,
+          "ok": true,
+          "change_pct": -0.005175,
+          "price": 24.99,
+          "quote_time": "2026-07-02 16:00:01",
+          "correlation_note": "单一美股中概 ETF 代理; 港股中概敞口未覆盖"
+        },
+        {
+          "symbol": "gb_kweb",
+          "source": "sina_gb",
+          "display_name": "KraneShares KWEB (新浪 gb_kweb)",
+          "cookie_required": false,
+          "ok": true,
+          "change_pct": -0.0052,
+          "price": 24.99,
+          "quote_time": "2026-07-03 09:48:36",
+          "correlation_note": ""
+        }
+      ],
+      "reasons": "混合口径: 美股中概 + 港股中概; 单一 KWEB 拟合误差偏大"
+    },
+    {
+      "code": "161128",
+      "name": "标普信息科技LOF",
+      "asset_region": "us",
+      "currency": "USD",
+      "fx_pair": "USD/CNY",
+      "formula_type": "index",
+      "single_index_correlation": "strong",
+      "price": 6.658,
+      "price_change_pct": 0.006348,
+      "amount": 81460000.0,
+      "price_source": "tencent_quote",
+      "fund_nav_t1": 6.5366,
+      "nav_dt": "2026-07-01",
+      "nav_source": "jisilu_qdii",
+      "jisilu_index_id": "Y",
+      "jisilu_index_nm": "标普500信息科技指数",
+      "reference_index_symbol": "usXLK",
+      "reference_index_display": "SPDR 科技精选 ETF (XLK)",
+      "reference_index_change_pct": -0.027098,
+      "fx_symbol": "fx_susdcny",
+      "fx_change_pct": -0.001531,
+      "estimate_nav": 6.349735,
+      "estimate_premium": 0.048548,
+      "estimate_quality": "high",
+      "candidates_status": [
+        {
+          "symbol": "usXLK",
+          "source": "tencent",
+          "display_name": "SPDR 科技精选 ETF (XLK)",
+          "cookie_required": false,
+          "ok": true,
+          "change_pct": -0.027098,
+          "price": 180.59,
+          "quote_time": "2026-07-02 16:00:01",
+          "correlation_note": "标普信息科技行业代理"
+        },
+        {
+          "symbol": "gb_xlk",
+          "source": "sina_gb",
+          "display_name": "SPDR 科技精选 ETF (新浪 gb_xlk)",
+          "cookie_required": false,
+          "ok": true,
+          "change_pct": -0.0271,
+          "price": 180.59,
+          "quote_time": "2026-07-03 09:44:25",
+          "correlation_note": ""
+        },
+        {
+          "symbol": "usIYW",
+          "source": "tencent",
+          "display_name": "iShares 美国科技 ETF (IYW)",
+          "cookie_required": false,
+          "ok": true,
+          "change_pct": -0.021186,
+          "price": 243.48,
+          "quote_time": "2026-07-02 16:00:01",
+          "correlation_note": "备用美国科技代理"
+        }
+      ],
+      "reasons": ""
+    },
+    {
+      "code": "160140",
+      "name": "美国REIT精选LOF",
+      "asset_region": "us",
+      "currency": "USD",
+      "fx_pair": "USD/CNY",
+      "formula_type": "index",
+      "single_index_correlation": "medium",
+      "price": 1.473,
+      "price_change_pct": 0.016563,
+      "amount": 2110000.0,
+      "price_source": "tencent_quote",
+      "fund_nav_t1": 1.4489,
+      "nav_dt": "2026-07-01",
+      "nav_source": "jisilu_qdii",
+      "jisilu_index_id": "Y",
+      "jisilu_index_nm": "道琼斯美国精选REIT指数",
+      "reference_index_symbol": "usVNQ",
+      "reference_index_display": "Vanguard 美国地产 ETF (VNQ)",
+      "reference_index_change_pct": 0.012394,
+      "fx_symbol": "fx_susdcny",
+      "fx_change_pct": -0.001531,
+      "estimate_nav": 1.464612,
+      "estimate_premium": 0.005727,
+      "estimate_quality": "medium",
+      "candidates_status": [
+        {
+          "symbol": "usVNQ",
+          "source": "tencent",
+          "display_name": "Vanguard 美国地产 ETF (VNQ)",
+          "cookie_required": false,
+          "ok": true,
+          "change_pct": 0.012394,
+          "price": 98.02,
+          "quote_time": "2026-07-02 16:00:01",
+          "correlation_note": "美国 REIT 宽基代理; 与精选子集有跟踪误差"
+        },
+        {
+          "symbol": "gb_vnq",
+          "source": "sina_gb",
+          "display_name": "VNQ (新浪 gb_vnq)",
+          "cookie_required": false,
+          "ok": true,
+          "change_pct": 0.0124,
+          "price": 98.02,
+          "quote_time": "2026-07-03 09:43:49",
+          "correlation_note": ""
+        }
+      ],
+      "reasons": ""
+    },
+    {
+      "code": "164824",
+      "name": "印度基金LOF",
+      "asset_region": "india",
+      "currency": "USD",
+      "fx_pair": "USD/CNY",
+      "formula_type": "regional",
+      "single_index_correlation": "medium",
+      "price": 1.315,
+      "price_change_pct": 0.00921,
+      "amount": 34090000.0,
+      "price_source": "tencent_quote",
+      "fund_nav_t1": 1.3111,
+      "nav_dt": "2026-07-01",
+      "nav_source": "jisilu_qdii",
+      "jisilu_index_id": "N",
+      "jisilu_index_nm": "印度ETP指数",
+      "reference_index_symbol": "usINDA",
+      "reference_index_display": "iShares MSCI 印度 ETF (INDA)",
+      "reference_index_change_pct": 0.007112,
+      "fx_symbol": "fx_susdcny",
+      "fx_change_pct": -0.001531,
+      "estimate_nav": 1.318403,
+      "estimate_premium": -0.002581,
+      "estimate_quality": "medium",
+      "candidates_status": [
+        {
+          "symbol": "usINDA",
+          "source": "tencent",
+          "display_name": "iShares MSCI 印度 ETF (INDA)",
+          "cookie_required": false,
+          "ok": true,
+          "change_pct": 0.007112,
+          "price": 49.56,
+          "quote_time": "2026-07-02 16:00:01",
+          "correlation_note": "MSCI 印度宽基 ETF 代理; 与 SENSEX/NIFTY 高度相关"
+        },
+        {
+          "symbol": "gb_inda",
+          "source": "sina_gb",
+          "display_name": "iShares MSCI 印度 ETF (新浪 gb_inda)",
+          "cookie_required": false,
+          "ok": true,
+          "change_pct": 0.0071,
+          "price": 49.56,
+          "quote_time": "2026-07-03 09:47:35",
+          "correlation_note": ""
+        }
+      ],
+      "reasons": "POC v1 曾标 unavailable; 本次复测尝试 usINDA / gb_inda 代理"
+    },
+    {
+      "code": "162415",
+      "name": "美国消费LOF",
+      "asset_region": "us",
+      "currency": "USD",
+      "fx_pair": "USD/CNY",
+      "formula_type": "index",
+      "single_index_correlation": "medium",
+      "price": 2.886,
+      "price_change_pct": 0.0,
+      "amount": 7130000.0,
+      "price_source": "tencent_quote",
+      "fund_nav_t1": 2.912,
+      "nav_dt": "2026-07-01",
+      "nav_source": "jisilu_qdii",
+      "jisilu_index_id": "Y",
+      "jisilu_index_nm": "标普可选消费品精选版块指数",
+      "reference_index_symbol": "usXLY",
+      "reference_index_display": "SPDR 可选消费精选 ETF (XLY)",
+      "reference_index_change_pct": -0.008214,
+      "fx_symbol": "fx_susdcny",
+      "fx_change_pct": -0.001531,
+      "estimate_nav": 2.883659,
+      "estimate_premium": 0.000812,
+      "estimate_quality": "medium",
+      "candidates_status": [
+        {
+          "symbol": "usXLY",
+          "source": "tencent",
+          "display_name": "SPDR 可选消费精选 ETF (XLY)",
+          "cookie_required": false,
+          "ok": true,
+          "change_pct": -0.008214,
+          "price": 117.12,
+          "quote_time": "2026-07-02 16:00:01",
+          "correlation_note": "消费行业宽基代理; 标普美国消费口径可能包含必需消费"
+        },
+        {
+          "symbol": "gb_xly",
+          "source": "sina_gb",
+          "display_name": "SPDR 可选消费精选 ETF (新浪 gb_xly)",
+          "cookie_required": false,
+          "ok": true,
+          "change_pct": -0.0082,
+          "price": 117.12,
+          "quote_time": "2026-07-03 09:44:28",
+          "correlation_note": ""
+        }
+      ],
+      "reasons": ""
+    },
+    {
+      "code": "160125",
+      "name": "南方香港LOF",
+      "asset_region": "hong_kong",
+      "currency": "HKD",
+      "fx_pair": "HKD/CNY",
+      "formula_type": "index",
+      "single_index_correlation": "strong",
+      "price": 1.719,
+      "price_change_pct": 0.02139,
+      "amount": 2440000.0,
+      "price_source": "tencent_quote",
+      "fund_nav_t1": 1.7376,
+      "nav_dt": "2026-07-01",
+      "nav_source": "jisilu_qdii",
+      "jisilu_index_id": "Y",
+      "jisilu_index_nm": "恒生指数",
+      "reference_index_symbol": "hkHSI",
+      "reference_index_display": "恒生指数 (HSI)",
+      "reference_index_change_pct": 0.011938,
+      "fx_symbol": "fx_shkdcny",
+      "fx_change_pct": -0.001314,
+      "estimate_nav": 1.756033,
+      "estimate_premium": -0.021089,
+      "estimate_quality": "high",
+      "candidates_status": [
+        {
+          "symbol": "hkHSI",
+          "source": "tencent",
+          "display_name": "恒生指数 (HSI)",
+          "cookie_required": false,
+          "ok": true,
+          "change_pct": 0.011938,
+          "price": 23330.25,
+          "quote_time": "2026/07/03 16:02:12",
+          "correlation_note": "恒生宽基指数"
+        },
+        {
+          "symbol": "hkHSCEI",
+          "source": "tencent",
+          "display_name": "恒生中国企业指数 (HSCEI)",
+          "cookie_required": false,
+          "ok": true,
+          "change_pct": 0.010968,
+          "price": 7695.97,
+          "quote_time": "2026/07/03 16:02:12",
+          "correlation_note": "国企指数备用"
+        }
+      ],
+      "reasons": ""
+    },
+    {
+      "code": "501312",
+      "name": "海外科技LOF",
+      "asset_region": "us",
+      "currency": "USD",
+      "fx_pair": "USD/CNY",
+      "formula_type": "index",
+      "single_index_correlation": "strong",
+      "price": 2.367,
+      "price_change_pct": 0.001693,
+      "amount": 77580000.0,
+      "price_source": "tencent_quote",
+      "fund_nav_t1": 2.4085,
+      "nav_dt": "2026-07-01",
+      "nav_source": "jisilu_qdii",
+      "jisilu_index_id": "N",
+      "jisilu_index_nm": "海外科技",
+      "reference_index_symbol": "usXLK",
+      "reference_index_display": "SPDR 科技精选 ETF (XLK)",
+      "reference_index_change_pct": -0.027098,
+      "fx_symbol": "fx_susdcny",
+      "fx_change_pct": -0.001531,
+      "estimate_nav": 2.339647,
+      "estimate_premium": 0.011691,
+      "estimate_quality": "high",
+      "candidates_status": [
+        {
+          "symbol": "usXLK",
+          "source": "tencent",
+          "display_name": "SPDR 科技精选 ETF (XLK)",
+          "cookie_required": false,
+          "ok": true,
+          "change_pct": -0.027098,
+          "price": 180.59,
+          "quote_time": "2026-07-02 16:00:01",
+          "correlation_note": "美国科技行业代理"
+        },
+        {
+          "symbol": "gb_xlk",
+          "source": "sina_gb",
+          "display_name": "SPDR 科技精选 ETF (新浪 gb_xlk)",
+          "cookie_required": false,
+          "ok": true,
+          "change_pct": -0.0271,
+          "price": 180.59,
+          "quote_time": "2026-07-03 09:44:25",
+          "correlation_note": ""
+        },
+        {
+          "symbol": "usIYW",
+          "source": "tencent",
+          "display_name": "iShares 美国科技 ETF (IYW)",
+          "cookie_required": false,
+          "ok": true,
+          "change_pct": -0.021186,
+          "price": 243.48,
+          "quote_time": "2026-07-02 16:00:01",
+          "correlation_note": "备用美国科技代理"
+        }
+      ],
+      "reasons": ""
+    },
+    {
+      "code": "160644",
+      "name": "港美互联网LOF",
+      "asset_region": "us_hk_mixed",
+      "currency": "USD",
+      "fx_pair": "USD/CNY",
+      "formula_type": "hybrid",
+      "single_index_correlation": "weak",
+      "price": 1.972,
+      "price_change_pct": 0.001015,
+      "amount": 310290000.0,
+      "price_source": "tencent_quote",
+      "fund_nav_t1": 2.0735,
+      "nav_dt": "2026-07-01",
+      "nav_source": "jisilu_qdii",
+      "jisilu_index_id": "Y",
+      "jisilu_index_nm": "中证海外中国互联网指数",
+      "reference_index_symbol": "usKWEB",
+      "reference_index_display": "KraneShares 中概互联网 ETF (KWEB)",
+      "reference_index_change_pct": -0.005175,
+      "fx_symbol": "fx_susdcny",
+      "fx_change_pct": -0.001531,
+      "estimate_nav": 2.059612,
+      "estimate_premium": -0.042538,
+      "estimate_quality": "low",
+      "candidates_status": [
+        {
+          "symbol": "usKWEB",
+          "source": "tencent",
+          "display_name": "KraneShares 中概互联网 ETF (KWEB)",
+          "cookie_required": false,
+          "ok": true,
+          "change_pct": -0.005175,
+          "price": 24.99,
+          "quote_time": "2026-07-02 16:00:01",
+          "correlation_note": "美股中概代理"
+        },
+        {
+          "symbol": "hkHSTECH",
+          "source": "tencent",
+          "display_name": "恒生科技指数 (HSTECH)",
+          "cookie_required": false,
+          "ok": true,
+          "change_pct": 0.010271,
+          "price": 4500.03,
+          "quote_time": "2026/07/03 16:02:12",
+          "correlation_note": "港股互联网科技代理"
+        }
+      ],
+      "reasons": "混合口径: 港股互联网 + 美股中概; 单一指数拟合误差大"
+    }
+  ],
+  "anonymous_summary": {
+    "cookie_mode": "anonymous",
+    "quality_counts": {
+      "high": 7,
+      "medium": 3,
+      "low": 2,
+      "unavailable": 1
+    },
+    "recommended_high_codes": [
+      "161127",
+      "161126",
+      "161130",
+      "161125",
+      "161128",
+      "160125",
+      "501312"
+    ],
+    "nav_source_by_code": {
+      "501225": null,
+      "161127": "jisilu_qdii",
+      "161126": "jisilu_qdii",
+      "161130": "fundgz",
+      "161125": "fundgz",
+      "164906": "jisilu_qdii",
+      "161128": "fundgz",
+      "160140": "jisilu_qdii",
+      "164824": "jisilu_qdii",
+      "162415": "fundgz",
+      "160125": "jisilu_qdii",
+      "501312": "jisilu_qdii",
+      "160644": "fundgz"
+    },
+    "estimate_premium_by_code": {
+      "501225": null,
+      "161127": 0.012812,
+      "161126": 0.002508,
+      "161130": 0.042782,
+      "161125": 0.019266,
+      "164906": 0.019889,
+      "161128": 0.048548,
+      "160140": 0.005727,
+      "164824": -0.002581,
+      "162415": 0.000812,
+      "160125": -0.021089,
+      "501312": 0.011691,
+      "160644": -0.042538
+    },
+    "quality_by_code": {
+      "501225": "unavailable",
+      "161127": "high",
+      "161126": "high",
+      "161130": "high",
+      "161125": "high",
+      "164906": "low",
+      "161128": "high",
+      "160140": "medium",
+      "164824": "medium",
+      "162415": "medium",
+      "160125": "high",
+      "501312": "high",
+      "160644": "low"
+    }
+  },
+  "cookie_summary": {
+    "cookie_mode": "with_cookie",
+    "quality_counts": {
+      "high": 8,
+      "medium": 3,
+      "low": 2,
+      "unavailable": 0
+    },
+    "recommended_high_codes": [
+      "501225",
+      "161127",
+      "161126",
+      "161130",
+      "161125",
+      "161128",
+      "160125",
+      "501312"
+    ],
+    "nav_source_by_code": {
+      "501225": "jisilu_qdii",
+      "161127": "jisilu_qdii",
+      "161126": "jisilu_qdii",
+      "161130": "jisilu_qdii",
+      "161125": "jisilu_qdii",
+      "164906": "jisilu_qdii",
+      "161128": "jisilu_qdii",
+      "160140": "jisilu_qdii",
+      "164824": "jisilu_qdii",
+      "162415": "jisilu_qdii",
+      "160125": "jisilu_qdii",
+      "501312": "jisilu_qdii",
+      "160644": "jisilu_qdii"
+    },
+    "estimate_premium_by_code": {
+      "501225": 0.33195,
+      "161127": 0.012812,
+      "161126": 0.002508,
+      "161130": 0.042782,
+      "161125": 0.019266,
+      "164906": 0.019889,
+      "161128": 0.048548,
+      "160140": 0.005727,
+      "164824": -0.002581,
+      "162415": 0.000812,
+      "160125": -0.021089,
+      "501312": 0.011691,
+      "160644": -0.042538
+    },
+    "quality_by_code": {
+      "501225": "high",
+      "161127": "high",
+      "161126": "high",
+      "161130": "high",
+      "161125": "high",
+      "164906": "low",
+      "161128": "high",
+      "160140": "medium",
+      "164824": "medium",
+      "162415": "medium",
+      "160125": "high",
+      "501312": "high",
+      "160644": "low"
+    }
+  },
+  "version": "v2",
+  "e_class_probe": {
+    "endpoint": "https://www.jisilu.cn/data/qdii/qdii_list/E?only_lof=y&only_etf=y&rp=300",
+    "note": "v1 只抓默认类目, 501225 / 164824 / 501312 未命中; v2 追加 category=E 并按 fund_nav 存在性优先合并, 补齐 LOF 类 QDII 净值",
+    "recovered_codes": [
+      "501225",
+      "164824",
+      "501312"
+    ]
+  },
+  "composite_fitting": {
+    "method": "两因子 OLS (无截距): y_fund_daily = w_ref * ref_official_daily + w_hs * hkHSTECH_daily; 同时网格搜索 w_ref ∈ [0.3, 0.7] step 0.05, w_hs = 1 - w_ref",
+    "factor_ref_source": "集思录 detail_hists ref_increase_rt (官方参考指数日涨跌%); 免费替代 usKWEB 日 K 不可得的说明见 free_source_notes",
+    "factor_hs_source": "腾讯 hkfqkline hkHSTECH 60 日 qfq 日 K",
+    "quality_thresholds": "RMSE < 0.5% -> medium (仅在复合优于任一单因子时才提升); RMSE >= 1.0% -> 保持 low",
+    "results": [
+      {
+        "code": "164906",
+        "name": "中概互联网LOF",
+        "ref_index_symbol": "H11136.CSI",
+        "ref_index_name": "中证海外中国互联网指数",
+        "hk_kline_symbol": "hkHSTECH",
+        "hk_kline_name": "恒生科技指数",
+        "us_target_symbol": "usKWEB",
+        "us_target_name": "KraneShares 中概互联网 ETF",
+        "us_target_free_daily": "腾讯 usfqkline qfqday 对美股 ETF 只回最新一帧(2017 后日 K 仅返回 1 行); 东财 push2his 106.KWEB 与 Yahoo v8 chart 当前断连; KWEB 免费日 K 30 日序列不可得",
+        "aligned_sample_size": 47,
+        "sample_date_range": [
+          "2026-04-16",
+          "2026-06-30"
+        ],
+        "rmse_ref_only": 0.002469,
+        "rmse_hstech_only": 0.010079,
+        "ols": {
+          "w_ref": 0.913906,
+          "w_hs": 0.028539,
+          "rmse": 0.002221,
+          "n": 47
+        },
+        "grid": {
+          "search_space": "w_ref in [0.3, 0.7] step 0.05; w_hs = 1 - w_ref",
+          "best": {
+            "w_ref": 0.7,
+            "w_hs": 0.3,
+            "rmse": 0.003581
+          },
+          "trials": [
+            {
+              "w_ref": 0.3,
+              "w_hs": 0.7,
+              "rmse": 0.007143
+            },
+            {
+              "w_ref": 0.35,
+              "w_hs": 0.65,
+              "rmse": 0.006665
+            },
+            {
+              "w_ref": 0.4,
+              "w_hs": 0.6,
+              "rmse": 0.006192
+            },
+            {
+              "w_ref": 0.45,
+              "w_hs": 0.55,
+              "rmse": 0.005726
+            },
+            {
+              "w_ref": 0.5,
+              "w_hs": 0.5,
+              "rmse": 0.005268
+            },
+            {
+              "w_ref": 0.55,
+              "w_hs": 0.45,
+              "rmse": 0.00482
+            },
+            {
+              "w_ref": 0.6,
+              "w_hs": 0.4,
+              "rmse": 0.004387
+            },
+            {
+              "w_ref": 0.65,
+              "w_hs": 0.35,
+              "rmse": 0.003972
+            },
+            {
+              "w_ref": 0.7,
+              "w_hs": 0.3,
+              "rmse": 0.003581
+            }
+          ]
+        },
+        "composite_quality": "medium"
+      },
+      {
+        "code": "160644",
+        "name": "港美互联网LOF",
+        "ref_index_symbol": "H11136.CSI",
+        "ref_index_name": "中证海外中国互联网指数",
+        "hk_kline_symbol": "hkHSTECH",
+        "hk_kline_name": "恒生科技指数",
+        "us_target_symbol": "usKWEB",
+        "us_target_name": "KraneShares 中概互联网 ETF",
+        "us_target_free_daily": "同 164906; usKWEB 免费日 K 不可得, 回归因子使用 H11136_ref(集思录官方参考指数)+HSTECH",
+        "aligned_sample_size": 47,
+        "sample_date_range": [
+          "2026-04-16",
+          "2026-06-30"
+        ],
+        "rmse_ref_only": 0.028371,
+        "rmse_hstech_only": 0.027429,
+        "ols": {
+          "w_ref": -0.237362,
+          "w_hs": 0.596474,
+          "rmse": 0.025009,
+          "n": 47
+        },
+        "grid": {
+          "search_space": "w_ref in [0.3, 0.7] step 0.05; w_hs = 1 - w_ref",
+          "best": {
+            "w_ref": 0.3,
+            "w_hs": 0.7,
+            "rmse": 0.027317
+          },
+          "trials": [
+            {
+              "w_ref": 0.3,
+              "w_hs": 0.7,
+              "rmse": 0.027317
+            },
+            {
+              "w_ref": 0.35,
+              "w_hs": 0.65,
+              "rmse": 0.027332
+            },
+            {
+              "w_ref": 0.4,
+              "w_hs": 0.6,
+              "rmse": 0.027356
+            },
+            {
+              "w_ref": 0.45,
+              "w_hs": 0.55,
+              "rmse": 0.027389
+            },
+            {
+              "w_ref": 0.5,
+              "w_hs": 0.5,
+              "rmse": 0.027433
+            },
+            {
+              "w_ref": 0.55,
+              "w_hs": 0.45,
+              "rmse": 0.027485
+            },
+            {
+              "w_ref": 0.6,
+              "w_hs": 0.4,
+              "rmse": 0.027547
+            },
+            {
+              "w_ref": 0.65,
+              "w_hs": 0.35,
+              "rmse": 0.027618
+            },
+            {
+              "w_ref": 0.7,
+              "w_hs": 0.3,
+              "rmse": 0.027699
+            }
+          ]
+        },
+        "composite_quality": "low"
+      }
+    ],
+    "free_source_notes": [
+      "usKWEB (KraneShares 中概互联网 ETF) 免费日 K 30 日序列不可得: 腾讯 usfqkline qfqday 对美股 ETF 仅回传最新 1 帧; 东财 push2his 106.KWEB 与 Yahoo v8 chart 当前断连",
+      "港股 hkHSTECH 通过腾讯 hkfqkline 可稳定拿 60 日 qfq 日 K",
+      "H11136 官方参考指数日涨跌% 通过集思录 detail_hists 可得, 但需 Cookie"
+    ]
+  },
+  "quality_matrix_v1_vs_v2": [
+    {
+      "code": "501225",
+      "v1_quality": "unavailable",
+      "v2_quality": "high",
+      "delta": "upgraded",
+      "nav_source_v2": "jisilu_qdii"
+    },
+    {
+      "code": "161127",
+      "v1_quality": "high",
+      "v2_quality": "high",
+      "delta": "unchanged",
+      "nav_source_v2": "jisilu_qdii"
+    },
+    {
+      "code": "161126",
+      "v1_quality": "high",
+      "v2_quality": "high",
+      "delta": "unchanged",
+      "nav_source_v2": "jisilu_qdii"
+    },
+    {
+      "code": "161130",
+      "v1_quality": "high",
+      "v2_quality": "high",
+      "delta": "unchanged",
+      "nav_source_v2": "jisilu_qdii"
+    },
+    {
+      "code": "161125",
+      "v1_quality": "high",
+      "v2_quality": "high",
+      "delta": "unchanged",
+      "nav_source_v2": "jisilu_qdii"
+    },
+    {
+      "code": "164906",
+      "v1_quality": "low",
+      "v2_quality": "low",
+      "delta": "unchanged",
+      "nav_source_v2": "jisilu_qdii"
+    },
+    {
+      "code": "161128",
+      "v1_quality": "high",
+      "v2_quality": "high",
+      "delta": "unchanged",
+      "nav_source_v2": "jisilu_qdii"
+    },
+    {
+      "code": "160140",
+      "v1_quality": "medium",
+      "v2_quality": "medium",
+      "delta": "unchanged",
+      "nav_source_v2": "jisilu_qdii"
+    },
+    {
+      "code": "164824",
+      "v1_quality": "unavailable",
+      "v2_quality": "medium",
+      "delta": "upgraded",
+      "nav_source_v2": "jisilu_qdii"
+    },
+    {
+      "code": "162415",
+      "v1_quality": "medium",
+      "v2_quality": "medium",
+      "delta": "unchanged",
+      "nav_source_v2": "jisilu_qdii"
+    },
+    {
+      "code": "160125",
+      "v1_quality": "high",
+      "v2_quality": "high",
+      "delta": "unchanged",
+      "nav_source_v2": "jisilu_qdii"
+    },
+    {
+      "code": "501312",
+      "v1_quality": "high",
+      "v2_quality": "high",
+      "delta": "unchanged",
+      "nav_source_v2": "jisilu_qdii"
+    },
+    {
+      "code": "160644",
+      "v1_quality": "low",
+      "v2_quality": "low",
+      "delta": "unchanged",
+      "nav_source_v2": "jisilu_qdii"
+    }
+  ],
+  "recommended_high_codes_v2": [
+    "501225",
+    "161127",
+    "161126",
+    "161130",
+    "161125",
+    "161128",
+    "160125",
+    "501312"
+  ],
+  "structural_recommendation": {
+    "field": "qdii_reference_index_weights",
+    "shape": "list[{symbol: str, weight: number}]",
+    "purpose": "支持 mixed-exposure QDII (如 164906 / 160644) 用两个以上参考指数加权拟合 estimate_nav; PRD 1.6 只支持单指数, 引入该结构属于结构性变更",
+    "ccr_required": true,
+    "ccr_target": "PRD 1.6.2",
+    "poc_impact": "本轮不实装, 仅在报告中建议"
+  }
+}

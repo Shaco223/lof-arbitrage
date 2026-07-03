@@ -212,3 +212,230 @@ def test_render_markdown_contains_all_codes():
         assert m.code in md
     assert "非交易所 IOPV" in md
     assert "推荐 high 准入清单" in md
+
+# ---------------------------------------------------------------------------
+# v2: 混合口径复合指数拟合 + E 类补测 + hists 抽取 单测
+# ---------------------------------------------------------------------------
+
+
+def test_fit_two_factor_ols_recovers_known_weights():
+    # y = 0.7 * a + 0.3 * b, 无噪
+    a = [0.01, -0.02, 0.03, -0.01, 0.02, 0.005, -0.015]
+    b = [-0.01, 0.01, 0.02, 0.0, -0.02, 0.008, 0.003]
+    y = [0.7 * a[i] + 0.3 * b[i] for i in range(len(a))]
+    r = _probe.fit_two_factor_ols(y, a, b)
+    assert r is not None
+    assert abs(r["w_a"] - 0.7) < 1e-9
+    assert abs(r["w_b"] - 0.3) < 1e-9
+    assert r["rmse"] < 1e-9
+    assert r["n"] == len(y)
+
+
+def test_fit_two_factor_ols_returns_none_on_length_mismatch():
+    assert _probe.fit_two_factor_ols([0.01], [], []) is None
+    assert _probe.fit_two_factor_ols([0.01, 0.02], [0.01], [0.01, 0.02]) is None
+
+
+def test_grid_search_two_factor_bounds_and_sum_to_one():
+    a = [0.01, -0.02, 0.03]
+    b = [-0.01, 0.01, 0.02]
+    y = [0.5 * a[i] + 0.5 * b[i] for i in range(len(a))]
+    g = _probe.grid_search_two_factor(y, a, b, w_a_lo=0.3, w_a_hi=0.7, step=0.05, sum_to_one=True)
+    assert g["best"]["w_a"] == 0.5
+    assert g["best"]["w_b"] == 0.5
+    # 全部 trial 均 sum_to_one
+    for t in g["trials"]:
+        assert abs(t["w_a"] + t["w_b"] - 1.0) < 1e-6
+        assert 0.3 - 1e-6 <= t["w_a"] <= 0.7 + 1e-6
+    # 网格步长与端点
+    assert len(g["trials"]) == 9  # 0.30 ... 0.70 step 0.05
+
+
+def test_classify_composite_quality_thresholds():
+    assert _probe.classify_composite_quality(0.001) == "medium"
+    assert _probe.classify_composite_quality(0.004) == "medium"
+    assert _probe.classify_composite_quality(0.009) == "medium"
+    assert _probe.classify_composite_quality(0.010) == "low"
+    assert _probe.classify_composite_quality(0.05) == "low"
+
+
+def test_extract_daily_fund_and_ref_from_hists():
+    # 三天净值 -> 两天日收益; ref_increase_rt 百分比自动换算
+    hists = [
+        {"net_value": "1.000", "net_value_dt": "2026-06-30", "ref_increase_rt": "0.5"},
+        {"net_value": "1.010", "net_value_dt": "2026-07-01", "ref_increase_rt": "1.0"},
+        {"net_value": "1.020", "net_value_dt": "2026-07-02", "ref_increase_rt": "-0.5"},
+    ]
+    daily = _probe._extract_daily_fund_and_ref(hists)
+    assert len(daily) == 2
+    assert daily[0][0] == "2026-07-01"
+    assert abs(daily[0][1] - (1.010 / 1.000 - 1)) < 1e-9
+    assert abs(daily[0][2] - 0.010) < 1e-9  # 1.0% -> 0.01
+    assert daily[1][0] == "2026-07-02"
+    assert abs(daily[1][2] - (-0.005)) < 1e-9
+
+
+def test_extract_daily_fund_and_ref_skips_missing_fields():
+    hists = [
+        {"net_value": None, "net_value_dt": "2026-06-30", "ref_increase_rt": "0.5"},
+        {"net_value": "1.010", "net_value_dt": None, "ref_increase_rt": "1.0"},
+        {"net_value": "1.020", "net_value_dt": "2026-07-02", "ref_increase_rt": None},
+    ]
+    assert _probe._extract_daily_fund_and_ref(hists) == []
+
+
+class _StubV2Fetcher(_StubFetcher):
+    """StubFetcher 扩展: 提供 fetch_detail_hists / fetch_tencent_hk_daily。"""
+
+    def __init__(self, *, hists_by_code, hk_daily, **kw):
+        super().__init__(**kw)
+        self._hists = hists_by_code
+        self._hk_daily = hk_daily
+
+    def fetch_detail_hists(self, code, cookie, rp=60):
+        return self._hists.get(code, [])
+
+    def fetch_tencent_hk_daily(self, symbol, limit=60):
+        return self._hk_daily if symbol == "hkHSTECH" else {}
+
+
+def _stub_v2():
+    price = {m.code: {"ok": True, "price": 1.0, "change_pct": 0.001, "amount": 1000.0}
+             for m in _probe.BATCH13_MAPPINGS}
+    fundgz = {m.code: {"ok": True, "fund_nav_t1": 2.0, "nav_dt": "2026-07-01", "name": m.name}
+              for m in _probe.BATCH13_MAPPINGS}
+    jisilu = {m.code: {"fund_nav": 2.5, "nav_dt": "2026-07-02", "name": m.name,
+                       "index_id": "IDX", "index_nm": "IDX_NM"}
+              for m in _probe.BATCH13_MAPPINGS}
+    tencent_index = {}
+    for m in _probe.BATCH13_MAPPINGS:
+        for c in m.candidates:
+            if c.source == "tencent":
+                tencent_index[c.symbol] = {"price": 100.0, "previous_close": 99.0,
+                                           "change_pct": 0.010101, "name": c.display_name, "quote_time": ""}
+    fx = {"fx_susdcny": {"rate": 6.78, "change_pct": 0.001, "quote_time": ""},
+          "fx_shkdcny": {"rate": 0.865, "change_pct": -0.002, "quote_time": ""}}
+    # 构造 hists: 5 天净值序列 (含两个 code)
+    def _hists(code):
+        # 生成 y = 0.6 * ref + 0.4 * hs 的净值序列
+        rets_ref = [0.005, -0.003, 0.006, -0.002, 0.004]
+        rets_hs = [-0.002, 0.004, -0.001, 0.003, -0.002]
+        dates = ["2026-06-26", "2026-06-27", "2026-06-28", "2026-06-29", "2026-06-30"]
+        nv = 1.0
+        rows = [{"net_value": "1.000", "net_value_dt": "2026-06-25", "ref_increase_rt": "0.0"}]
+        for i, d in enumerate(dates):
+            y = 0.6 * rets_ref[i] + 0.4 * rets_hs[i]
+            nv *= (1 + y)
+            rows.append({
+                "net_value": f"{nv:.6f}",
+                "net_value_dt": d,
+                "ref_increase_rt": f"{rets_ref[i] * 100:.6f}",
+            })
+        return rows
+    hists_by_code = {"164906": _hists("164906"), "160644": _hists("160644")}
+    hk_daily = {
+        "2026-06-26": -0.002, "2026-06-27": 0.004, "2026-06-28": -0.001,
+        "2026-06-29": 0.003, "2026-06-30": -0.002,
+    }
+    return _StubV2Fetcher(
+        price_map=price, fundgz_map=fundgz, jisilu_map=jisilu,
+        tencent_index_map=tencent_index, sina_gb_map={}, fx_map=fx,
+        hists_by_code=hists_by_code, hk_daily=hk_daily,
+    )
+
+
+def test_run_composite_fitting_returns_two_codes_and_low_rmse():
+    stub = _stub_v2()
+    results = _probe.run_composite_fitting(stub, cookie=None)
+    assert [r["code"] for r in results] == ["164906", "160644"]
+    for r in results:
+        assert r["aligned_sample_size"] == 5
+        # 构造的 y = 0.6 * ref + 0.4 * hs, OLS 应该恢复精确权重
+        ols = r["ols"]
+        assert ols is not None
+        assert abs(ols["w_ref"] - 0.6) < 1e-3
+        assert abs(ols["w_hs"] - 0.4) < 1e-3
+        assert r["rmse_ref_only"] is not None
+        # 网格最优 w_ref=0.6 命中
+        assert r["grid"]["best"]["w_ref"] == 0.6
+        assert r["composite_quality"] == "medium"
+
+
+def test_build_report_v2_marks_e_class_upgrade_and_ccr():
+    stub = _stub_v2()
+    base = _probe.run_probe(fetcher=stub)
+    composite = _probe.run_composite_fitting(stub, cookie=None)
+    report = _probe.build_report_v2(base, composite)
+    assert report["version"] == "v2"
+    assert "E 类" in report["scope"] or "E-category" in report["scope"] or "category=E" in report["e_class_probe"]["note"]
+    # stub 给每只都填 jisilu.fund_nav, 所以 501225 / 164824 都会被判定为非 unavailable
+    recovered = report["e_class_probe"]["recovered_codes"]
+    assert "501225" in recovered
+    assert "164824" in recovered
+    # 质量矩阵包含全部 13 只
+    codes_in_matrix = {row["code"] for row in report["quality_matrix_v1_vs_v2"]}
+    assert codes_in_matrix == {m.code for m in _probe.BATCH13_MAPPINGS}
+    # 结构性建议 CCR 标记
+    assert report["structural_recommendation"]["ccr_required"] is True
+    assert "1.6.2" in report["structural_recommendation"]["ccr_target"]
+    assert report["ccr"].startswith("not_triggered")
+
+
+def test_render_markdown_v2_contains_key_sections():
+    stub = _stub_v2()
+    base = _probe.run_probe(fetcher=stub)
+    composite = _probe.run_composite_fitting(stub, cookie=None)
+    report = _probe.build_report_v2(base, composite)
+    md = _probe.render_markdown_v2(report)
+    assert "QDII 13" in md and "v2" in md
+    assert "E 类接口补测" in md
+    assert "混合口径复合指数拟合" in md
+    assert "质量矩阵 v1 vs v2" in md
+    assert "结构性建议" in md
+    assert "非交易所 IOPV" in md
+
+
+def test_fetch_jisilu_qdii_iterates_categories_and_prefers_nav():
+    calls: list[str] = []
+
+    class _CatClient:
+        def get(self, url, params=None, headers=None):
+            calls.append(url)
+            if url.endswith("/qdii_list/"):
+                rows = [
+                    {"cell": {"fund_id": "161125", "fund_nav": "3.0768", "nav_dt": "2026-07-01", "fund_nm": "标普500"}},
+                    {"cell": {"fund_id": "501225", "fund_nav": None, "nav_dt": "", "fund_nm": "全球芯片"}},
+                ]
+            elif url.endswith("/qdii_list/E"):
+                assert params and params.get("only_lof") == "y"
+                rows = [
+                    {"cell": {"fund_id": "501225", "fund_nav": "3.5887", "nav_dt": "2026-07-01", "fund_nm": "全球芯片LOF"}},
+                    {"cell": {"fund_id": "164824", "fund_nav": "1.3111", "nav_dt": "2026-07-01", "fund_nm": "印度基金"}},
+                ]
+            else:
+                rows = []
+            return _Resp({"rows": rows})
+
+    class _Resp:
+        def __init__(self, data):
+            self._data = data
+
+        def raise_for_status(self):
+            pass
+
+        def json(self):
+            return self._data
+
+    fetcher = _probe._Fetcher(client=_CatClient())
+    merged = fetcher.fetch_jisilu_qdii(cookie=None)
+    fetcher.close()
+    # 默认 + E 两轮
+    assert any(u.endswith("/qdii_list/") for u in calls)
+    assert any(u.endswith("/qdii_list/E") for u in calls)
+    # 501225 应取 E 类的 fund_nav 而非默认的 None
+    assert merged["501225"]["fund_nav"] == 3.5887
+    assert merged["501225"]["category_source"] == "E"
+    # 161125 保留默认类目
+    assert merged["161125"]["fund_nav"] == 3.0768
+    assert merged["161125"]["category_source"] == "default"
+    assert merged["164824"]["fund_nav"] == 1.3111
