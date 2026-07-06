@@ -10,9 +10,11 @@ import {
   fmtPct,
   fmtPctSigned,
   fmtVolumeWan,
+  fmtLimitAmount,
   freshnessLabel,
   coverageLevel,
   isMarketOpen,
+  periodText,
   shouldRender
 } from '@/utils/format'
 import { isLowLiquidity } from '@/utils/low-liquidity'
@@ -129,6 +131,14 @@ function subscribeBadge(item: LofListItem): string {
   if (st === 'suspended') return '暂停'
   if (st === 'closed') return '停售'
   return ''
+}
+
+// BUG-FE-01：QDII 卡片限购额度副标签；仅在 subscribe_status=limited 且额度非 null 时展示
+// 文案与 detail.vue subscribeLabel 对齐："单日 ≤ 50万"
+function subscribeLimitText(item: LofListItem): string {
+  if (item.subscribe_status !== 'limited') return ''
+  if (!shouldRender(item.subscribe_limit_amount)) return ''
+  return periodText(item.subscribe_limit_period) + ' ≤ ' + fmtLimitAmount(item.subscribe_limit_amount)
 }
 
 async function loadList(showToast = false) {
@@ -322,6 +332,9 @@ onUnmounted(() => {
             <view class="row-line1">
               <text class="code">{{ item.code }}</text>
               <text class="type-tag type-index">QDII</text>
+              <!-- BUG-FE-01: QDII 卡片补显申赎状态（AC-P5 空值不渲染）+ 限购额度副标签 -->
+              <text v-if="subscribeBadge(item)" class="sub-badge">{{ subscribeBadge(item) }}</text>
+              <text v-if="subscribeLimitText(item)" class="sub-badge sub-badge-amount">{{ subscribeLimitText(item) }}</text>
             </view>
             <view class="qdii-fund-name">{{ displayFundName(item.code, item.name) }}</view>
           </view>
@@ -415,6 +428,7 @@ onUnmounted(() => {
 .type-industry { background: #fdf6ec; color: #e6a23c; }
 .type-active { background: #f0f9eb; color: #67c23a; }
 .sub-badge { padding: 2rpx 10rpx; border-radius: 4rpx; font-size: 20rpx; background: #fef0f0; color: #f56c6c; }
+.sub-badge-amount { background: #fdf6ec; color: #e6a23c; }
 .low-liquidity-dot { width: 12rpx; height: 12rpx; border-radius: 6rpx; background: #1f6feb; display: inline-block; }
 .row-line2 { font-size: 26rpx; color: #303133; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .row-line3 { display: flex; flex-wrap: wrap; gap: 14rpx; color: #909399; font-size: 22rpx; }

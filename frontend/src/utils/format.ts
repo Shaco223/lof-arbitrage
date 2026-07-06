@@ -41,6 +41,14 @@ export function fmtLimitAmount(v: number | undefined | null): string {
   return trimZero(num) + '元'
 }
 
+/** PRD 1.3：申赎限额周期文案（day/week/month → 单日/单周/单月；其他/空 → 单期） */
+export function periodText(p?: string | null): string {
+  if (p === 'day') return '单日'
+  if (p === 'week') return '单周'
+  if (p === 'month') return '单月'
+  return '单期'
+}
+
 function trimZero(n: number): string {
   // 去掉多余小数：50.0 -> "50"，1.5 -> "1.5"
   return Number(n.toFixed(2)).toString()

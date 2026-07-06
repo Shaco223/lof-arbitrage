@@ -18,6 +18,7 @@ import {
   fmtSharesIncrWan,
   fmtVolumeWan,
   freshnessLabel,
+  periodText,
   shouldRender
 } from '@/utils/format'
 import { isLowLiquidity, LOW_LIQUIDITY_LABEL } from '@/utils/low-liquidity'
@@ -84,14 +85,6 @@ const showQdiiEstimateCard = computed(() => {
     d.qdii_nav_date
   ].some((value) => shouldRender(value))
 })
-
-// PRD 1.3 限额周期文案
-function periodText(p?: string | null): string {
-  if (p === 'day') return '单日'
-  if (p === 'week') return '单周'
-  if (p === 'month') return '单月'
-  return '单期'
-}
 
 // PRD 1.3 申购标签：open/unknown/null 返回空（AC-P5 不渲染）
 function subscribeLabel(d: LofDetailData): string {
