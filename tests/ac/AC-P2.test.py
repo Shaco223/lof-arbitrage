@@ -1,13 +1,15 @@
 """AC-P2: watchlist-v2 / benchmark-v2 coverage acceptance test.
 
 Method: read watchlist-v2 and benchmark-mapping-v2, aggregate benchmark weights
-by LOF code as a static coverage proxy, then verify 30 funds are covered and the
-399987 numeric-code conflict is resolved.
-Pass criteria: average coverage >= 0.90, count of coverage < 0.70 <= 3,
-index/industry funds have coverage 1.00, benchmark weight failures = 0, and
-numeric-code conflicts = 0.
+by LOF code as a static coverage proxy, then verify all watchlist funds are
+covered and no numeric-code duplication (excluding CASH / UNMAPPED sentinels)
+survives after the PRD 1.5 expansion (139 codes).
+Pass criteria: benchmark rows cover every watchlist code with weight sum 1.0,
+average coverage >= 0.90, count of coverage < 0.70 <= 3, index/qdii funds have
+coverage 1.00, and non-sentinel numeric-code conflicts = 0.
 Dependencies: dev-002 (watchlist-v2 / benchmark-v2), dev-004 (coverage policy).
-Current status: implemented as v2 static asset acceptance.
+Current status: implemented as v2 static asset acceptance (BUG-Q1-A fix,
+watchlist=139 rows, active funds fallback to 沪深300+综合债 default).
 """
 from __future__ import annotations
 
@@ -21,11 +23,11 @@ from _lib import AC
 from _lib.m1_backend import build_sample_api_outputs
 
 META = AC.P2
-EXPECTED_TOTAL = 30
 MIN_AVG_COVERAGE = 0.90
 LOW_COVERAGE_THRESHOLD = 0.70
 MAX_LOW_COVERAGE_COUNT = 3
-FULL_COVERAGE_TYPES = {"\u6307\u6570", "\u884c\u4e1a"}
+FULL_COVERAGE_TYPES = {"index", "industry", "qdii"}
+SENTINEL_INDEX_CODES = {"CASH", "UNMAPPED"}
 
 
 def read_csv(path: Path) -> list[dict[str, str]]:
@@ -44,7 +46,7 @@ def detect_numeric_index_conflicts(rows: list[dict[str, str]]) -> dict[str, set[
     by_numeric_code: dict[str, set[tuple[str, str]]] = defaultdict(set)
     for row in rows:
         index_code = row["index_code"]
-        if index_code == "CASH":
+        if index_code in SENTINEL_INDEX_CODES:
             continue
         numeric_code = index_code.split(".", 1)[0]
         by_numeric_code[numeric_code].add((index_code, row["component_name"]))
@@ -55,18 +57,35 @@ def detect_numeric_index_conflicts(rows: list[dict[str, str]]) -> dict[str, set[
     }
 
 
+def normalize_fund_type(raw_type: str) -> str:
+    normalized = str(raw_type).strip().lower()
+    mapping = {
+        "index": "index",
+        "industry": "industry",
+        "active": "active",
+        "qdii": "qdii",
+        "指数": "index",
+        "行业": "industry",
+        "主动": "active",
+    }
+    return mapping.get(str(raw_type).strip(), mapping.get(normalized, normalized))
+
+
 @pytest.mark.ac_p
 def test_ac_p2_watchlist_v2_benchmark_coverage(project_root):
-    """AC-P2: all 30 watchlist-v2 funds must be fully covered by benchmark-v2."""
+    """AC-P2: every watchlist-v2 code must be fully covered by benchmark-v2."""
     assert META.code == "AC-P2"
     watchlist = read_csv(project_root / "assets" / "lof-watchlist-v2.csv")
     benchmark_rows = read_csv(project_root / "assets" / "benchmark-mapping-v2.csv")
     watch_codes = {row["code"] for row in watchlist}
     coverage_by_code = aggregate_weights(benchmark_rows)
 
-    assert len(watchlist) == EXPECTED_TOTAL
-    assert len(watch_codes) == EXPECTED_TOTAL, "watchlist-v2 code must be unique"
-    assert set(coverage_by_code) == watch_codes
+    assert len(watch_codes) == len(watchlist), "watchlist-v2 code must be unique"
+    assert set(coverage_by_code) == watch_codes, (
+        "benchmark-v2 must cover exactly the watchlist-v2 codes; "
+        f"missing={sorted(watch_codes - set(coverage_by_code))[:5]}, "
+        f"extra={sorted(set(coverage_by_code) - watch_codes)[:5]}"
+    )
 
     coverage_values = list(coverage_by_code.values())
     average_coverage = sum(coverage_values) / len(coverage_values)
@@ -82,11 +101,12 @@ def test_ac_p2_watchlist_v2_benchmark_coverage(project_root):
         assert abs(coverage - 1.0) <= 1e-9, f"{code} benchmark weight sum is {coverage}"
 
     for row in watchlist:
-        if row["type"] in FULL_COVERAGE_TYPES:
+        fund_type = normalize_fund_type(row["type"])
+        if fund_type in FULL_COVERAGE_TYPES:
             assert coverage_by_code[row["code"]] == 1.0
 
     conflicts = detect_numeric_index_conflicts(benchmark_rows)
-    assert conflicts == {}
+    assert conflicts == {}, f"numeric index conflicts: {conflicts}"
 
     conflict_399987_rows = [
         row for row in benchmark_rows
@@ -102,11 +122,11 @@ def test_ac_p2_backend_sample_api_coverage_matches_v2_policy(project_root):
     """AC-P2: backend sample list output must preserve v2 coverage policy."""
     assert META.code == "AC-P2"
     watchlist = read_csv(project_root / "assets" / "lof-watchlist-v2.csv")
-    fund_type_by_code = {row["code"]: row["type"] for row in watchlist}
+    fund_type_by_code = {row["code"]: normalize_fund_type(row["type"]) for row in watchlist}
     list_response = build_sample_api_outputs(project_root)["list"]
     items = list_response["data"]["items"]
 
-    assert len(items) == EXPECTED_TOTAL
+    assert len(items) == len(watchlist)
     assert {item["code"] for item in items} == set(fund_type_by_code)
 
     coverage_by_code = {item["code"]: item["coverage"] for item in items}
